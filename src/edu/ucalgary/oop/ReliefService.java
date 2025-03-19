@@ -7,7 +7,7 @@ public class ReliefService{
     private String infoProvided;
     private Location lastKnownLocation;
 
-    public ReliefService(Person inquirer, Person missingPerson, String dateOfInquiry, Sting infoProvided, Location lastKnownLocation){
+    public ReliefService(Person inquirer, Person missingPerson, String dateOfInquiry, Sting infoProvided, Location lastKnownLocation) throws IllegalArgumentException{
         this.inquirer = inquirer;
         this.missingPerson = missingPerson;
         this.dateOfInquiry = dateOfInquiry;
@@ -35,7 +35,7 @@ public class ReliefService{
         this.dateOfInquiry = dateOfInquiry;
     }
 
-    public String getDateOfInquiry(){
+    public String getDateOfInquiry() throws IllegalArgumentException{
         return this.dateOfInquiry;
     }
 
@@ -53,5 +53,9 @@ public class ReliefService{
 
     public void setLastKnownLocation(){
         this.lastKnownLocation = lastKnownLocation;
+    }
+
+    private static boolean isValidDateFormat(){
+        
     }
 }
