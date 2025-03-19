@@ -1,5 +1,34 @@
 package edu.ucalgary.oop;
 
 public class FamilyGroup {
+    private int FAMILYID;
+    private ArrayList<Person> familyMembers;
 
+    public FamilyGroup(){
+        this.FAMILYID = generateFamilyId();
+    }
+
+    public void addFamilyMember(Person person){
+        this.familyMembers.add(person);
+    }
+
+    public void removeFamilyMember(Person person){
+        this.familyMembers.remove(person);
+    }
+
+    public ArrayList<Person> getFamilyMembers(){
+        return this.familyMembers;
+    }
+
+    public void setFamilyMembers(ArrayList<Person> family){
+        this.familyMembers = family;
+    }
+
+    public int getFamilyID(){
+        return this.FAMILYID;
+    }
+
+    private static generateFamilyId(){
+        
+    }
 }
