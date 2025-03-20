@@ -1,8 +1,6 @@
 package edu.ucalgary.oop;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,7 +10,6 @@ public class DisasterVictim extends Person{
     private ArrayList<MedicalRecord> medicalRecords;
     private ArrayList<InventoryItem> belongings;
 	private final String ENTRY_DATE;
-	private String gender;
 	private String comments;
     private static int counter = 0;
 
@@ -70,7 +67,7 @@ public class DisasterVictim extends Person{
 		return this.medicalRecords;
 	}
 	public ArrayList<InventoryItem> getBelongings(){
-		return this.personalBelongings;
+		return this.belongings;
 	}
 
 
@@ -78,26 +75,22 @@ public class DisasterVictim extends Person{
 		this.medicalRecords = records;
 	}
 
-	public void setPersonalBelongings(ArrayList<InventoryItem> belongings){
-		this.personalBelongings = belongings;
+	public void setBelongings(ArrayList<InventoryItem> belongings){
+		this.belongings = belongings;
 	}
 
-	public void addPersonalBelongings(InventoryItem supply){
-		personalBelongings = Arrays.copyOf(personalBelongings, personalBelongings.length + 1);
-		personalBelongings[personalBelongings.length - 1] = supply;
+	public void addBelongings(InventoryItem supply){
+		this.belongings.add(supply);
 	}
 
-	public void removePersonalBelongings(InventoryItem unwantedSupply){
-		List<Supply> tempList = new ArrayList<>(Arrays.asList(personalBelongings));
-		tempList.remove(unwantedSupply);
-		personalBelongings = tempList.toArray(new Supply[0]);
+	public void removeBelongings(InventoryItem unwantedSupply){
+		this.belongings.remove(unwantedSupply);
 		
 	}
 
 
 	public void addMedicalRecord(MedicalRecord record){
-		medicalRecords = Arrays.copyOf(medicalRecords, medicalRecords.length + 1);
-		medicalRecords[medicalRecords.length - 1] = record;
+		this.medicalRecords.add(record);
 	}
 
 	public String getEntryDate(){
@@ -112,12 +105,9 @@ public class DisasterVictim extends Person{
 		this.comments = comments;
 	}
 
-	public void setGender(String gender){
-		this.gender = gender;
-	}
 
 	private static int generateSocialID(){
-		int socialId = 2891 + counter;
+		int socialId = counter;
 		counter++;
 		return socialId;
 	}

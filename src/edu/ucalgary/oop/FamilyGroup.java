@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class FamilyGroup {
     private int FAMILYID;
     private ArrayList<Person> familyMembers;
+    private static int counter = 0;
 
     public FamilyGroup(){
         this.FAMILYID = generateFamilyId();
@@ -29,7 +30,9 @@ public class FamilyGroup {
         return this.FAMILYID;
     }
 
-    private static generateFamilyId(){
-        
+    private static int generateFamilyId(){
+        int id = counter;
+        counter++;
+        return id;
     }
 }
