@@ -2,7 +2,7 @@ package edu.ucalgary.oop;
 import java.util.ArrayList;
 
 public class FamilyGroup {
-    private int FAMILYID;
+    private final int FAMILYID;
     private ArrayList<Person> familyMembers;
     private static int counter = 0;
 

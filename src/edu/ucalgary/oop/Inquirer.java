@@ -1,8 +1,8 @@
 package edu.ucalgary.oop;
 
 public class Inquirer extends Person{
-    private Final String INFO;
-    private Final String SERVICES_PHONE;
+    private final String INFO;
+    private final String SERVICES_PHONE;
 
     public Inquirer(String firstName, String lastName, String PHONE, String INFO){
         this.firstName = firstName;
