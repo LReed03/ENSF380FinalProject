@@ -1,5 +1,5 @@
 package edu.ucalgary.oop;
 
-public class MockDatabase {
+public class MockDatabase implements DBAccess{
 
 }

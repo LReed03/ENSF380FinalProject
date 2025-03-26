@@ -1,5 +1,5 @@
 package edu.ucalgary.oop;
 
-public class DBManager {
+public class DBManager implements DBAccess{
 
 }
