@@ -68,7 +68,7 @@ public class DBManager implements DBAccess{
             myStmt.setInt(1, );
             myStmt.setInt(2, null);
             myStmt.setInt(3, );
-            myStmt.setInt(4, item.getAllocationDate());
+            myStmt.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis()));
      
             int rowCount = myStmt.executeUpdate();
             System.out.println("Rows affected: " + rowCount);
