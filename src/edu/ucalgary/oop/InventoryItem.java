@@ -5,6 +5,7 @@ public abstract class InventoryItem {
     protected DisasterVictim allocatedToPerson = null;
     protected Location allocatedToLocation = null;
     protected ItemType ITEMTYPE;
+    protected Date allocationDate;
 
 
     public ItemType getItemType(){
@@ -28,6 +29,14 @@ public abstract class InventoryItem {
             }
         }
         return false;
+    }
+
+    public Date getAllocationDate(){
+        return this.allocationDate;
+    }
+
+    public void setAllocationDate(Date allocationDate){
+        this.allocationDate = allocationDate;
     }
 
 

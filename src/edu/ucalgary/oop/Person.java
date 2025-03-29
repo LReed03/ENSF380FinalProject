@@ -5,6 +5,7 @@ public abstract class Person {
     protected String lastName;
     protected Gender gender;
     protected FamilyGroup family;
+    protected String phoneNumber;
 
     public void setFamily(FamilyGroup family){
         this.family = family;
@@ -36,5 +37,13 @@ public abstract class Person {
 
     public Gender getGender(){
         return this.gender;
+    }
+
+    public String getPhone(){
+        return this.phone_number;
+    }
+
+    public void setPhone(String phoneNumber){
+        this.phoneNumber = phoneNumber;
     }
 }

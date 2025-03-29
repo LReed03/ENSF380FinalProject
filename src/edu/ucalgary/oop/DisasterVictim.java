@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class DisasterVictim extends Person{
     private String dateOfBirth;
-	private int ASSIGNED_SOCIAL_ID;
+	private int VictimID;
     private ArrayList<MedicalRecord> medicalRecords;
     private ArrayList<InventoryItem> belongings;
 	private final String ENTRY_DATE;
@@ -20,7 +20,7 @@ public class DisasterVictim extends Person{
 		}
 		this.ENTRY_DATE = ENTRY_DATE;
 		this.firstName = firstName;
-		this.ASSIGNED_SOCIAL_ID = generateSocialID();
+		this.VictimID = generateID();
 	}
 	
 	public DisasterVictim(String firstName, String ENTRY_DATE, String dateOfBirth) throws IllegalArgumentException{
@@ -58,8 +58,8 @@ public class DisasterVictim extends Person{
 		
 	}
 
-    public int getAssignedSocialID(){
-		return this.ASSIGNED_SOCIAL_ID;
+    public int getVictimID(){
+		return this.VictimID;
 	}
 
 
@@ -106,7 +106,7 @@ public class DisasterVictim extends Person{
 	}
 
 
-	private static int generateSocialID(){
+	private static int generateID(){
 		int socialId = counter;
 		counter++;
 		return socialId;
