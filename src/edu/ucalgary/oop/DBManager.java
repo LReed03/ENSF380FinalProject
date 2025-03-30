@@ -166,7 +166,7 @@ public ArrayList<Inquirer> getAllInquirers() {
 
     }
 
-    public void updateDisasterVictim(Person person) {
+    public void updatePerson(Person person) {
         try {
             String query = "UPDATE Person SET gender = ?, comments = ?, phone_number = ?, family_group = ? WHERE first_name = ? AND last_name = ? AND date_of_birth = ?";
             PreparedStatement myStmt = connection.prepareStatement(query);
@@ -228,31 +228,68 @@ public ArrayList<Inquirer> getAllInquirers() {
 
     }
 
-    public void logInquiry(int inquirerId, int seekingId, int locationId, String date, String comments){
-
+    public void logInquiry(int inquirerId, int seekingId, int locationId, String date, String comments) {
+        try {
+            String query = """
+                INSERT INTO Inquiry (inquirer_id, seeking_id, location_id, date_of_inquiry, comments)
+                VALUES (?, ?, ?, ?, ?)
+            """;
+    
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, inquirerId);
+            stmt.setInt(2, seekingId);
+            stmt.setInt(3, locationId);
+            stmt.setTimestamp(4, Timestamp.valueOf(date)); 
+            stmt.setString(5, comments);
+    
+            stmt.executeUpdate();
+            stmt.close();
+    
+            System.out.println("Inquiry successfully logged.");
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        catch (IllegalArgumentException e) {
+            System.err.println("Invalid date format. Expected format: yyyy-MM-dd HH:mm:ss");
+        }
     }
+    
 
     public void removeExpiredWater() {
         try {
-            String query = "DELETE FROM Inventory WHERE item_type = 'water' AND expiry_date < CURRENT_DATE";
+            String query = """
+                DELETE FROM SupplyAllocation
+                USING Supply
+                WHERE SupplyAllocation.supply_id = Supply.supply_id
+                  AND Supply.type = 'water'
+                  AND SupplyAllocation.allocation_date < CURRENT_DATE - INTERVAL '1 day'
+                """;
             PreparedStatement stmt = connection.prepareStatement(query);
-
             int rowsDeleted = stmt.executeUpdate();
-            System.out.println("Expired water items removed: " + rowsDeleted);
-
+            System.out.println("Expired water supply allocations removed: " + rowsDeleted);
             stmt.close();
         } 
         catch (SQLException e) {
             e.printStackTrace();
-            }
         }
+    }
+    
 
 
-    public ArrayList<InventoryItem> getAllAvalibleInventory(){
+    public ArrayList<InventoryItem> getAllInventory(){
 
     }
 
-    public ArrayList<ReliefService> getallInquiries(){
+    public ArrayList<ReliefService> getAllInquiries(){
+
+    }
+
+    public ArrayList<Location> getAllLocations(){
+
+    }
+
+    public ArrayList<MedicalRecord> getAllMedicalRecords(){
 
     }
 
