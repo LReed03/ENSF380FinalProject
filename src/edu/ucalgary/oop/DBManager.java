@@ -293,8 +293,18 @@ public ArrayList<Inquirer> getAllInquirers() {
 
     }
 
+    public void addDisasterVictimToLocation(int personId, int locationId){
 
-    public boolean checkPersonExists(Person person){
+    }
+
+    public void addMedicalRecord(){
+
+    }
+
+
+
+
+    private static boolean checkPersonExists(Person person){
         boolean exists = false;
         try {
             String sql = "SELECT 1 FROM Person WHERE first_name = ? AND last_name = ? AND date_of_birth = ?";
