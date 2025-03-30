@@ -2,7 +2,7 @@ package edu.ucalgary.oop;
 
 public class LanguageManager {
     private String languageCode = 'en-CA';
-    private ArrayList<String> languageCodes = new ArrayList<>(Arrays.asList("en-Ca", "fr-CA"));
+    private ArrayList<String> languageCodes = new ArrayList<>(Arrays.asList("en-CA", "fr-CA"));
     private ArrayList<String> keys = new ArrayList<>();
     private ArrayList<String> values = new ArrayList<>();
     private static LanguageManager instance;
