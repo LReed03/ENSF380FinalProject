@@ -5,7 +5,7 @@ public class DBManager implements DBAccess{
     private final String URL = "jdbc:postgresssql://localhost:5432/oop";
     private final String USER = "oop";
     private final String PASSWORD = "ucalgary";
-    private DBManager instance;
+    private static DBManager instance;
     private Connection connection;
     private ResultSet results;
 
@@ -18,19 +18,129 @@ public class DBManager implements DBAccess{
         }
     }
 
-    public DBManager getInstance(){
-
+    public static DBManager getInstance(){
+        if (instance == null) {
+            instance = new DBManager();
+        }
+        return instance;
     }
 
     public ArrayList<DisasterVictim> getAllDisasterVictims(){
+        ArrayList<DisasterVictim> victims = new ArrayList<>();
         try{
+            String query = "SELECT * FROM Person WHERE date_of_birth IS NOT NULL AND gender IS NOT NULL";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet result = stmt.executeQuery();
 
-        }
-        catch(SQLExcepion e){
-            e.printStackTrace();
+            while (result.next()) {
+                DisasterVictim victim = new DisasterVictim();
+
+                victim.setFirstName(result.getString("first_name"));
+                victim.setLastName(result.getString("last_name"));
+                victim.setDateOfBirth(result.getDate("date_of_birth"));
+                victim.setGender(Gender.valueOf(result.getString("gender"))); 
+                victim.setComments(result.getString("comments"));
+                victim.setPhone(result.getString("phone_number"));
+
+                int familyId = result.getInt("family_group");
+                if (!result.wasNull()) {
+                    Family fam = new Family();
+                    fam.setFamilyID(familyId);
+                    victim.setFamily(fam);
+                }
+                victims.add(victim);
+            }
+            result.close();
+            stmt.close();
+            }   
+        catch (SQLException e) {
+        e.printStackTrace();
         }
 
+        return victims;
     }
+
+public ArrayList<FamilyGroup> getAllFamilyGroups() {
+    ArrayList<FamilyGroup> familyGroups = new ArrayList<>();
+
+    try {
+        String query = "SELECT * FROM Person WHERE family_group IS NOT NULL";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        ResultSet result = stmt.executeQuery();
+
+        while (result.next()) {
+            int familyID = result.getInt("family_group");
+
+            Person person = new Person();
+            person.setFirstName(result.getString("first_name"));
+            person.setLastName(result.getString("last_name"));
+            person.setDateOfBirth(result.getDate("date_of_birth"));
+            person.setGender(Gender.valueOf(result.getString("gender")));
+            person.setComments(result.getString("comments"));
+            person.setPhone(result.getString("phone_number"));
+
+            FamilyGroup existingGroup = null;
+            for (FamilyGroup group : familyGroups) {
+                if (group.getFamilyID() == familyID) {
+                    existingGroup = group;
+                    break;
+                }
+            }
+            if (existingGroup == null) {
+                existingGroup = new FamilyGroup(familyID);
+                familyGroups.add(existingGroup);
+            }
+            existingGroup.addFamilyMember(person);
+        }
+        result.close();
+        stmt.close();
+    } 
+    catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return familyGroups;
+}
+
+public ArrayList<Inquirer> getAllInquirers() {
+    ArrayList<Inquirer> inquirers = new ArrayList<>();
+
+    try {
+        String query = "SELECT * FROM Person WHERE phone_number IS NOT NULL";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        ResultSet result = stmt.executeQuery();
+
+        while (result.next()) {
+            Inquirer inquirer = new Inquirer();
+
+            inquirer.setFirstName(result.getString("first_name"));
+            inquirer.setLastName(result.getString("last_name"));
+            inquirer.setDateOfBirth(result.getDate("date_of_birth"));
+            inquirer.setGender(Gender.valueOf(result.getString("gender")));
+            inquirer.setComments(result.getString("comments"));
+            inquirer.setPhone(result.getString("phone_number"));
+
+            int familyId = result.getInt("family_group");
+            if (!result.wasNull()) {
+                FamilyGroup fam = new FamilyGroup(familyId);
+                inquirer.setFamily(fam);
+            }
+
+            inquirers.add(inquirer);
+        }
+
+        result.close();
+        stmt.close();
+
+    } 
+    catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return inquirers;
+}
+
+
 
     public void insertDisasterVictim(Person person){
         try{
@@ -118,25 +228,34 @@ public class DBManager implements DBAccess{
 
     }
 
-    public void logInquiry(Person person, String message){
+    public void logInquiry(int inquirerId, int seekingId, int locationId, String date, String comments){
 
     }
 
-    public void removeExpiredWater(){
+    public void removeExpiredWater() {
+        try {
+            String query = "DELETE FROM Inventory WHERE item_type = 'water' AND expiry_date < CURRENT_DATE";
+            PreparedStatement stmt = connection.prepareStatement(query);
 
-    }
+            int rowsDeleted = stmt.executeUpdate();
+            System.out.println("Expired water items removed: " + rowsDeleted);
+
+            stmt.close();
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+            }
+        }
+
 
     public ArrayList<InventoryItem> getAllAvalibleInventory(){
 
     }
 
-    public ArrayList<String> getallInquiries(){
+    public ArrayList<ReliefService> getallInquiries(){
 
     }
 
-    public DisasterVictim getVictimById(int id){
-
-    }
 
     public boolean checkPersonExists(Person person){
         boolean exists = false;

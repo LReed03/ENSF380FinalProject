@@ -2,12 +2,16 @@ package edu.ucalgary.oop;
 import java.util.ArrayList;
 
 public class FamilyGroup {
-    private final int FAMILYID;
+    private int familyId;
     private ArrayList<Person> familyMembers;
-    private static int counter = 0;
 
     public FamilyGroup(){
-        this.FAMILYID = generateFamilyId();
+        this.familyMembers = new ArrayList<>();
+    }
+    
+    public FamilyGroup(int familyId){
+        this.familyId = familyId;
+        this.familyMembers = new ArrayList<>();
     }
 
     public void addFamilyMember(Person person){
@@ -30,9 +34,7 @@ public class FamilyGroup {
         return this.FAMILYID;
     }
 
-    private static int generateFamilyId(){
-        int id = counter;
-        counter++;
-        return id;
+    public void setFamilyId(int id){
+        this.familyId = id;
     }
 }
