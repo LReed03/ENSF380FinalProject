@@ -4,6 +4,7 @@ public class MedicalRecord {
     private Location location;
     private String treatmentDetails;
     private String dateOfTreatment;
+    private int medicalRecordId;
 
     public MedicalRecord(Location location, String treatmentDetails, String dateOfTreatment) throws IllegalArgumentException{
         boolean validEntryDate = isValidDateFormat(dateOfTreatment);
@@ -56,4 +57,14 @@ public class MedicalRecord {
         }
     
 	}
+
+    public int getMedicalRecordId() {
+        return medicalRecordId;
+    }
+
+    public void setMedicalRecordId(int medicalRecordId) {
+        this.medicalRecordId = medicalRecordId;
+    }
+
+
 }

@@ -31,7 +31,7 @@ public class FamilyGroup {
     }
 
     public int getFamilyID(){
-        return this.FAMILYID;
+        return this.familyId;
     }
 
     public void setFamilyId(int id){

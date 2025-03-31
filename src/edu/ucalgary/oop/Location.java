@@ -6,6 +6,7 @@ public class Location {
     private String address;
     private ArrayList<DisasterVictim> occupants;
     private ArrayList<InventoryItem> supplies;
+    private int locationId;
 
     public Location(String name, String address) {
         if (name == null || address == null) {
@@ -77,5 +78,13 @@ public class Location {
 
     public void removeSupply(InventoryItem supply) {
         this.supplies.remove(supply);
+    }
+
+    public int getId() {
+        return locationId; 
+    }
+
+    public void setId(int id) {
+        this.locationId = id;
     }
 }

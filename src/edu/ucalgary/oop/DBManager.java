@@ -25,120 +25,110 @@ public class DBManager implements DBAccess{
         return instance;
     }
 
-    public ArrayList<DisasterVictim> getAllDisasterVictims(){
+    public ArrayList<DisasterVictim> getAllDisasterVictims(ArrayList<FamilyGroup> families) {
         ArrayList<DisasterVictim> victims = new ArrayList<>();
-        try{
+    
+        try {
             String query = "SELECT * FROM Person WHERE date_of_birth IS NOT NULL AND gender IS NOT NULL";
             PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet result = stmt.executeQuery();
-
+    
             while (result.next()) {
-                DisasterVictim victim = new DisasterVictim();
-
-                victim.setFirstName(result.getString("first_name"));
+                String firstName = result.getString("first_name");
+                String entryDate = java.time.LocalDate.now().toString(); 
+                DisasterVictim victim = new DisasterVictim(firstName, entryDate);
+    
+                victim.setVictimID(result.getInt("person_id"));
                 victim.setLastName(result.getString("last_name"));
-                victim.setDateOfBirth(result.getDate("date_of_birth"));
-                victim.setGender(Gender.valueOf(result.getString("gender"))); 
+                java.sql.Date dob = result.getDate("date_of_birth");
+                victim.setDateOfBirth(dob.toString()); 
+                victim.setGender(Gender.valueOf(result.getString("gender")));
                 victim.setComments(result.getString("comments"));
-                victim.setPhone(result.getString("phone_number"));
-
                 int familyId = result.getInt("family_group");
                 if (!result.wasNull()) {
-                    Family fam = new Family();
-                    fam.setFamilyID(familyId);
-                    victim.setFamily(fam);
+                    FamilyGroup fam = findFamilyGroupById(families, familyId);
+                    if (fam != null) {
+                        fam.addFamilyMember(victim);
+                        victim.setFamily(fam);
+                    }
                 }
                 victims.add(victim);
             }
+    
             result.close();
             stmt.close();
-            }   
+    
+        } 
         catch (SQLException e) {
-        e.printStackTrace();
+            e.printStackTrace();
         }
-
+    
         return victims;
     }
+    
+    
 
-public ArrayList<FamilyGroup> getAllFamilyGroups() {
-    ArrayList<FamilyGroup> familyGroups = new ArrayList<>();
+    public ArrayList<FamilyGroup> getFamilyGroups() {
+        ArrayList<FamilyGroup> groups = new ArrayList<>();
+    
+        try {
+            String query = "SELECT DISTINCT family_group FROM Person WHERE family_group IS NOT NULL";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                int familyId = rs.getInt("family_group");
+                groups.add(new FamilyGroup(familyId));
+            }
+    
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return groups;
+    }
+    
 
-    try {
-        String query = "SELECT * FROM Person WHERE family_group IS NOT NULL";
-        PreparedStatement stmt = connection.prepareStatement(query);
-        ResultSet result = stmt.executeQuery();
-
-        while (result.next()) {
-            int familyID = result.getInt("family_group");
-
-            Person person = new Person();
-            person.setFirstName(result.getString("first_name"));
-            person.setLastName(result.getString("last_name"));
-            person.setDateOfBirth(result.getDate("date_of_birth"));
-            person.setGender(Gender.valueOf(result.getString("gender")));
-            person.setComments(result.getString("comments"));
-            person.setPhone(result.getString("phone_number"));
-
-            FamilyGroup existingGroup = null;
-            for (FamilyGroup group : familyGroups) {
-                if (group.getFamilyID() == familyID) {
-                    existingGroup = group;
-                    break;
+    public ArrayList<Inquirer> getAllInquirers(ArrayList<FamilyGroup> families) {
+        ArrayList<Inquirer> inquirers = new ArrayList<>();
+    
+        try {
+            String query = "SELECT * FROM Person WHERE phone_number IS NOT NULL";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet result = stmt.executeQuery();
+    
+            while (result.next()) {
+                String firstName = result.getString("first_name");
+                String lastName = result.getString("last_name");
+                String phone = result.getString("phone_number");
+                Inquirer inquirer = new Inquirer(firstName, lastName, phone);
+    
+                inquirer.setInquirerId(result.getInt("person_id"));
+                int familyId = result.getInt("family_group");
+                if (!result.wasNull()) {
+                    FamilyGroup fam = findFamilyGroupById(families, familyId);
+                    if (fam != null) {
+                        fam.addFamilyMember(inquirer);
+                        inquirer.setFamily(fam);
+                    }
                 }
+    
+                inquirers.add(inquirer);
             }
-            if (existingGroup == null) {
-                existingGroup = new FamilyGroup(familyID);
-                familyGroups.add(existingGroup);
-            }
-            existingGroup.addFamilyMember(person);
+    
+            result.close();
+            stmt.close();
+    
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
         }
-        result.close();
-        stmt.close();
-    } 
-    catch (SQLException e) {
-        e.printStackTrace();
+    
+        return inquirers;
     }
-
-    return familyGroups;
-}
-
-public ArrayList<Inquirer> getAllInquirers() {
-    ArrayList<Inquirer> inquirers = new ArrayList<>();
-
-    try {
-        String query = "SELECT * FROM Person WHERE phone_number IS NOT NULL";
-        PreparedStatement stmt = connection.prepareStatement(query);
-        ResultSet result = stmt.executeQuery();
-
-        while (result.next()) {
-            Inquirer inquirer = new Inquirer();
-
-            inquirer.setFirstName(result.getString("first_name"));
-            inquirer.setLastName(result.getString("last_name"));
-            inquirer.setDateOfBirth(result.getDate("date_of_birth"));
-            inquirer.setGender(Gender.valueOf(result.getString("gender")));
-            inquirer.setComments(result.getString("comments"));
-            inquirer.setPhone(result.getString("phone_number"));
-
-            int familyId = result.getInt("family_group");
-            if (!result.wasNull()) {
-                FamilyGroup fam = new FamilyGroup(familyId);
-                inquirer.setFamily(fam);
-            }
-
-            inquirers.add(inquirer);
-        }
-
-        result.close();
-        stmt.close();
-
-    } 
-    catch (SQLException e) {
-        e.printStackTrace();
-    }
-
-    return inquirers;
-}
+    
 
 
 
@@ -275,34 +265,275 @@ public ArrayList<Inquirer> getAllInquirers() {
         }
     }
     
+    public ArrayList<InventoryItem> getAllInventory(ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
+        ArrayList<InventoryItem> items = new ArrayList<>();
+    
+        try {
+            String query = """
+                SELECT sa.supply_id, s.type, s.comments, sa.person_id, sa.location_id, sa.allocation_date
+                FROM SupplyAllocation sa
+                JOIN Supply s ON sa.supply_id = s.supply_id
+            """;
+    
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                int supplyId = rs.getInt("supply_id");
+                String type = rs.getString("type").toLowerCase();
+                String comments = rs.getString("comments");
+                int personId = rs.getInt("person_id");
+                int locationId = rs.getInt("location_id");
+                String allocationDate = rs.getTimestamp("allocation_date").toLocalDateTime().toLocalDate().toString();
+    
+                DisasterVictim person = null;
+                if (!rs.wasNull() && personId != 0) {
+                    for (DisasterVictim v : victims) {
+                        if (v.getVictimID() == personId) {
+                            person = v;
+                            break;
+                        }
+                    }
+                }
+    
+                Location location = null;
+                if (!rs.wasNull() && locationId != 0) {
+                    for (Location loc : locations) {
+                        if (loc.getId() == locationId) {
+                            location = loc;
+                            break;
+                        }
+                    }
+                }
+    
+                InventoryItem item = null;
+    
+                switch (type) {
+                    case "blanket" -> {
+                        item = (person != null) ? new Blanket(person) : new Blanket(location);
+                    }
+                    case "water" -> {
+                        item = (person != null) ? new Water(person) : new Water(location);
+                        ((Water) item).allocationDate = allocationDate;
+                    }
+                    case "cot" -> {
+                        String grid = (comments != null) ? comments : "unknown";
+                        item = (person != null) ? new Cot(0, grid, person) : new Cot(0, grid, location);
+                    }
+                    case "personal item" -> {
+                        if (person != null) {
+                            String desc = (comments != null) ? comments : "unspecified";
+                            item = new PersonalBelongings(desc, person);
+                        }
+                    }
+                }
+    
+                if (item != null) {
+                    item.setItemId(supplyId);
+                    items.add(item);
+                }
+            }
+    
+            rs.close();
+            stmt.close();
+    
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return items;
+    }
+    
 
+    public ArrayList<ReliefService> getAllInquiries(ArrayList<Inquirer> inquirers, ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
+        ArrayList<ReliefService> inquiries = new ArrayList<>();
+    
+        try {
+            String query = "SELECT * FROM Inquiry";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                int inquirerId = rs.getInt("inquirer_id");
+                int seekingId = rs.getInt("seeking_id");
+                int locationId = rs.getInt("location_id");
+                String date = rs.getTimestamp("date_of_inquiry").toLocalDateTime().toLocalDate().toString(); 
+                String comments = rs.getString("comments");
 
-    public ArrayList<InventoryItem> getAllInventory(){
+                Inquirer inquirer = null;
+                for (Inquirer i : inquirers) {
+                    if (i.getInquirerId() == inquirerId) {
+                        inquirer = i;
+                        break;
+                    }
+                }
+                DisasterVictim victim = null;
+                for (DisasterVictim d : victims) {
+                    if (d.getVictimID() == seekingId) {
+                        victim = d;
+                        break;
+                    }
+                }
+                Location location = null;
+                for (Location loc : locations) {
+                    if (loc.getId() == locationId) {
+                        location = loc;
+                        break;
+                    }
+                }
 
+                ReliefService service = new ReliefService(inquirer, victim, date, comments, location);
+                inquiries.add(service);
+            }
+    
+            rs.close();
+            stmt.close();
+    
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return inquiries;
+    }
+    
+
+    public ArrayList<Location> getAllLocations() {
+        ArrayList<Location> locations = new ArrayList<>();
+    
+        try {
+            String query = "SELECT * FROM Location";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                String name = rs.getString("name");
+                String address = rs.getString("address");
+    
+                Location location = new Location(name, address);
+                location.setId(rs.getInt("location_id")); 
+    
+                locations.add(location);
+            }
+    
+            rs.close();
+            stmt.close();
+    
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return locations;
+    }
+    
+
+    public ArrayList<MedicalRecord> getAllMedicalRecords(ArrayList<Location> allLocations, ArrayList<DisasterVictim> victims) {
+        ArrayList<MedicalRecord> records = new ArrayList<>();
+    
+        try {
+            String query = "SELECT * FROM MedicalRecord";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+    
+            while (rs.next()) {
+                int locationId = rs.getInt("location_id");
+                int personId = rs.getInt("person_id");
+                String treatment = rs.getString("treatment_details");
+                String date = rs.getTimestamp("date_of_treatment").toLocalDateTime().toLocalDate().toString();
+
+                Location location = null;
+                for (Location loc : allLocations) {
+                    if (loc.getId() == locationId) {
+                        location = loc;
+                        break;
+                    }
+                }
+                DisasterVictim victim = null;
+                for (DisasterVictim v : victims) {
+                    if (v.getVictimID() == personId) {
+                        victim = v;
+                        break;
+                    }
+                }
+ 
+                MedicalRecord record = new MedicalRecord(location, treatment, date);
+                records.add(record);
+    
+                if (victim != null) {
+                    victim.addMedicalRecord(record); 
+                }
+            }
+    
+            rs.close();
+            stmt.close();
+    
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return records;
+    }
+    
+     
+    
+
+    public void addDisasterVictimToLocation(int personId, int locationId) {
+        try {
+            String query = "INSERT INTO PersonLocation (person_id, location_id) VALUES (?, ?)";
+    
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, personId);
+            stmt.setInt(2, locationId);
+    
+            stmt.executeUpdate();
+            stmt.close();
+    
+            System.out.println("Victim successfully added to location.");
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+
+    public void addMedicalRecord(MedicalRecord record, int locationId) {
+        try {
+            String query = """
+                INSERT INTO MedicalRecord (location_id, treatment_details, date_of_treatment)
+                VALUES (?, ?, ?)
+            """;
+    
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, locationId); 
+            stmt.setString(2, record.getTreatmentDetails());
+            stmt.setTimestamp(3, Timestamp.valueOf(record.getDateOfTreatment())); 
+    
+            stmt.executeUpdate();
+            stmt.close();
+    
+            System.out.println("Medical record added.");
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        } 
+        catch (IllegalArgumentException e) {
+            System.err.println("Date format must be yyyy-MM-dd HH:mm:ss");
+        }
     }
 
-    public ArrayList<ReliefService> getAllInquiries(){
-
+    private FamilyGroup findFamilyGroupById(ArrayList<FamilyGroup> list, int id) {
+        for (FamilyGroup fg : list) {
+            if (fg.getFamilyID() == id) {
+                return fg;
+            }
+        }
+        return null;
     }
-
-    public ArrayList<Location> getAllLocations(){
-
-    }
-
-    public ArrayList<MedicalRecord> getAllMedicalRecords(){
-
-    }
-
-    public void addDisasterVictimToLocation(int personId, int locationId){
-
-    }
-
-    public void addMedicalRecord(){
-
-    }
-
-
-
+    
 
     private static boolean checkPersonExists(Person person){
         boolean exists = false;

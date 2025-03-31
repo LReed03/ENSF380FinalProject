@@ -5,6 +5,7 @@ public abstract class InventoryItem {
     protected DisasterVictim allocatedToPerson = null;
     protected Location allocatedToLocation = null;
     protected ItemType ITEMTYPE;
+    protected int itemId;
 
 
     public ItemType getItemType(){
@@ -28,6 +29,14 @@ public abstract class InventoryItem {
             }
         }
         return false;
+    }
+
+    protected void setItemId(int id){
+        this.itemId = id;
+    }
+    
+    public int getItemId(){
+        return this.itemId;
     }
 
 }

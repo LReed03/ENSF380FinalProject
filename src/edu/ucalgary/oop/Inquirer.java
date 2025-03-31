@@ -1,18 +1,22 @@
 package edu.ucalgary.oop;
 
 public class Inquirer extends Person{
-    private final String INFO;
+    private String info;
     private String phoneNumber;
+    private int inquirerId;
 
-    public Inquirer(String firstName, String lastName, String phone, String INFO){
+    public Inquirer(String firstName, String lastName, String phone){
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phone;
-        this.INFO = INFO;
     }
 
     public String getInfo(){
         return this.INFO;
+    }
+
+    pubnlic void setInfo(String info){
+        this.info = info;
     }
 
     public String getPhone(){
@@ -21,6 +25,14 @@ public class Inquirer extends Person{
 
     public void setPhone(String phoneNumber){
         this.phoneNumber = phoneNumber;
+    }
+
+    public int getInquirerId(){
+        return this.inquirerId;
+    }
+
+    public void setInquirerId(int inquirerId){
+        this.inquirerId = inquirerId;
     }
 
 

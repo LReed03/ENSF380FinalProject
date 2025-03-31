@@ -11,7 +11,7 @@ public class DisasterVictim extends Person{
     private ArrayList<InventoryItem> belongings;
 	private final String ENTRY_DATE;
 	private String comments;
-    private static int counter = 0;
+	
 
     public DisasterVictim(String firstName, String ENTRY_DATE) {
 		boolean validEntryDate = isValidDateFormat(ENTRY_DATE);
@@ -20,7 +20,6 @@ public class DisasterVictim extends Person{
 		}
 		this.ENTRY_DATE = ENTRY_DATE;
 		this.firstName = firstName;
-		this.VictimID = generateID();
 	}
 	
 	public DisasterVictim(String firstName, String ENTRY_DATE, String dateOfBirth) throws IllegalArgumentException{
@@ -40,7 +39,6 @@ public class DisasterVictim extends Person{
 			throw new IllegalArgumentException("Invalid date");
 		}
 		this.dateOfBirth = dateOfBirth;
-		this.ASSIGNED_SOCIAL_ID = generateSocialID();
 	}
 
     public String getDateOfBirth(){
@@ -60,6 +58,10 @@ public class DisasterVictim extends Person{
 
     public int getVictimID(){
 		return this.VictimID;
+	}
+
+	public void setVictimID(int id){
+		this.VictimID = id;
 	}
 
 
@@ -105,12 +107,6 @@ public class DisasterVictim extends Person{
 		this.comments = comments;
 	}
 
-
-	private static int generateID(){
-		int socialId = counter;
-		counter++;
-		return socialId;
-	}
 
 	private static boolean isValidDateFormat(String date){
 		String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";

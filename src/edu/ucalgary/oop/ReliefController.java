@@ -7,6 +7,7 @@ public class ReliefController {
     private ArrayList<ReliefService> inquiries;
     private ArrayList<InventoryItem> supply;
     private ArrayList<MedicalRecord> medicalRecords;
+    private ArrayList<FamilyGroup> familyGroups;
     private static DBAccess model;
     private static Scanner scanner;
 
@@ -18,12 +19,13 @@ public class ReliefController {
 
     public void StartUp(){
         model.removeExpiredWater();
-        this.disastervictims = model.getAllDisasterVictims();
-        this.inquirers = model.getAllInquirers();
+        this.familyGroups = model.getAllFamilyGroups();
+        this.disastervictims = model.getAllDisasterVictims(this.familyGroups);
+        this.inquirers = model.getAllInquirers(this.familyGroups);
         this.locations = model.getAllLocations();
-        this.inquiries = model.getAllInquiries();
-        this.suppy = model.getAllInventory();
-        this.medicalRecords = model.getAllMedicalRecords();
+        this.inquiries = model.getAllInquiries(this.inquirers, this.disastervictims, this.locations);
+        this.supply = model.getAllInventory(this.disastervictims, this.locations);
+        this.medicalRecords = model.getAllMedicalRecords(this.locations, this.disastervictims);
     }
 
 }

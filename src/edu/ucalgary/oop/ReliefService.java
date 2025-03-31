@@ -6,6 +6,7 @@ public class ReliefService{
     private String dateOfInquiry;
     private String infoProvided;
     private Location lastKnownLocation;
+    private int inquiryID;
 
     public ReliefService(Person inquirer, Person missingPerson, String dateOfInquiry, Sting infoProvided, Location lastKnownLocation) throws IllegalArgumentException{
         this.inquirer = inquirer;
@@ -57,5 +58,13 @@ public class ReliefService{
 
     private static boolean isValidDateFormat(){
         
+    }
+
+    public void setInquiryId(int inquiryID){
+        this.inquiryID = inquiryID;
+    }
+
+    public int getInquiryId(){
+        return this.inquiryID;
     }
 }
