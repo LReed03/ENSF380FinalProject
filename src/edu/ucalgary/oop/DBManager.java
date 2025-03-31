@@ -520,9 +520,6 @@ public class DBManager implements DBAccess{
         catch (SQLException e) {
             e.printStackTrace();
         } 
-        catch (IllegalArgumentException e) {
-            System.err.println("Date format must be yyyy-MM-dd HH:mm:ss");
-        }
     }
 
     private FamilyGroup findFamilyGroupById(ArrayList<FamilyGroup> list, int id) {
