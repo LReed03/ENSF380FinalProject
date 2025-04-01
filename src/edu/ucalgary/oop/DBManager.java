@@ -429,8 +429,7 @@ public class DBManager implements DBAccess{
     }
     
 
-    public ArrayList<MedicalRecord> getAllMedicalRecords(ArrayList<Location> allLocations, ArrayList<DisasterVictim> victims) {
-        ArrayList<MedicalRecord> records = new ArrayList<>();
+    public void getAllMedicalRecords(ArrayList<Location> allLocations, ArrayList<DisasterVictim> victims) {
     
         try {
             String query = "SELECT * FROM MedicalRecord";
@@ -459,7 +458,6 @@ public class DBManager implements DBAccess{
                 }
  
                 MedicalRecord record = new MedicalRecord(location, treatment, date);
-                records.add(record);
     
                 if (victim != null) {
                     victim.addMedicalRecord(record); 
