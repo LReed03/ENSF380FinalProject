@@ -132,50 +132,86 @@ public class DBManager implements DBAccess{
 
 
 
-    public void insertDisasterVictim(Person person){
-        try{
-            String query = "INSERT INTO Person (first_name, last_name, date_of_birth, gender, comments, phone_number, family_group) VALUES (?,?,?,?,?,?,?)";
-            PreparedStatement myStmt = connection.prepareStatement(query);
-
-            myStmt.setString(1, person.getFirstName());
-            myStmt.setString(2, person.getFirstName());
-            myStmt.setDate(3, person.getDateOfBirth());
-            myStmt.setString(4, person.getGender().toString());
-            myStmt.setString(5, person.getComments());
-            myStmt.setString(6, person.getPhone());
-            myStmt.setInt(7, person.getFamily().getFamilyID());
-
-            int rowCount = myStmt.executeUpdate();
-            System.out.println("Rows affected: " + rowCount);
-            myStmt.close();
-        }
-        catch(SQLExcepion ex){
-            ex.printStackTrace();
-        }
-
-
-    }
-
-    public void updatePerson(Person person) {
+    public void insertDisasterVictim(DisasterVictim victim) {
         try {
-            String query = "UPDATE Person SET gender = ?, comments = ?, phone_number = ?, family_group = ? WHERE first_name = ? AND last_name = ? AND date_of_birth = ?";
+            String query = "INSERT INTO Person (first_name, last_name, date_of_birth, gender, comments, family_group) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement myStmt = connection.prepareStatement(query);
-
-            myStmt.setString(1, person.getGender().toString());
-            myStmt.setString(2, person.getComments());
-            myStmt.setString(3, person.getPhone());
-            myStmt.setInt(4, person.getFamily().getFamilyID());
-            myStmt.setString(5, person.getFirstName());
-            myStmt.setString(6, person.getLastName());
-            myStmt.setDate(7, person.getDateOfBirth());
-
+    
+            myStmt.setString(1, victim.getFirstName());
+            myStmt.setString(2, victim.getLastName());
+            myStmt.setDate(3, java.sql.Date.valueOf(victim.getDateOfBirth())); 
+            myStmt.setString(4, victim.getGender().toString());
+            myStmt.setString(5, victim.getComments());
+            myStmt.setInt(6, victim.getFamily().getFamilyID());
+    
             int rowCount = myStmt.executeUpdate();
-            System.out.println("Rows affected: " + rowCount);
+            System.out.println("Disaster victim added. Rows affected: " + rowCount);
             myStmt.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-}
+    }
+
+    public void insertInquirer(Inquirer inquirer) {
+        try {
+            String query = "INSERT INTO Person (first_name, last_name, phone_number, family_group) VALUES (?, ?, ?, ?)";
+            PreparedStatement myStmt = connection.prepareStatement(query);
+    
+            myStmt.setString(1, inquirer.getFirstName());
+            myStmt.setString(2, inquirer.getLastName());
+            myStmt.setString(3, inquirer.getPhone());
+            myStmt.setInt(4, inquirer.getFamily().getFamilyID());
+    
+            int rowCount = myStmt.executeUpdate();
+            System.out.println("Inquirer added. Rows affected: " + rowCount);
+            myStmt.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    
+
+    public void updateDisasterVictim(DisasterVictim victim) {
+        try {
+            String query = "UPDATE Person SET gender = ?, comments = ?, family_group = ? WHERE first_name = ? AND last_name = ? AND date_of_birth = ?";
+            PreparedStatement myStmt = connection.prepareStatement(query);
+    
+            myStmt.setString(1, victim.getGender().toString());
+            myStmt.setString(2, victim.getComments());
+            myStmt.setInt(3, victim.getFamily().getFamilyID());
+            myStmt.setString(4, victim.getFirstName());
+            myStmt.setString(5, victim.getLastName());
+            myStmt.setDate(6, java.sql.Date.valueOf(victim.getDateOfBirth()));
+    
+            int rowCount = myStmt.executeUpdate();
+            System.out.println("Disaster victim updated. Rows affected: " + rowCount);
+            myStmt.close();
+        } 
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void updateInquirer(Inquirer inquirer) {
+        try {
+            String query = "UPDATE Person SET phone_number = ?, family_group = ? WHERE first_name = ? AND last_name = ?";
+            PreparedStatement myStmt = connection.prepareStatement(query);
+    
+            myStmt.setString(1, inquirer.getPhone());
+            myStmt.setInt(2, inquirer.getFamily().getFamilyID());
+            myStmt.setString(3, inquirer.getFirstName());
+            myStmt.setString(4, inquirer.getLastName());
+    
+            int rowCount = myStmt.executeUpdate();
+            System.out.println("Inquirer updated. Rows affected: " + rowCount);
+            myStmt.close();
+        } 
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
 
 
     public void allocateInventoryToPerson(int itemId, int victimId){
