@@ -1,15 +1,20 @@
 package edu.ucalgary.oop;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Water extends InventoryItem{
     private boolean avalible;
     private String allocationDate;
 
     public Water(Location location){
         this.allocatedToLocation = location;
+        this.ITEMTYPE = ItemType.WATER;
     }
 
     public Water(DisasterVictim person){
         this.allocatedToPerson = person;
+        this.ITEMTYPE = ItemType.WATER;
     }
 
     public boolean getAvalible(){
@@ -37,16 +42,10 @@ public class Water extends InventoryItem{
         this.allocatedToLocation = location;
     }
 
-    public DisasterVictim getAllocatedToPerson(){
-        return this.allocatedToPerson;
-    }
 
-    public Location getAllocatedToLocation(){
-        return this.allocatedToLocation;
-    }
 
-    public String setAllocationDate(String allocationDate){
-        boolean validEntryDate = isValidDateFormat(dateOfTreatment);
+    public void setAllocationDate(String allocationDate){
+        boolean validEntryDate = isValidDateFormat(allocationDate);
         if (validEntryDate == false){
 			throw new IllegalArgumentException("Invalid date");
 		}

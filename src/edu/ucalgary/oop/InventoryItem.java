@@ -6,6 +6,7 @@ public abstract class InventoryItem {
     protected Location allocatedToLocation = null;
     protected ItemType ITEMTYPE;
     protected int itemId;
+    protected static int highestId;
 
 
     public ItemType getItemType(){
@@ -31,12 +32,26 @@ public abstract class InventoryItem {
         return false;
     }
 
-    protected void setItemId(int id){
+    protected void setId(int id){
+        highestId = id;
         this.itemId = id;
     }
+
+    protected void setId(){
+        highestId = highestId + 1;
+        this.itemId = highestId;
+    }
     
-    public int getItemId(){
+    public int getId(){
         return this.itemId;
+    }
+
+    public DisasterVictim getAllocatedToPerson(){
+        return this.allocatedToPerson;
+    }
+
+    public Location getAllocatedToLocation(){
+        return this.allocatedToLocation;
     }
 
 }

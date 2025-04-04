@@ -54,7 +54,7 @@ public class Location {
 
     public void setSupplies(ArrayList<InventoryItem> supplies) throws IllegalArgumentException{
         for(int i = 0; i < supplies.size(); i++){
-            if(supplies.get(i).getItemType() == PERSONALBELONGINGS){
+            if(supplies.get(i).getItemType() == ItemType.PERSONALBELONGINGS){
                 throw new IllegalArgumentException("Locations cannot store personal belongings");
             }
         }
@@ -70,7 +70,7 @@ public class Location {
     }
 
     public void addSupply(InventoryItem supply) throws IllegalArgumentException{
-        if(supply.getItemType() == PERSONALBELONGINGS){
+        if(supply.getItemType() == ItemType.PERSONALBELONGINGS){
             throw new IllegalArgumentException("Locations cannot store personal belongings");
         }
         this.supplies.add(supply);

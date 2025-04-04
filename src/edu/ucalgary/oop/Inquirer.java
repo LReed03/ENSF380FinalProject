@@ -12,7 +12,7 @@ public class Inquirer extends Person{
     }
 
     public String getInfo(){
-        return this.INFO;
+        return this.info;
     }
 
     public void setInfo(String info){
@@ -20,7 +20,7 @@ public class Inquirer extends Person{
     }
 
     public String getPhone(){
-        return this.phone_number;
+        return this.phoneNumber;
     }
 
     public void setPhone(String phoneNumber){

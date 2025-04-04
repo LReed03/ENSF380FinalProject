@@ -1,23 +1,28 @@
 package edu.ucalgary.oop;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DBManager implements DBAccess{
-    private final String URL = "jdbc:postgresssql://localhost:5432/oop";
+    private final String URL = "jdbc:postgresql://localhost:5432/ensf380project";
     private final String USER = "oop";
     private final String PASSWORD = "ucalgary";
     private static DBManager instance;
+    private static LanguageManager languageManager;
     private Connection connection;
     private ResultSet results;
 
     private DBManager(){
         try{
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
+            this.languageManager = LanguageManager.getInstance();
         }
-        catch(SQLExcepion e){
-            e.printStackTrace();
+        catch(SQLException e){
+            ErrorLog error = new ErrorLog(e);
+            System.exit(1); 
         }
     }
 
+    
     public static DBManager getInstance(){
         if (instance == null) {
             instance = new DBManager();
@@ -25,6 +30,7 @@ public class DBManager implements DBAccess{
         return instance;
     }
 
+    @Override
     public ArrayList<DisasterVictim> getAllDisasterVictims(ArrayList<FamilyGroup> families) {
         ArrayList<DisasterVictim> victims = new ArrayList<>();
     
@@ -42,7 +48,7 @@ public class DBManager implements DBAccess{
                 victim.setLastName(result.getString("last_name"));
                 java.sql.Date dob = result.getDate("date_of_birth");
                 victim.setDateOfBirth(dob.toString()); 
-                victim.setGender(Gender.valueOf(result.getString("gender")));
+                victim.setGender(Gender.fromString(result.getString("gender")));
                 victim.setComments(result.getString("comments"));
                 int familyId = result.getInt("family_group");
                 if (!result.wasNull()) {
@@ -67,7 +73,7 @@ public class DBManager implements DBAccess{
     }
     
     
-
+    @Override
     public ArrayList<FamilyGroup> getFamilyGroups() {
         ArrayList<FamilyGroup> groups = new ArrayList<>();
     
@@ -90,7 +96,7 @@ public class DBManager implements DBAccess{
         return groups;
     }
     
-
+    @Override
     public ArrayList<Inquirer> getAllInquirers(ArrayList<FamilyGroup> families) {
         ArrayList<Inquirer> inquirers = new ArrayList<>();
     
@@ -131,7 +137,7 @@ public class DBManager implements DBAccess{
     
 
 
-
+    @Override
     public void insertDisasterVictim(DisasterVictim victim) {
         try {
             String query = "INSERT INTO Person (first_name, last_name, date_of_birth, gender, comments, family_group) VALUES (?, ?, ?, ?, ?, ?)";
@@ -142,16 +148,21 @@ public class DBManager implements DBAccess{
             myStmt.setDate(3, java.sql.Date.valueOf(victim.getDateOfBirth())); 
             myStmt.setString(4, victim.getGender().toString());
             myStmt.setString(5, victim.getComments());
-            myStmt.setInt(6, victim.getFamily().getFamilyID());
-    
-            int rowCount = myStmt.executeUpdate();
-            System.out.println("Disaster victim added. Rows affected: " + rowCount);
+            if(victim.getFamily() != null){
+                myStmt.setInt(6, victim.getFamily().getFamilyID());
+            }
+            else{
+                myStmt.setNull(6, java.sql.Types.INTEGER);
+            }
+            myStmt.executeUpdate();
             myStmt.close();
-        } catch (SQLException ex) {
+        } 
+        catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
+    @Override
     public void insertInquirer(Inquirer inquirer) {
         try {
             String query = "INSERT INTO Person (first_name, last_name, phone_number, family_group) VALUES (?, ?, ?, ?)";
@@ -160,18 +171,37 @@ public class DBManager implements DBAccess{
             myStmt.setString(1, inquirer.getFirstName());
             myStmt.setString(2, inquirer.getLastName());
             myStmt.setString(3, inquirer.getPhone());
-            myStmt.setInt(4, inquirer.getFamily().getFamilyID());
-    
-            int rowCount = myStmt.executeUpdate();
-            System.out.println("Inquirer added. Rows affected: " + rowCount);
+            if(inquirer.getFamily() != null){
+                myStmt.setInt(4, inquirer.getFamily().getFamilyID());
+            }
+            else{
+                myStmt.setNull(4, java.sql.Types.INTEGER);
+            }
+            myStmt.executeUpdate();
             myStmt.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
     
-    
+    @Override
+    public void addNewSupply(String type, String comments){
+        try{
+            String query = "INSERT INTO Supply (type, comments) VALUES (?,?)";
+            PreparedStatement myStmt = connection.prepareStatement(query);
 
+            myStmt.setString(1, type);
+            myStmt.setString(2, comments);
+            myStmt.executeUpdate();
+
+            myStmt.close();
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    @Override
     public void updateDisasterVictim(DisasterVictim victim) {
         try {
             String query = "UPDATE Person SET gender = ?, comments = ?, family_group = ? WHERE first_name = ? AND last_name = ? AND date_of_birth = ?";
@@ -184,8 +214,7 @@ public class DBManager implements DBAccess{
             myStmt.setString(5, victim.getLastName());
             myStmt.setDate(6, java.sql.Date.valueOf(victim.getDateOfBirth()));
     
-            int rowCount = myStmt.executeUpdate();
-            System.out.println("Disaster victim updated. Rows affected: " + rowCount);
+            myStmt.executeUpdate();
             myStmt.close();
         } 
         catch (SQLException ex) {
@@ -193,6 +222,7 @@ public class DBManager implements DBAccess{
         }
     }
     
+    @Override
     public void updateInquirer(Inquirer inquirer) {
         try {
             String query = "UPDATE Person SET phone_number = ?, family_group = ? WHERE first_name = ? AND last_name = ?";
@@ -203,8 +233,8 @@ public class DBManager implements DBAccess{
             myStmt.setString(3, inquirer.getFirstName());
             myStmt.setString(4, inquirer.getLastName());
     
-            int rowCount = myStmt.executeUpdate();
-            System.out.println("Inquirer updated. Rows affected: " + rowCount);
+            myStmt.executeUpdate();
+
             myStmt.close();
         } 
         catch (SQLException ex) {
@@ -213,47 +243,46 @@ public class DBManager implements DBAccess{
     }
     
 
-
+    @Override
     public void allocateInventoryToPerson(int itemId, int victimId){
         try{
-            String query = "INSERT INTO SupplyAllocation (supply_id, person_id, location_id, allocation_date) VALUES (?,?,?,?)"
+            String query = "INSERT INTO SupplyAllocation (supply_id, person_id, location_id, allocation_date) VALUES (?,?,?,?)";
             PreparedStatement myStmt = connection.prepareStatement(query);
 
             myStmt.setInt(1, itemId);
             myStmt.setInt(2, victimId);
-            myStmt.setInt(3, null);
+            myStmt.setNull(3, java.sql.Types.INTEGER);
             myStmt.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis()));
      
-            int rowCount = myStmt.executeUpdate();
-            System.out.println("Rows affected: " + rowCount);
+            myStmt.executeUpdate();
             myStmt.close();
         }
-        catch(SQLExcepion ex){
+        catch(SQLException ex){
             ex.printStackTrace();
         }
 
     }
 
+    @Override
     public void allocateInventoryToLocation(int itemId, int locationId){
         try{
-            String query = "INSERT INTO SupplyAllocation (supply_id, person_id, location_id, allocation_date) VALUES (?,?,?,?)"
+            String query = "INSERT INTO SupplyAllocation (supply_id, person_id, location_id, allocation_date) VALUES (?,?,?,?)";
             PreparedStatement myStmt = connection.prepareStatement(query);
 
-            myStmt.setInt(1, null);
-            myStmt.setInt(2, victimId);
+            myStmt.setInt(1, itemId);
+            myStmt.setNull(2 , java.sql.Types.INTEGER);
             myStmt.setInt(3, locationId);
             myStmt.setTimestamp(4, new java.sql.Timestamp(System.currentTimeMillis()));
-     
-            int rowCount = myStmt.executeUpdate();
-            System.out.println("Rows affected: " + rowCount);
+            myStmt.executeUpdate();
             myStmt.close();
         }
-        catch(SQLExcepion ex){
+        catch(SQLException ex){
             ex.printStackTrace();
         }
 
     }
 
+    @Override
     public void logInquiry(int inquirerId, int seekingId, int locationId, String date, String comments) {
         try {
             String query = """
@@ -270,18 +299,13 @@ public class DBManager implements DBAccess{
     
             stmt.executeUpdate();
             stmt.close();
-    
-            System.out.println("Inquiry successfully logged.");
         }
         catch (SQLException e) {
             e.printStackTrace();
         } 
-        catch (IllegalArgumentException e) {
-            System.err.println("Invalid date format. Expected format: yyyy-MM-dd HH:mm:ss");
-        }
     }
     
-
+    @Override
     public void removeExpiredWater() {
         try {
             String query = """
@@ -292,8 +316,7 @@ public class DBManager implements DBAccess{
                   AND SupplyAllocation.allocation_date < CURRENT_DATE - INTERVAL '1 day'
                 """;
             PreparedStatement stmt = connection.prepareStatement(query);
-            int rowsDeleted = stmt.executeUpdate();
-            System.out.println("Expired water supply allocations removed: " + rowsDeleted);
+            stmt.executeUpdate();
             stmt.close();
         } 
         catch (SQLException e) {
@@ -301,6 +324,7 @@ public class DBManager implements DBAccess{
         }
     }
     
+    @Override
     public ArrayList<InventoryItem> getAllInventory(ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
         ArrayList<InventoryItem> items = new ArrayList<>();
     
@@ -323,7 +347,7 @@ public class DBManager implements DBAccess{
                 String allocationDate = rs.getTimestamp("allocation_date").toLocalDateTime().toLocalDate().toString();
     
                 DisasterVictim person = null;
-                if (!rs.wasNull() && personId != 0) {
+                if (personId > 0) {
                     for (DisasterVictim v : victims) {
                         if (v.getVictimID() == personId) {
                             person = v;
@@ -333,7 +357,7 @@ public class DBManager implements DBAccess{
                 }
     
                 Location location = null;
-                if (!rs.wasNull() && locationId != 0) {
+                if (locationId > 0) {
                     for (Location loc : locations) {
                         if (loc.getId() == locationId) {
                             location = loc;
@@ -346,15 +370,21 @@ public class DBManager implements DBAccess{
     
                 switch (type) {
                     case "blanket" -> {
-                        item = (person != null) ? new Blanket(person) : new Blanket(location);
+                        item = (person != null) ? new Blanket(person) : (location != null ? new Blanket(location) : null);
                     }
                     case "water" -> {
-                        item = (person != null) ? new Water(person) : new Water(location);
-                        ((Water) item).allocationDate = allocationDate;
+                        item = (person != null) ? new Water(person) : (location != null ? new Water(location) : null);
+                        if (item instanceof Water water) {
+                            water.setAllocationDate(allocationDate); // Add a setter if needed
+                        }
                     }
                     case "cot" -> {
-                        String grid = (comments != null) ? comments : "unknown";
-                        item = (person != null) ? new Cot(0, grid, person) : new Cot(0, grid, location);
+                        if (comments != null && comments.matches("^\\d{3} [A-Za-z]\\d+$")) {
+                            String[] parts = comments.split(" ");
+                            int roomNum = Integer.parseInt(parts[0]);
+                            String grid = parts[1];
+                            item = (person != null) ? new Cot(roomNum, grid, person) : (location != null ? new Cot(roomNum, grid, location) : null);
+                        }
                     }
                     case "personal item" -> {
                         if (person != null) {
@@ -365,23 +395,22 @@ public class DBManager implements DBAccess{
                 }
     
                 if (item != null) {
-                    item.setItemId(supplyId);
+                    item.setId(supplyId);
                     items.add(item);
                 }
             }
     
             rs.close();
             stmt.close();
-    
-        } 
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     
         return items;
     }
     
-
+    
+    @Override
     public ArrayList<ReliefService> getAllInquiries(ArrayList<Inquirer> inquirers, ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
         ArrayList<ReliefService> inquiries = new ArrayList<>();
     
@@ -434,7 +463,7 @@ public class DBManager implements DBAccess{
         return inquiries;
     }
     
-
+    @Override
     public ArrayList<Location> getAllLocations() {
         ArrayList<Location> locations = new ArrayList<>();
     
@@ -464,7 +493,7 @@ public class DBManager implements DBAccess{
         return locations;
     }
     
-
+    @Override
     public void getAllMedicalRecords(ArrayList<Location> allLocations, ArrayList<DisasterVictim> victims) {
     
         try {
@@ -508,12 +537,11 @@ public class DBManager implements DBAccess{
             e.printStackTrace();
         }
     
-        return records;
     }
     
      
     
-
+    @Override
     public void addDisasterVictimToLocation(int personId, int locationId) {
         try {
             String query = "INSERT INTO PersonLocation (person_id, location_id) VALUES (?, ?)";
@@ -524,8 +552,6 @@ public class DBManager implements DBAccess{
     
             stmt.executeUpdate();
             stmt.close();
-    
-            System.out.println("Victim successfully added to location.");
         } 
         catch (SQLException e) {
             e.printStackTrace();
@@ -533,29 +559,62 @@ public class DBManager implements DBAccess{
     }
     
     
-
-    public void addMedicalRecord(MedicalRecord record, int locationId) {
+    @Override
+    public void addMedicalRecord(MedicalRecord record, int locationId, int personId) {
         try {
             String query = """
-                INSERT INTO MedicalRecord (location_id, treatment_details, date_of_treatment)
-                VALUES (?, ?, ?)
+                INSERT INTO MedicalRecord (location_id, person_id, date_of_treatment, treatment_details)
+                VALUES (?, ?, ?, ?)
             """;
     
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, locationId); 
-            stmt.setString(2, record.getTreatmentDetails());
+            stmt.setInt(2, personId);
             stmt.setTimestamp(3, Timestamp.valueOf(record.getDateOfTreatment())); 
-    
+            stmt.setString(4, record.getTreatmentDetails());
             stmt.executeUpdate();
             stmt.close();
-    
-            System.out.println("Medical record added.");
         } 
         catch (SQLException e) {
             e.printStackTrace();
         } 
     }
 
+    @Override
+    public void updateMedicalRecord(MedicalRecord record, int recordId) {
+        try {
+            String query = "UPDATE MedicalRecord SET treatment_details = ?, date_of_treatment = ? WHERE medical_record_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, record.getTreatmentDetails());
+            stmt.setString(2, record.getDateOfTreatment());
+            stmt.setInt(3, recordId);
+            stmt.executeUpdate();
+            stmt.close();
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateInquiry(ReliefService inquiry, int inquiryId) {
+        try {
+            String query = "UPDATE Inquiry SET comments = ?, date_of_inquiry = ?, location_id = ? WHERE inquiry_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, inquiry.getInfoProvided());
+            stmt.setString(2, inquiry.getDateOfInquiry());
+            stmt.setInt(3, inquiry.getLastKnownLocation().getId());
+            stmt.setInt(4, inquiryId);
+            stmt.executeUpdate();
+            stmt.close();
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+   
     private FamilyGroup findFamilyGroupById(ArrayList<FamilyGroup> list, int id) {
         for (FamilyGroup fg : list) {
             if (fg.getFamilyID() == id) {
@@ -565,35 +624,13 @@ public class DBManager implements DBAccess{
         return null;
     }
     
-
-    private static boolean checkPersonExists(Person person){
-        boolean exists = false;
-        try {
-            String sql = "SELECT 1 FROM Person WHERE first_name = ? AND last_name = ? AND date_of_birth = ?";
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setString(1, person.getFirstName());
-            stmt.setString(2, person.getLastName());
-            stmt.setDate(3, person.getDateOfBirth());
-
-            ResultSet rs = stmt.executeQuery();
-            exists = rs.next(); 
-
-            rs.close();
-            stmt.close();
-        } 
-        catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return exists;
-        }
-
+    @Override
     public void close(){
         try{
             results.close();
             connection.close();
         }
-        catch(SQLExcepion e){
+        catch(SQLException e){
             e.printStackTrace();
         }
     }

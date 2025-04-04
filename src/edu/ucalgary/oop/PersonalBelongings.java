@@ -9,14 +9,11 @@ public class PersonalBelongings extends InventoryItem{
         }
         this.description = description;
         this.allocatedToPerson = person;
+        this.ITEMTYPE = ItemType.PERSONALBELONGINGS;
     }
 
     public void setAllocatedToPerson(DisasterVictim person){
         this.allocatedToPerson = person;
-    }
-
-    public DisasterVictim getAllocatedToPerson(){
-        return this.allocatedToPerson;
     }
 
     public void setDescription(String description){

@@ -4,9 +4,11 @@ public class Blanket extends InventoryItem{
     
     public Blanket(DisasterVictim person){
         this.allocatedToPerson = person;
+        this.ITEMTYPE = ItemType.BLANKET;
     }
     public Blanket(Location location){
         this.allocatedToLocation = location;
+        this.ITEMTYPE = ItemType.BLANKET;
     }
 
     public void setAllocatedToPerson(DisasterVictim person) throws IllegalArgumentException{
@@ -26,12 +28,5 @@ public class Blanket extends InventoryItem{
         this.allocatedToLocation = location;
     }
 
-    public DisasterVictim getAllocatedToPerson(){
-        return this.allocatedToPerson;
-    }
-
-    public Location getAllocatedToLocation(){
-        return this.allocatedToLocation;
-    }
 
 }

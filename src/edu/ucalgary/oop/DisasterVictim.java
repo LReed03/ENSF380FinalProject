@@ -7,8 +7,8 @@ import java.util.regex.Pattern;
 public class DisasterVictim extends Person{
     private String dateOfBirth;
 	private int VictimID;
-    private ArrayList<MedicalRecord> medicalRecords;
-    private ArrayList<InventoryItem> belongings;
+    private ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
+    private ArrayList<InventoryItem> belongings = new ArrayList<>();
 	private final String ENTRY_DATE;
 	private String comments;
 	

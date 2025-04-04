@@ -8,12 +8,14 @@ public class Cot extends InventoryItem{
         this.roomNumber = rmNum;
         this.gridLocation = gridLocation;
         this.allocatedToPerson = person;
+        this.ITEMTYPE = ItemType.COT;
     }
 
     public Cot(int rmNum, String gridLocation, Location location){
         this.roomNumber = rmNum;
         this.gridLocation = gridLocation;
         this.allocatedToLocation = location;
+        this.ITEMTYPE = ItemType.COT;
     }
 
     public void setRoomNumber(int rmNum){
@@ -49,13 +51,6 @@ public class Cot extends InventoryItem{
         this.allocatedToLocation = location;
     }
 
-    public DisasterVictim getAllocatedToPerson(){
-        return this.allocatedToPerson;
-    }
-
-    public Location getAllocatedToLocation(){
-        return this.allocatedToLocation;
-    }
 
 
 }

@@ -1,28 +1,48 @@
 package edu.ucalgary.oop;
 
+import java.util.ArrayList;
+
 public interface DBAccess {
 
-    public DBAccess getInstance();
+    ArrayList<DisasterVictim> getAllDisasterVictims(ArrayList<FamilyGroup> families);
 
-    public ArrayList<DisasterVictim> getAllDisasterVictims();
+    ArrayList<FamilyGroup> getFamilyGroups();
 
-    public void insertDisasterVictim(DisasterVictim victim);
+    ArrayList<Inquirer> getAllInquirers(ArrayList<FamilyGroup> families);
 
-    public void updateDisasterVictim(DisasterVictim victim);
+    ArrayList<Location> getAllLocations();
 
-    public void allocateInventoryToPerson(InventoryItem item, DisasterVictim victim);
+    ArrayList<InventoryItem> getAllInventory(ArrayList<DisasterVictim> victims, ArrayList<Location> locations);
 
-    public void allocateInventoryToLocation(InventoryItem item, Location location);
+    ArrayList<ReliefService> getAllInquiries(ArrayList<Inquirer> inquirers, ArrayList<DisasterVictim> victims, ArrayList<Location> locations);
 
-    public void logInquiry(Person person, String message);
+    void insertDisasterVictim(DisasterVictim victim);
 
-    public void removeExpiredWater();
+    void insertInquirer(Inquirer inquirer);
 
-    public ArrayList<InventoryItem> getAllAvalibleInventory();
+    void updateDisasterVictim(DisasterVictim victim);
 
-    public ArrayList<String> getallInquiries();
+    void updateInquirer(Inquirer inquirer);
 
-    public DisasterVictim getVictimById(int id);
+    void updateMedicalRecord(MedicalRecord record, int recordId);
 
+    void updateInquiry(ReliefService inquiry, int inquiryId);
 
+    void addDisasterVictimToLocation(int personId, int locationId);
+
+    void addMedicalRecord(MedicalRecord record, int locationId, int personId);
+
+    void allocateInventoryToPerson(int itemId, int victimId);
+
+    void allocateInventoryToLocation(int itemId, int locationId);
+
+    void addNewSupply(String type, String comments);
+
+    void logInquiry(int inquirerId, int seekingId, int locationId, String date, String comments);
+
+    void getAllMedicalRecords(ArrayList<Location> locations, ArrayList<DisasterVictim> victims);
+
+    void removeExpiredWater();
+
+    void close();
 }

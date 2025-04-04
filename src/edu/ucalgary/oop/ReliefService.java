@@ -1,5 +1,8 @@
 package edu.ucalgary.oop;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ReliefService{
     private Person inquirer;
     private Person missingPerson;
@@ -8,7 +11,7 @@ public class ReliefService{
     private Location lastKnownLocation;
     private int inquiryID;
 
-    public ReliefService(Person inquirer, Person missingPerson, String dateOfInquiry, Sting infoProvided, Location lastKnownLocation) throws IllegalArgumentException{
+    public ReliefService(Person inquirer, Person missingPerson, String dateOfInquiry, String infoProvided, Location lastKnownLocation) throws IllegalArgumentException{
         this.inquirer = inquirer;
         this.missingPerson = missingPerson;
         this.dateOfInquiry = dateOfInquiry;
@@ -56,9 +59,18 @@ public class ReliefService{
         this.lastKnownLocation = lastKnownLocation;
     }
 
-    private static boolean isValidDateFormat(){
-        
-    }
+    private static boolean isValidDateFormat(String date){
+		String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
+		Pattern myPattern = Pattern.compile(dateRegex);
+		Matcher mymatcher = myPattern.matcher(date);
+		if(mymatcher.find()){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
 
     public void setInquiryId(int inquiryID){
         this.inquiryID = inquiryID;
