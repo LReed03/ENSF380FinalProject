@@ -12,29 +12,27 @@ public class CLI {
 
     public CLI() {
         this.scanner = new Scanner(System.in);
-    
-        // Language selection stuff...
         System.out.println("Available Languages: ");
         ArrayList<String> langs = languageCodes;
         for (String code : langs) {
             System.out.println("- " + code);
         }
-    
+
         System.out.print("Enter language code (default is en-CA): ");
         String userLangCode = scanner.nextLine().trim();
-    
+
         if (userLangCode.isEmpty() || !langs.contains(userLangCode)) {
             System.out.println("Invalid or empty input. Defaulting to en-CA.");
             userLangCode = "en-CA";
         }
-    
+
         this.languageManager = LanguageManager.getInstance(userLangCode);
-    
+
         DBManager dbManager = DBManager.getInstance();
-    
+
         this.controller = new ReliefController(scanner, dbManager, languageManager);
     }
-    
+
     public void run() {
         boolean running = true;
         while (running) {
@@ -47,11 +45,20 @@ public class CLI {
 
             String choice = scanner.nextLine().trim();
             switch (choice) {
-                case "1": insertMenu(); break;
-                case "2": viewMenu(); break;
-                case "3": updateMenu(); break;
-                case "0": running = false; break;
-                default: System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                case "1":
+                    insertMenu();
+                    break;
+                case "2":
+                    viewMenu();
+                    break;
+                case "3":
+                    updateMenu();
+                    break;
+                case "0":
+                    running = false;
+                    break;
+                default:
+                    System.out.println(languageManager.getTranslation("InvalidInputNumber"));
             }
         }
     }
@@ -67,12 +74,23 @@ public class CLI {
 
         String choice = scanner.nextLine().trim();
         switch (choice) {
-            case "1": controller.addDisasterVictim(); break;
-            case "2": controller.addNewInquirer(); break;
-            case "3": controller.addNewMedicalRecord(); break;
-            case "4": controller.addNewSupply(); break;
-            case "5": controller.logInquiry(); break;
-            default: System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            case "1":
+                controller.addDisasterVictim();
+                break;
+            case "2":
+                controller.addNewInquirer();
+                break;
+            case "3":
+                controller.addNewMedicalRecord();
+                break;
+            case "4":
+                controller.addNewSupply();
+                break;
+            case "5":
+                controller.logInquiry();
+                break;
+            default:
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
         }
     }
 
@@ -89,21 +107,29 @@ public class CLI {
 
         String choice = scanner.nextLine().trim();
         switch (choice) {
-            case "1": controller.viewDisasterVictims(); 
-            break;
-            case "2": controller.viewInquirers(); 
-            break;
-            case "3": controller.viewLocations(); 
-            break;
-            case "4": controller.viewMedicalRecords(); 
-            break;
-            case "5": controller.viewInquiries(); 
-            break;
-            case "6": controller.viewInventory(); 
-            break;
-            case "7": controller.viewFamilies(); 
-            break;
-            default: System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            case "1":
+                controller.viewDisasterVictims();
+                break;
+            case "2":
+                controller.viewInquirers();
+                break;
+            case "3":
+                controller.viewLocations();
+                break;
+            case "4":
+                controller.viewMedicalRecords();
+                break;
+            case "5":
+                controller.viewInquiries();
+                break;
+            case "6":
+                controller.viewInventory();
+                break;
+            case "7":
+                controller.viewFamilies();
+                break;
+            default:
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
         }
     }
 
@@ -116,17 +142,30 @@ public class CLI {
         System.out.println("5. " + languageManager.getTranslation("AllocateInventoryToPerson"));
         System.out.println("6. " + languageManager.getTranslation("AllocateVictimToLocation"));
         System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
-    
+
         String choice = scanner.nextLine().trim();
         switch (choice) {
-            case "1": controller.updateDisasterVictim(); break;
-            case "2": controller.updateInquirer(); break;
-            case "3": controller.updateMedicalRecord(); break;
-            case "4": controller.updateInquiry(); break;
-            case "5": controller.allocateInventoryToPerson(); break;
-            case "6": controller.allocateVictimToLocation(); break;
-            default: System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            case "1":
+                controller.updateDisasterVictim();
+                break;
+            case "2":
+                controller.updateInquirer();
+                break;
+            case "3":
+                controller.updateMedicalRecord();
+                break;
+            case "4":
+                controller.updateInquiry();
+                break;
+            case "5":
+                controller.allocateInventoryToPerson();
+                break;
+            case "6":
+                controller.allocateVictimToLocation();
+                break;
+            default:
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
         }
     }
-    
+
 }

@@ -24,9 +24,11 @@ public enum Gender {
         value = value.toLowerCase();
         if (value.equals("male") || value.equals("man")) {
             return MALE;
-        } else if (value.equals("female") || value.equals("woman")) {
+        } 
+        else if (value.equals("female") || value.equals("woman")) {
             return FEMALE;
-        } else if (value.equals("nonbinary") || value.equals("non-binary") ||
+        } 
+        else if (value.equals("nonbinary") || value.equals("non-binary") ||
                    value.equals("non binary person") || value.equals("nonbinary person")) {
             return NONBINARY;
         }
