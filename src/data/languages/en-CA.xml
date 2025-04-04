@@ -379,4 +379,90 @@
         <key>EnterGender</key>
         <value>Enter the person's gender:</value>
     </translation>
+    <translation>
+        <key>AllocateInventoryToPerson</key>
+        <value>Allocate Inventory To Person</value>
+    </translation>
+    <translation>
+        <key>AllocateInventoryToLocation</key>
+        <value>Allocate Inventory To Location</value>
+    </translation>
+    <translation>
+        <key>AllocateVictimToLocation</key>
+        <value>Allocate Victim To Location</value>
+    </translation>
+    <translation>
+        <key>WhoIsLoggingInquiry</key>
+        <value>Who is logging the inquiry?</value>
+    </translation>
+    <translation>
+        <key>SelectDisasterVictim</key>
+        <value>Select a disaster victim</value>
+    </translation>
+    <translation>
+        <key>EnterGridLocation</key>
+        <value>Enter the grid location:</value>
+    </translation>
+    <translation>
+        <key>EnterRoomNumber</key>
+        <value>Enter the room number:</value>
+    </translation>
+    <translation>
+        <key>Name</key>
+        <value>Name</value>
+    </translation>
+    <translation>
+        <key>WarningMissingInquirer</key>
+        <value>Warning: Could not find inquirer with ID</value>
+    </translation>
+    <translation>
+        <key>WarningMissingVictim</key>
+        <value>Warning: Could not find disaster victim with ID</value>
+    </translation>
+    <translation>
+    <key>SupplyBlanket</key>
+    <value>Blanket</value>
+    </translation>
+    <translation>
+        <key>SupplyCot</key>
+        <value>Cot</value>
+    </translation>
+    <translation>
+        <key>SupplyBelongings</key>
+        <value>Personal Belongings</value>
+    </translation>
+    <translation>
+        <key>SupplyWater</key>
+        <value>Water</value>
+    </translation>
+    <translation>
+        <key>SupplyAddedSuccess</key>
+        <value>Item added successfully!</value>
+    </translation>
+    <translation>
+        <key>DisasterVictim</key>
+        <value>Disaster Victim</value>
+    </translation>
+    <translation>
+        <key>EnterNewGender</key>
+        <value>Enter the person's new gender</value>
+    </translation>
+    <translation>
+        <key>WhoIsLoggingInquiry</key>
+        <value>Who is logging the inquiry?</value>
+    </translation>
+    <translation>
+        <key>EnterNewGender</key>
+        <value>Enter the new gender</value>
+    </translation>
+    <translation>
+        <key>EnterNewComments</key>
+        <value>Enter new comments (optional)</value>
+    </translation>
+    <translation>
+        <key>EnterNewPhone</key>
+        <value>Enter the new phone number</value>
+    </translation>
+
+
 </translations>

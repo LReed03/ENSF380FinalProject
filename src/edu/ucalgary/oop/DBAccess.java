@@ -1,16 +1,21 @@
 package edu.ucalgary.oop;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public interface DBAccess {
 
     ArrayList<DisasterVictim> getAllDisasterVictims(ArrayList<FamilyGroup> families);
 
+    void assignVictimsToLocations(ArrayList<DisasterVictim> victims, ArrayList<Location> locations);
+
     ArrayList<FamilyGroup> getFamilyGroups();
 
     ArrayList<Inquirer> getAllInquirers(ArrayList<FamilyGroup> families);
 
     ArrayList<Location> getAllLocations();
+    
+    void removeVictimFromLocation(int personId, int locationId);
 
     ArrayList<InventoryItem> getAllInventory(ArrayList<DisasterVictim> victims, ArrayList<Location> locations);
 
@@ -38,7 +43,7 @@ public interface DBAccess {
 
     void addNewSupply(String type, String comments);
 
-    void logInquiry(int inquirerId, int seekingId, int locationId, String date, String comments);
+    void logInquiry(int inquirerId, int seekingId, int locationId, Timestamp date, String comments);
 
     void getAllMedicalRecords(ArrayList<Location> locations, ArrayList<DisasterVictim> victims);
 

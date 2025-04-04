@@ -44,7 +44,7 @@ public class DBManager implements DBAccess{
                 String entryDate = java.time.LocalDate.now().toString(); 
                 DisasterVictim victim = new DisasterVictim(firstName, entryDate);
     
-                victim.setVictimID(result.getInt("person_id"));
+                victim.setId(result.getInt("person_id"));
                 victim.setLastName(result.getString("last_name"));
                 java.sql.Date dob = result.getDate("date_of_birth");
                 victim.setDateOfBirth(dob.toString()); 
@@ -66,7 +66,9 @@ public class DBManager implements DBAccess{
     
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     
         return victims;
@@ -89,12 +91,59 @@ public class DBManager implements DBAccess{
     
             rs.close();
             stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } 
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     
         return groups;
     }
+
+    @Override
+    public void assignVictimsToLocations(ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
+    try {
+        String query = "SELECT person_id, location_id FROM PersonLocation";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            int personId = rs.getInt("person_id");
+            int locationId = rs.getInt("location_id");
+
+            DisasterVictim matchedVictim = null;
+            Location matchedLocation = null;
+
+            for (DisasterVictim v : victims) {
+                if (v.getId() == personId) {
+                    matchedVictim = v;
+                    break;
+                }
+            }
+
+            for (Location loc : locations) {
+                if (loc.getId() == locationId) {
+                    matchedLocation = loc;
+                    break;
+                }
+            }
+
+            if (matchedVictim != null && matchedLocation != null) {
+                matchedLocation.addOccupant(matchedVictim);
+            }
+        }
+
+        rs.close();
+        stmt.close();
+    } 
+    catch (SQLException e) {
+        ErrorLog error = new ErrorLog(e);
+        System.out.println(languageManager.getTranslation("UnexpectedError"));
+        System.exit(1);
+    }
+}
+
     
     @Override
     public ArrayList<Inquirer> getAllInquirers(ArrayList<FamilyGroup> families) {
@@ -111,7 +160,7 @@ public class DBManager implements DBAccess{
                 String phone = result.getString("phone_number");
                 Inquirer inquirer = new Inquirer(firstName, lastName, phone);
     
-                inquirer.setInquirerId(result.getInt("person_id"));
+                inquirer.setId(result.getInt("person_id"));
                 int familyId = result.getInt("family_group");
                 if (!result.wasNull()) {
                     FamilyGroup fam = findFamilyGroupById(families, familyId);
@@ -129,7 +178,9 @@ public class DBManager implements DBAccess{
     
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     
         return inquirers;
@@ -157,8 +208,10 @@ public class DBManager implements DBAccess{
             myStmt.executeUpdate();
             myStmt.close();
         } 
-        catch (SQLException ex) {
-            ex.printStackTrace();
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
 
@@ -179,8 +232,11 @@ public class DBManager implements DBAccess{
             }
             myStmt.executeUpdate();
             myStmt.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
+        } 
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
     
@@ -196,8 +252,10 @@ public class DBManager implements DBAccess{
 
             myStmt.close();
         }
-        catch (SQLException ex) {
-            ex.printStackTrace();
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
     
@@ -209,7 +267,12 @@ public class DBManager implements DBAccess{
     
             myStmt.setString(1, victim.getGender().toString());
             myStmt.setString(2, victim.getComments());
-            myStmt.setInt(3, victim.getFamily().getFamilyID());
+            if(victim.getFamily() != null){
+                myStmt.setInt(3, victim.getFamily().getFamilyID());
+            }
+            else{
+                myStmt.setNull(3, java.sql.Types.INTEGER);
+            }
             myStmt.setString(4, victim.getFirstName());
             myStmt.setString(5, victim.getLastName());
             myStmt.setDate(6, java.sql.Date.valueOf(victim.getDateOfBirth()));
@@ -217,8 +280,10 @@ public class DBManager implements DBAccess{
             myStmt.executeUpdate();
             myStmt.close();
         } 
-        catch (SQLException ex) {
-            ex.printStackTrace();
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
     
@@ -229,7 +294,12 @@ public class DBManager implements DBAccess{
             PreparedStatement myStmt = connection.prepareStatement(query);
     
             myStmt.setString(1, inquirer.getPhone());
-            myStmt.setInt(2, inquirer.getFamily().getFamilyID());
+            if(inquirer.getFamily() != null){
+                myStmt.setInt(2, inquirer.getFamily().getFamilyID());
+            }
+            else{
+                myStmt.setNull(2, java.sql.Types.INTEGER);
+            }
             myStmt.setString(3, inquirer.getFirstName());
             myStmt.setString(4, inquirer.getLastName());
     
@@ -237,8 +307,10 @@ public class DBManager implements DBAccess{
 
             myStmt.close();
         } 
-        catch (SQLException ex) {
-            ex.printStackTrace();
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
     
@@ -257,8 +329,10 @@ public class DBManager implements DBAccess{
             myStmt.executeUpdate();
             myStmt.close();
         }
-        catch(SQLException ex){
-            ex.printStackTrace();
+        catch(SQLException e){
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
 
     }
@@ -276,14 +350,16 @@ public class DBManager implements DBAccess{
             myStmt.executeUpdate();
             myStmt.close();
         }
-        catch(SQLException ex){
-            ex.printStackTrace();
+        catch(SQLException e){
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
 
     }
 
     @Override
-    public void logInquiry(int inquirerId, int seekingId, int locationId, String date, String comments) {
+    public void logInquiry(int inquirerId, int seekingId, int locationId, Timestamp date, String comments) {
         try {
             String query = """
                 INSERT INTO Inquiry (inquirer_id, seeking_id, location_id, date_of_inquiry, comments)
@@ -294,14 +370,16 @@ public class DBManager implements DBAccess{
             stmt.setInt(1, inquirerId);
             stmt.setInt(2, seekingId);
             stmt.setInt(3, locationId);
-            stmt.setTimestamp(4, Timestamp.valueOf(date)); 
+            stmt.setTimestamp(4, date); 
             stmt.setString(5, comments);
     
             stmt.executeUpdate();
             stmt.close();
         }
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         } 
     }
     
@@ -320,7 +398,9 @@ public class DBManager implements DBAccess{
             stmt.close();
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
     
@@ -349,7 +429,7 @@ public class DBManager implements DBAccess{
                 DisasterVictim person = null;
                 if (personId > 0) {
                     for (DisasterVictim v : victims) {
-                        if (v.getVictimID() == personId) {
+                        if (v.getId() == personId) {
                             person = v;
                             break;
                         }
@@ -375,7 +455,7 @@ public class DBManager implements DBAccess{
                     case "water" -> {
                         item = (person != null) ? new Water(person) : (location != null ? new Water(location) : null);
                         if (item instanceof Water water) {
-                            water.setAllocationDate(allocationDate); // Add a setter if needed
+                            water.setAllocationDate(allocationDate); 
                         }
                     }
                     case "cot" -> {
@@ -402,8 +482,11 @@ public class DBManager implements DBAccess{
     
             rs.close();
             stmt.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } 
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     
         return items;
@@ -425,21 +508,33 @@ public class DBManager implements DBAccess{
                 int locationId = rs.getInt("location_id");
                 String date = rs.getTimestamp("date_of_inquiry").toLocalDateTime().toLocalDate().toString(); 
                 String comments = rs.getString("comments");
-
-                Inquirer inquirer = null;
+    
+                Person person = null;
                 for (Inquirer i : inquirers) {
-                    if (i.getInquirerId() == inquirerId) {
-                        inquirer = i;
+                    if (i.getId() == inquirerId) {
+                        person = i;
                         break;
                     }
                 }
+
+
+                if (person == null) {
+                    for (DisasterVictim v : victims) {
+                        if (v.getId() == inquirerId) {
+                            person = v;
+                            break;
+                        }
+                    }
+                }
+
                 DisasterVictim victim = null;
                 for (DisasterVictim d : victims) {
-                    if (d.getVictimID() == seekingId) {
+                    if (d.getId() == seekingId) {
                         victim = d;
                         break;
                     }
                 }
+    
                 Location location = null;
                 for (Location loc : locations) {
                     if (loc.getId() == locationId) {
@@ -447,21 +542,23 @@ public class DBManager implements DBAccess{
                         break;
                     }
                 }
-
-                ReliefService service = new ReliefService(inquirer, victim, date, comments, location);
+    
+                ReliefService service = new ReliefService(person, victim, date, comments, location);
                 inquiries.add(service);
             }
     
             rs.close();
             stmt.close();
     
-        } 
-        catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     
         return inquiries;
     }
+    
     
     @Override
     public ArrayList<Location> getAllLocations() {
@@ -487,7 +584,9 @@ public class DBManager implements DBAccess{
     
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     
         return locations;
@@ -516,7 +615,7 @@ public class DBManager implements DBAccess{
                 }
                 DisasterVictim victim = null;
                 for (DisasterVictim v : victims) {
-                    if (v.getVictimID() == personId) {
+                    if (v.getId() == personId) {
                         victim = v;
                         break;
                     }
@@ -534,7 +633,9 @@ public class DBManager implements DBAccess{
     
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     
     }
@@ -554,10 +655,29 @@ public class DBManager implements DBAccess{
             stmt.close();
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
     
+    @Override
+    public void removeVictimFromLocation(int personId, int locationId) {
+    try {
+        String query = "DELETE FROM PersonLocation WHERE person_id = ? AND location_id = ?";
+        PreparedStatement stmt = connection.prepareStatement(query);
+        stmt.setInt(1, personId);
+        stmt.setInt(2, locationId);
+        stmt.executeUpdate();
+        stmt.close();
+    } 
+    catch (SQLException e) {
+        ErrorLog error = new ErrorLog(e);
+        System.out.println(languageManager.getTranslation("UnexpectedError"));
+        System.exit(1);
+    }
+}
+
     
     @Override
     public void addMedicalRecord(MedicalRecord record, int locationId, int personId) {
@@ -570,13 +690,14 @@ public class DBManager implements DBAccess{
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, locationId); 
             stmt.setInt(2, personId);
-            stmt.setTimestamp(3, Timestamp.valueOf(record.getDateOfTreatment())); 
-            stmt.setString(4, record.getTreatmentDetails());
+            stmt.setTimestamp(3, Timestamp.valueOf(record.getDateOfTreatment() + " 00:00:00"));            stmt.setString(4, record.getTreatmentDetails());
             stmt.executeUpdate();
             stmt.close();
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         } 
     }
 
@@ -586,13 +707,15 @@ public class DBManager implements DBAccess{
             String query = "UPDATE MedicalRecord SET treatment_details = ?, date_of_treatment = ? WHERE medical_record_id = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setString(1, record.getTreatmentDetails());
-            stmt.setString(2, record.getDateOfTreatment());
+            stmt.setTimestamp(2, Timestamp.valueOf(record.getDateOfTreatment() + " 00:00:00"));            
             stmt.setInt(3, recordId);
             stmt.executeUpdate();
             stmt.close();
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
 
@@ -609,7 +732,9 @@ public class DBManager implements DBAccess{
             stmt.close();
         } 
         catch (SQLException e) {
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
     
@@ -631,7 +756,9 @@ public class DBManager implements DBAccess{
             connection.close();
         }
         catch(SQLException e){
-            e.printStackTrace();
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
     }
 

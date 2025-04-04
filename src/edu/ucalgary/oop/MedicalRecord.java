@@ -7,6 +7,7 @@ public class MedicalRecord {
     private String treatmentDetails;
     private String dateOfTreatment;
     private int medicalRecordId;
+    private static int highestId = 0;
 
     public MedicalRecord(Location location, String treatmentDetails, String dateOfTreatment) throws IllegalArgumentException{
         boolean validEntryDate = isValidDateFormat(dateOfTreatment);
@@ -60,12 +61,18 @@ public class MedicalRecord {
     
 	}
 
-    public int getMedicalRecordId() {
-        return medicalRecordId;
+    public int getId() {
+        return this.medicalRecordId;
     }
 
-    public void setMedicalRecordId(int medicalRecordId) {
-        this.medicalRecordId = medicalRecordId;
+    public void setId(int id) {
+        highestId = id;
+        this.medicalRecordId = id;
+    }
+
+    public void setId(){
+        highestId = highestId + 1;
+        this.medicalRecordId = highestId;
     }
 
 

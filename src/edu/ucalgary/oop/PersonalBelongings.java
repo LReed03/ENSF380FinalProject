@@ -12,8 +12,11 @@ public class PersonalBelongings extends InventoryItem{
         this.ITEMTYPE = ItemType.PERSONALBELONGINGS;
     }
 
-    public void setAllocatedToPerson(DisasterVictim person){
-        this.allocatedToPerson = person;
+
+
+    @Override
+    public void setAllocatedToLocation(Location location){
+        return;
     }
 
     public void setDescription(String description){

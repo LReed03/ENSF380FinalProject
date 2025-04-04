@@ -1,5 +1,7 @@
 package edu.ucalgary.oop;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.*;
@@ -31,27 +33,36 @@ public class ReliefController {
         this.inquiries = model.getAllInquiries(this.inquirers, this.disastervictims, this.locations);
         this.supply = model.getAllInventory(this.disastervictims, this.locations);
         model.getAllMedicalRecords(this.locations, this.disastervictims);
+        model.assignVictimsToLocations(disastervictims, locations);
     }
 
     public void allocateVictimToLocation() {
         viewDisasterVictims();
         int victimIndex = getValidatedIndex(disastervictims.size());
+        if (victimIndex == -1) return;
+    
         DisasterVictim victim = disastervictims.get(victimIndex);
     
         viewLocations();
         int locationIndex = getValidatedIndex(locations.size());
-        Location location = locations.get(locationIndex);
+        if (locationIndex == -1) return;
     
-        if (location.getOccupants().contains(victim)) {
-            System.out.println(languageManager.getTranslation("VictimAlreadyAllocated"));
-            return;
+        Location newLocation = locations.get(locationIndex);
+    
+        for (Location loc : locations) {
+            if (loc.getOccupants().contains(victim)) {
+                loc.removeOccupant(victim); 
+                model.removeVictimFromLocation(victim.getId(), loc.getId()); 
+                break;
+            }
         }
     
-        location.addOccupant(victim);
-        model.addDisasterVictimToLocation(victim.getVictimID(), location.getId());
+        newLocation.addOccupant(victim);
+        model.addDisasterVictimToLocation(victim.getId(), newLocation.getId());
     
         System.out.println(languageManager.getTranslation("VictimSuccessfullyAllocated"));
     }
+    
     
     
 
@@ -110,6 +121,7 @@ public class ReliefController {
             newVictim.setDateOfBirth(dob);
             newVictim.setGender(gender);
             newVictim.setComments(comments);
+            newVictim.setId();
     
             viewFamilies();
             System.out.println(languageManager.getTranslation("EnterFamilyGroupOrSkip"));
@@ -170,9 +182,10 @@ public class ReliefController {
                 newInquirer.setFamily(family);
                 family.addFamilyMember(newInquirer);
             }
+            newInquirer.setId();
     
             inquirers.add(newInquirer);
-            model.insertInquirer(newInquirer); 
+            model.insertInquirer(newInquirer);
     
             System.out.println(languageManager.getTranslation("InquirerAddedSuccess"));
         } 
@@ -191,9 +204,8 @@ public class ReliefController {
             viewDisasterVictims();
             int victimIndex = getValidatedIndex(disastervictims.size());
             DisasterVictim victim = disastervictims.get(victimIndex);
-            int victimId = victim.getVictimID();
+            int victimId = victim.getId();
     
-            // 🔍 Find the location containing this victim
             Location location = null;
             for (Location loc : locations) {
                 if (loc.getOccupants().contains(victim)) {
@@ -224,6 +236,7 @@ public class ReliefController {
             }
     
             MedicalRecord record = new MedicalRecord(location, treatmentDetails, dateOfTreatment);
+            record.setId();
             victim.addMedicalRecord(record);
             model.addMedicalRecord(record, locationId, victimId);
             System.out.println(languageManager.getTranslation("MedicalRecordAddedSuccess"));
@@ -240,11 +253,16 @@ public class ReliefController {
     public void addNewSupply() {
         try {
             System.out.println(languageManager.getTranslation("SelectItem"));
+            System.out.println("0. " + languageManager.getTranslation("SupplyBlanket"));
+            System.out.println("1. " + languageManager.getTranslation("SupplyCot"));
+            System.out.println("2. " + languageManager.getTranslation("SupplyBelongings"));
+            System.out.println("3. " + languageManager.getTranslation("SupplyWater"));
             int itemTypeIndex = getValidatedIndex(4);
             if (itemTypeIndex == -1) return;
     
             String comments = null;
-    
+
+                
             switch (itemTypeIndex) {
                 case 0: // Blanket
                 System.out.println(languageManager.getTranslation("LocationOrPerson"));
@@ -263,6 +281,7 @@ public class ReliefController {
                         supply.add(blanket);
                         model.addNewSupply("blanket", comments);
                         model.allocateInventoryToLocation(blanket.getId(), location.getId());
+                        System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
                     } 
                     else {
                         viewDisasterVictims();
@@ -275,7 +294,8 @@ public class ReliefController {
                         victim.addBelongings(blanket);
                         supply.add(blanket);
                         model.addNewSupply("blanket", comments);
-                        model.allocateInventoryToPerson(blanket.getId(), victim.getVictimID());
+                        model.allocateInventoryToPerson(blanket.getId(), victim.getId());
+                        System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
                     }
                     break;
     
@@ -313,6 +333,7 @@ public class ReliefController {
                         supply.add(cot);
                         model.addNewSupply("cot", comments);
                         model.allocateInventoryToLocation(cot.getId(), location.getId());
+                        System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
                     } 
                     else {
                         viewDisasterVictims();
@@ -326,7 +347,8 @@ public class ReliefController {
                         victim.addBelongings(cot);
                         supply.add(cot);
                         model.addNewSupply("cot", comments);
-                        model.allocateInventoryToPerson(cot.getId(), victim.getVictimID());
+                        model.allocateInventoryToPerson(cot.getId(), victim.getId());
+                        System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
                     }
                     break;
     
@@ -349,7 +371,8 @@ public class ReliefController {
                     victim2.addBelongings(belongings);
                     supply.add(belongings);
                     model.addNewSupply("personal item", comments);
-                    model.allocateInventoryToPerson(belongings.getId(), victim2.getVictimID());
+                    model.allocateInventoryToPerson(belongings.getId(), victim2.getId());
+                    System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
                     break;
     
                 case 3: // Water
@@ -369,6 +392,7 @@ public class ReliefController {
                         supply.add(water);
                         model.addNewSupply("water", comments);
                         model.allocateInventoryToLocation(water.getId(), location.getId());
+                        System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
                     } 
                     else {
                         viewDisasterVictims();
@@ -381,7 +405,8 @@ public class ReliefController {
                         victim.addBelongings(water);
                         supply.add(water);
                         model.addNewSupply("water", comments);
-                        model.allocateInventoryToPerson(water.getId(), victim.getVictimID());
+                        model.allocateInventoryToPerson(water.getId(), victim.getId());
+                        System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
                     }
                     break;
     
@@ -400,70 +425,137 @@ public class ReliefController {
     
 
     public void logInquiry() {
-        System.out.println(languageManager.getTranslation("SelectInquirer"));
-        viewInquirers();
-        int inquirerIndex = getValidatedIndex(inquirers.size());
-        if (inquirerIndex == -1) return;
+        System.out.println(languageManager.getTranslation("WhoIsLoggingInquiry"));
+        System.out.println("1. " + languageManager.getTranslation("Inquirer"));
+        System.out.println("2. " + languageManager.getTranslation("DisasterVictim"));
+        System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
     
-        Inquirer inquirer = inquirers.get(inquirerIndex);
+        String typeChoice = scanner.nextLine().trim();
+    
+        int personId = 0;
+        boolean isInquirer = true;
+        Person loggedBy = null;
+    
+        if (typeChoice.equals("1")) {
+            System.out.println(languageManager.getTranslation("SelectInquirer"));
+            viewInquirers();
+            int inquirerIndex = getValidatedIndex(inquirers.size());
+            if (inquirerIndex == -1) return;
+            Inquirer inquirer = inquirers.get(inquirerIndex);
+            personId = inquirer.getId();
+            isInquirer = true;
+            loggedBy = inquirer;
+    
+        } 
+        else if (typeChoice.equals("2")) {
+            System.out.println(languageManager.getTranslation("SelectDisasterVictim"));
+            viewDisasterVictims();
+            int victimIndex = getValidatedIndex(disastervictims.size());
+            if (victimIndex == -1) return;
+            DisasterVictim victim = disastervictims.get(victimIndex);
+            personId = victim.getId();
+            isInquirer = false;
+            loggedBy = victim;
+        } 
+        else {
+            System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            return;
+        }
     
         System.out.println(languageManager.getTranslation("SelectMissingPerson"));
         viewDisasterVictims();
-        int victimIndex = getValidatedIndex(disastervictims.size());
-        if (victimIndex == -1) return;
-    
-        DisasterVictim missingPerson = disastervictims.get(victimIndex);
+        int missingIndex = getValidatedIndex(disastervictims.size());
+        if (missingIndex == -1) return;
+        DisasterVictim missingPerson = disastervictims.get(missingIndex);
     
         System.out.println(languageManager.getTranslation("SelectLocation"));
         viewLocations();
         int locationIndex = getValidatedIndex(locations.size());
         if (locationIndex == -1) return;
-    
         Location location = locations.get(locationIndex);
     
         System.out.println(languageManager.getTranslation("EnterComments"));
         String comments = scanner.nextLine().trim();
-    
-        String date = java.time.LocalDateTime.now().toString();
-    
-        model.logInquiry(inquirer.getInquirerId(),missingPerson.getVictimID(),location.getId(), date, comments);
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());    
+        String fullString = timestamp.toString();  
+
+        String[] parts = fullString.split(" ");  
+        String date = parts[0];              
+
+        model.logInquiry(personId, missingPerson.getId(), location.getId(), timestamp, comments);
+        ReliefService inquiry = new ReliefService(loggedBy, missingPerson, date, comments, location);
+        inquiries.add(inquiry);
+        
     
         System.out.println(languageManager.getTranslation("InquiryLoggedSuccessfully"));
     }
     
+    
 
     public void updateDisasterVictim() {
         viewDisasterVictims(); 
-    
         int index = getValidatedIndex(disastervictims.size());
         if (index == -1) return;
     
         DisasterVictim victim = disastervictims.get(index);
     
-        System.out.print(languageManager.getTranslation("EnterNewGender") + " (" + victim.getGender() + "): ");
-        String genderInput = scanner.nextLine().trim();
-        if (!genderInput.isEmpty()) {
-            Gender newGender = Gender.valueOf(genderInput.toLowerCase()); 
-            victim.setGender(newGender);
+        System.out.println(languageManager.getTranslation("EnterNewGender") + " (" + victim.getGender() + "):");
+        System.out.println("0. " + languageManager.getTranslation("GenderMale"));
+        System.out.println("1. " + languageManager.getTranslation("GenderFemale"));
+        System.out.println("2. " + languageManager.getTranslation("GenderNonBinary"));
+        int genderChoice = getValidatedIndex(3);
+        if (genderChoice != -1) {
+            Gender[] genders = Gender.values();
+            victim.setGender(genders[genderChoice]);
         }
     
-        System.out.print(languageManager.getTranslation("EnterNewComments") + " (" + victim.getComments() + "): ");
+        System.out.println(languageManager.getTranslation("EnterNewComments") + " (" + victim.getComments() + "):");
         String commentInput = scanner.nextLine().trim();
         if (!commentInput.isEmpty()) {
             victim.setComments(commentInput);
         }
     
-        System.out.println(languageManager.getTranslation("AssignToFamily"));
+        System.out.println(languageManager.getTranslation("EnterFamilyIndexOrLeaveBlank"));
         viewFamilies();
-        Integer famIndex = getValidatedIndex(familyGroups.size());
-        if (famIndex != null) {
-            FamilyGroup selectedFam = familyGroups.get(famIndex);
-            victim.setFamily(selectedFam);
+        int famIndex = getValidatedIndex(familyGroups.size());
+    
+        if (famIndex != -1) {
+            FamilyGroup newFam = familyGroups.get(famIndex);
+    
+            if (victim.getFamily() != null && victim.getFamily() != newFam) {
+                FamilyGroup oldFam = victim.getFamily();
+                ArrayList<Person> members = oldFam.getFamilyMembers();
+                for (int i = 0; i < members.size(); i++) {
+                    if (members.get(i).getId() == victim.getId()) {
+                        members.remove(i);
+                        break;
+                    }
+                }
+            }
+    
+            newFam.addFamilyMember(victim);
+            victim.setFamily(newFam);
+        } 
+        else {
+            if (victim.getFamily() != null) {
+                FamilyGroup currentFam = victim.getFamily();
+                ArrayList<Person> members = currentFam.getFamilyMembers();
+                for (int i = 0; i < members.size(); i++) {
+                    if (members.get(i).getId() == victim.getId()) {
+                        members.remove(i);
+                        break;
+                    }
+                }
+                victim.setFamily(null);
+            }
         }
     
         model.updateDisasterVictim(victim);
         System.out.println(languageManager.getTranslation("VictimSuccessfullyUpdated"));
     }
+    
+    
+    
     
 
     public void updateInquirer() {
@@ -483,23 +575,66 @@ public class ReliefController {
     
         viewFamilies();
         System.out.println(languageManager.getTranslation("EnterFamilyIndexOrLeaveBlank"));
-        Integer famIndex = getValidatedIndex(familyGroups.size());
+        int famIndex = getValidatedIndex(familyGroups.size());
+    
         if (famIndex != -1) {
-            inquirer.setFamily(familyGroups.get(famIndex));
+            FamilyGroup newFam = familyGroups.get(famIndex);
+    
+            if (inquirer.getFamily() != null && inquirer.getFamily() != newFam) {
+                FamilyGroup oldFam = inquirer.getFamily();
+                ArrayList<Person> members = oldFam.getFamilyMembers();
+                for (int i = 0; i < members.size(); i++) {
+                    if (members.get(i).getId() == inquirer.getId()) {
+                        members.remove(i);
+                        break;
+                    }
+                }
+            }
+    
+            newFam.addFamilyMember(inquirer);
+            inquirer.setFamily(newFam);
         } 
+        else {
+            if (inquirer.getFamily() != null) {
+                FamilyGroup currentFam = inquirer.getFamily();
+                ArrayList<Person> members = currentFam.getFamilyMembers();
+                for (int i = 0; i < members.size(); i++) {
+                    if (members.get(i).getId() == inquirer.getId()) {
+                        members.remove(i);
+                        break;
+                    }
+                }
+                inquirer.setFamily(null);
+            }
+        }
+    
         model.updateInquirer(inquirer);
         System.out.println(languageManager.getTranslation("InquirerUpdated"));
     }
     
+    
+    
 
 
     public void updateMedicalRecord() {
-        viewMedicalRecords();
-        int victimIndex = getValidatedIndex(disastervictims.size());
-        if (victimIndex == -1) return;
-        DisasterVictim victim = disastervictims.get(victimIndex);
+        ArrayList<DisasterVictim> victimsWithRecords = new ArrayList<>();
+        for (DisasterVictim victim : disastervictims) {
+            if (victim.getMedicalRecords() != null && !victim.getMedicalRecords().isEmpty()) {
+                victimsWithRecords.add(victim);
+            }
+        }
     
-        ArrayList<MedicalRecord> records = victim.getMedicalRecords();
+        for (int i = 0; i < victimsWithRecords.size(); i++) {
+            DisasterVictim v = victimsWithRecords.get(i);
+            System.out.println(i + ": " + languageManager.getTranslation("Name") + " " + v.getFirstName() + " " + v.getLastName() + " | " + languageManager.getTranslation("DateOfBirth") + ": " + v.getDateOfBirth());
+        }
+    
+        int victimIndex = getValidatedIndex(victimsWithRecords.size());
+        if (victimIndex == -1) return;
+    
+        DisasterVictim selectedVictim = victimsWithRecords.get(victimIndex);
+        ArrayList<MedicalRecord> records = selectedVictim.getMedicalRecords();
+    
         for (int i = 0; i < records.size(); i++) {
             System.out.println(i + ": " + records.get(i).getTreatmentDetails());
         }
@@ -520,9 +655,10 @@ public class ReliefController {
         record.setTreatmentDetails(newDetails);
         record.setDateOfTreatment(newDate);
     
-        model.updateMedicalRecord(record, record.getMedicalRecordId());
+        model.updateMedicalRecord(record, record.getId());
         System.out.println(languageManager.getTranslation("MedicalRecordUpdated"));
     }
+    
         
 
     public void updateInquiry() {
@@ -537,7 +673,7 @@ public class ReliefController {
         if (comments.isEmpty()) return;
         inquiry.setInfoProvided(comments);
 
-        model.updateInquiry(inquiry, inquiry.getInquiryId());
+        model.updateInquiry(inquiry, inquiry.getId());
         System.out.println(languageManager.getTranslation("InquiryUpdated"));
     }
 
@@ -618,8 +754,9 @@ public class ReliefController {
         if (invIndex == -1) return;
     
         InventoryItem selectedItem = matchingInventory.get(invIndex);
+        selectedItem.setAllocatedToPerson(victim);
         victim.addBelongings(selectedItem);
-        model.allocateInventoryToPerson(selectedItem.getId(), victim.getVictimID());
+        model.allocateInventoryToPerson(selectedItem.getId(), victim.getId());
     
         System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
     }
@@ -628,14 +765,14 @@ public class ReliefController {
     public void viewDisasterVictims(){
         for (int i = 0; i < disastervictims.size(); i++) {
             DisasterVictim v = disastervictims.get(i);
-            System.out.println(i + ": " + languageManager.getTranslation("FirstName") + " " + v.getFirstName() + " " + languageManager.getTranslation("LastName") + " " + v.getLastName() + " " + languageManager.getTranslation("DateOfBirth")  + " " + v.getDateOfBirth());
+            System.out.println(i + ": " + languageManager.getTranslation("Name") + " " + v.getFirstName() + " "  + v.getLastName() + " | " + languageManager.getTranslation("DateOfBirth")  + ": " + v.getDateOfBirth());
         }
     }
 
     public void viewInquirers(){
         for(int i = 0; i < inquirers.size(); i++){
             Inquirer in = inquirers.get(i);
-            System.out.println(i + ": " + languageManager.getTranslation("FirstName") + " " + in.getFirstName() + " " + languageManager.getTranslation("LastName") + " " + in.getLastName() + " " + languageManager.getTranslation("PhoneNumber") + " "  + in.getPhone());
+            System.out.println(i + ": " + languageManager.getTranslation("Name") + ": " + in.getFirstName() + " " + in.getLastName() + " | " + languageManager.getTranslation("PhoneNumber") + ": "  + in.getPhone());
         }
 
     }
@@ -643,7 +780,7 @@ public class ReliefController {
     public void viewLocations(){
         for (int i = 0; i < locations.size(); i++) {
             Location loc = locations.get(i);
-            System.out.println(i + ": " + languageManager.getTranslation("LocationName") + " " + loc.getName());
+            System.out.println(i + ": " + languageManager.getTranslation("LocationName") + ": " + loc.getName());
         }
     }
 
@@ -655,30 +792,30 @@ public class ReliefController {
         ArrayList<MedicalRecord> medicalRecords = victim.getMedicalRecords();
         for(int i = 0; i < medicalRecords.size(); i++){
             MedicalRecord med = medicalRecords.get(i);
-            System.out.println(i + ": " + languageManager.getTranslation("TreatmentDetails") + " " + med.getTreatmentDetails() + " " + languageManager.getTranslation("dateOfTreatment") + " " + med.getDateOfTreatment());
+            System.out.println(i + ": " + languageManager.getTranslation("TreatmentDetails") + ": " + med.getTreatmentDetails() + " | " + languageManager.getTranslation("dateOfTreatment") + ": " + med.getDateOfTreatment());
         }
     }
 
     public void viewInquiries(){
         for(int i = 0; i < inquiries.size(); i++){
             ReliefService inquiry = inquiries.get(i);
-            System.out.println(i + ": " + languageManager.getTranslation("Inquirer") + " " + inquiry.getInquirer() + " " + languageManager.getTranslation("MissingPerson") + " " + inquiry.getMissingPerson() + " " + languageManager.getTranslation("Infoed") + " " + inquiry.getInfoProvided());
+            System.out.println(i + ": " + languageManager.getTranslation("Inquirer") + ": " + inquiry.getInquirer().getFirstName() + " " + inquiry.getInquirer().getLastName() + " | " + languageManager.getTranslation("MissingPerson") + ": " + inquiry.getMissingPerson().getFirstName() + " " + inquiry.getMissingPerson().getLastName() + " | " + languageManager.getTranslation("Infoed") + ": " + inquiry.getInfoProvided());
     }
 }
 
     public void viewInventory(){
         for(int i = 0; i < supply.size(); i++){
             InventoryItem item = supply.get(i);
-            System.out.println(i + ": " + languageManager.getTranslation("ItemType") + " " + item.getItemType());
+            System.out.println(i + ": " + languageManager.getTranslation("ItemType") + ": " + item.getItemType());
         }
     }
 
     public void viewFamilies() {
-        for (FamilyGroup group : familyGroups) {
-            System.out.println(languageManager.getTranslation("FamilyID") + ": " + group.getFamilyID());
+        for (int i =0; i < familyGroups.size(); i++) {
+            System.out.println(languageManager.getTranslation("FamilyID") + ": " + i);
     
-            for (Person member : group.getFamilyMembers()){
-                System.out.println("  - " + languageManager.getTranslation("FirstName") + ": " + member.getFirstName()+ ", " + languageManager.getTranslation("LastName") + ": " + member.getLastName());
+            for (Person member : familyGroups.get(i).getFamilyMembers()){
+                System.out.println("  - " + languageManager.getTranslation("Name") + ": " + member.getFirstName() + " " + member.getLastName());
             }
     
             System.out.println(); 

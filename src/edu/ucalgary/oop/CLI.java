@@ -104,15 +104,20 @@ public class CLI {
         System.out.println("2. " + languageManager.getTranslation("UpdateInquirer"));
         System.out.println("3. " + languageManager.getTranslation("UpdateMedicalRecord"));
         System.out.println("4. " + languageManager.getTranslation("UpdateInquiry"));
+        System.out.println("5. " + languageManager.getTranslation("AllocateInventoryToPerson"));
+        System.out.println("6. " + languageManager.getTranslation("AllocateVictimToLocation"));
         System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
-
+    
         String choice = scanner.nextLine().trim();
         switch (choice) {
             case "1": controller.updateDisasterVictim(); break;
             case "2": controller.updateInquirer(); break;
             case "3": controller.updateMedicalRecord(); break;
             case "4": controller.updateInquiry(); break;
+            case "5": controller.allocateInventoryToPerson(); break;
+            case "6": controller.allocateVictimToLocation(); break;
             default: System.out.println(languageManager.getTranslation("InvalidInputNumber"));
         }
     }
+    
 }

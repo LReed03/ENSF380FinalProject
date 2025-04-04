@@ -7,6 +7,7 @@ public class Location {
     private ArrayList<DisasterVictim> occupants;
     private ArrayList<InventoryItem> supplies;
     private int locationId;
+    private static int highestId = 0;
 
     public Location(String name, String address) {
         if (name == null || address == null) {
@@ -85,6 +86,12 @@ public class Location {
     }
 
     public void setId(int id) {
+        highestId = id;
         this.locationId = id;
+    }
+
+    public void setId(){
+        highestId = highestId + 1;
+        this.locationId = highestId;
     }
 }

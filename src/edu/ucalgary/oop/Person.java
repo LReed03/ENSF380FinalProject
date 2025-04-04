@@ -5,6 +5,8 @@ public abstract class Person {
     protected String lastName;
     protected Gender gender;
     protected FamilyGroup family;
+    protected int personId;
+    protected static int highestId = 0;
 
     public void setFamily(FamilyGroup family){
         this.family = family;
@@ -36,6 +38,21 @@ public abstract class Person {
 
     public Gender getGender(){
         return this.gender;
+    }
+
+    public void setId(int id){
+        highestId = id;
+        this.personId = id;
+
+    }
+
+    protected void setId(){
+        highestId = highestId + 1;
+        this.personId = highestId;
+    }
+
+    protected int getId(){
+        return this.personId;
     }
 
 

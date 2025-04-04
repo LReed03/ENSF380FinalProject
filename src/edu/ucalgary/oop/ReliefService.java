@@ -10,6 +10,8 @@ public class ReliefService{
     private String infoProvided;
     private Location lastKnownLocation;
     private int inquiryID;
+    private static int highestId = 0;
+    
 
     public ReliefService(Person inquirer, Person missingPerson, String dateOfInquiry, String infoProvided, Location lastKnownLocation) throws IllegalArgumentException{
         this.inquirer = inquirer;
@@ -72,11 +74,16 @@ public class ReliefService{
 		
 	}
 
-    public void setInquiryId(int inquiryID){
+    public void setId(int inquiryID){
         this.inquiryID = inquiryID;
     }
 
-    public int getInquiryId(){
+    public int getId(){
         return this.inquiryID;
+    }
+
+    protected void setId(){
+        highestId = highestId + 1;
+        this.inquiryID = highestId;
     }
 }

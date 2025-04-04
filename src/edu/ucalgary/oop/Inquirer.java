@@ -3,7 +3,6 @@ package edu.ucalgary.oop;
 public class Inquirer extends Person{
     private String info;
     private String phoneNumber;
-    private int inquirerId;
 
     public Inquirer(String firstName, String lastName, String phone){
         this.firstName = firstName;
@@ -27,13 +26,6 @@ public class Inquirer extends Person{
         this.phoneNumber = phoneNumber;
     }
 
-    public int getInquirerId(){
-        return this.inquirerId;
-    }
-
-    public void setInquirerId(int inquirerId){
-        this.inquirerId = inquirerId;
-    }
 
 
 }

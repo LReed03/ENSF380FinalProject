@@ -34,3 +34,13 @@
 
 [2025-04-03T18:14:19.410184300] Cannot invoke "edu.ucalgary.oop.FamilyGroup.getFamilyID()" because the return value of "edu.ucalgary.oop.DisasterVictim.getFamily()" is null
 
+[2025-04-03T22:36:13.071064400] Timestamp format must be yyyy-mm-dd hh:mm:ss[.fffffffff]
+
+[2025-04-03T22:46:25.503022700] null
+
+[2025-04-03T22:46:52.655905500] null
+
+[2025-04-03T23:32:11.750623] No value specified for parameter 1.
+
+[2025-04-03T23:53:58.907927400] No value specified for parameter 2.
+
