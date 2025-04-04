@@ -4,12 +4,14 @@ import java.util.ArrayList;
 public class FamilyGroup {
     private int familyId;
     private ArrayList<Person> familyMembers;
+    private static int highestId = 0;
 
     public FamilyGroup(){
         this.familyMembers = new ArrayList<>();
     }
     
     public FamilyGroup(int familyId){
+        highestId = familyId;
         this.familyId = familyId;
         this.familyMembers = new ArrayList<>();
     }
@@ -30,11 +32,17 @@ public class FamilyGroup {
         this.familyMembers = family;
     }
 
-    public int getFamilyID(){
+    public int getId(){
         return this.familyId;
     }
 
-    public void setFamilyId(int id){
+    public void setId(int id){
+        highestId = id;
         this.familyId = id;
+    }
+
+    public void setId(){
+        highestId = highestId + 1;
+        this.familyId = highestId;
     }
 }

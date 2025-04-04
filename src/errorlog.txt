@@ -44,3 +44,11 @@
 
 [2025-04-03T23:53:58.907927400] No value specified for parameter 2.
 
+[2025-04-04T14:46:20.867071900] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
+
+[2025-04-04T14:46:31.229511300] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
+
+[2025-04-04T14:47:35.938780] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
+
+[2025-04-04T14:47:49.856547400] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
+

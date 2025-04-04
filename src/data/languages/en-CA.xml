@@ -97,19 +97,11 @@
     <!-- Family -->
     <translation>
         <key>EnterFamilyGroupOrSkip</key>
-        <value>Enter index for family group or leave blank to skip</value>
+        <value>Enter a family group index or enter %s to create a new family group</value>
     </translation>
     <translation>
         <key>AssignToFamily</key>
         <value>Assign this person to a family group?</value>
-    </translation>
-    <translation>
-        <key>OptionalFamily</key>
-        <value>Optionally select a family group</value>
-    </translation>
-    <translation>
-        <key>EnterFamilyIndexOrLeaveBlank</key>
-        <value>Enter family index or press enter to skip</value>
     </translation>
 
     <!-- Location -->

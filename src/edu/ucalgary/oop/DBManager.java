@@ -200,7 +200,7 @@ public class DBManager implements DBAccess{
             myStmt.setString(4, victim.getGender().toString());
             myStmt.setString(5, victim.getComments());
             if(victim.getFamily() != null){
-                myStmt.setInt(6, victim.getFamily().getFamilyID());
+                myStmt.setInt(6, victim.getFamily().getId());
             }
             else{
                 myStmt.setNull(6, java.sql.Types.INTEGER);
@@ -225,7 +225,7 @@ public class DBManager implements DBAccess{
             myStmt.setString(2, inquirer.getLastName());
             myStmt.setString(3, inquirer.getPhone());
             if(inquirer.getFamily() != null){
-                myStmt.setInt(4, inquirer.getFamily().getFamilyID());
+                myStmt.setInt(4, inquirer.getFamily().getId());
             }
             else{
                 myStmt.setNull(4, java.sql.Types.INTEGER);
@@ -268,7 +268,7 @@ public class DBManager implements DBAccess{
             myStmt.setString(1, victim.getGender().toString());
             myStmt.setString(2, victim.getComments());
             if(victim.getFamily() != null){
-                myStmt.setInt(3, victim.getFamily().getFamilyID());
+                myStmt.setInt(3, victim.getFamily().getId());
             }
             else{
                 myStmt.setNull(3, java.sql.Types.INTEGER);
@@ -295,7 +295,7 @@ public class DBManager implements DBAccess{
     
             myStmt.setString(1, inquirer.getPhone());
             if(inquirer.getFamily() != null){
-                myStmt.setInt(2, inquirer.getFamily().getFamilyID());
+                myStmt.setInt(2, inquirer.getFamily().getId());
             }
             else{
                 myStmt.setNull(2, java.sql.Types.INTEGER);
@@ -742,7 +742,7 @@ public class DBManager implements DBAccess{
    
     private FamilyGroup findFamilyGroupById(ArrayList<FamilyGroup> list, int id) {
         for (FamilyGroup fg : list) {
-            if (fg.getFamilyID() == id) {
+            if (fg.getId() == id) {
                 return fg;
             }
         }

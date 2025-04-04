@@ -3,6 +3,7 @@ package edu.ucalgary.oop;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.*;
 
@@ -124,13 +125,22 @@ public class ReliefController {
             newVictim.setId();
     
             viewFamilies();
-            System.out.println(languageManager.getTranslation("EnterFamilyGroupOrSkip"));
-            Integer famIndex = getValidatedIndex(familyGroups.size());
-            if (famIndex != -1) {
-                FamilyGroup family = familyGroups.get(famIndex);
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
+            Integer familyIndex = getValidatedIndex(familyGroups.size() + 1);
+            FamilyGroup family = null;
+            if (familyIndex == familyGroups.size()) {
+                family = new FamilyGroup();
+                family.setId();
+                family.addFamilyMember(newVictim);
+                newVictim.setFamily(family);
+                familyGroups.add(family);
+            } 
+            else if (familyIndex != -1) {
+                family = familyGroups.get(familyIndex);
                 family.addFamilyMember(newVictim);
                 newVictim.setFamily(family);
             }
+
     
             if (checkPersonExists(newVictim)) {
                 System.out.println(languageManager.getTranslation("VictimAlreadyExists"));
@@ -173,9 +183,20 @@ public class ReliefController {
             }
     
             viewFamilies();
-            System.out.println(languageManager.getTranslation("OptionalFamily"));
-            Integer familyIndex = getValidatedIndex(familyGroups.size());
-            FamilyGroup family = (familyIndex != -1) ? familyGroups.get(familyIndex) : null;
+            FamilyGroup family = null;
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
+            Integer familyIndex = getValidatedIndex(familyGroups.size() + 1);
+
+            if (familyIndex == familyGroups.size()) {
+                family = new FamilyGroup();
+                family.setId();
+                familyGroups.add(family);
+            } 
+            else if (familyIndex != -1) {
+                family = familyGroups.get(familyIndex);
+            }
+
+            
     
             Inquirer newInquirer = new Inquirer(firstName, lastName, phoneNumber);
             if (family != null) {
@@ -514,23 +535,30 @@ public class ReliefController {
         if (!commentInput.isEmpty()) {
             victim.setComments(commentInput);
         }
-    
-        System.out.println(languageManager.getTranslation("EnterFamilyIndexOrLeaveBlank"));
+
         viewFamilies();
-        int famIndex = getValidatedIndex(familyGroups.size());
+        System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
+        int famIndex = getValidatedIndex(familyGroups.size() + 1);
     
-        if (famIndex != -1) {
+        if (famIndex == familyGroups.size()) {
+            FamilyGroup newFamily = new FamilyGroup();
+            newFamily.setId(); 
+            familyGroups.add(newFamily);
+    
+            if (victim.getFamily() != null) {
+                victim.getFamily().getFamilyMembers().remove(victim);
+                isFamilyEmpty();
+            }
+    
+            newFamily.addFamilyMember(victim);
+            victim.setFamily(newFamily);
+        } 
+        else if (famIndex != -1) {
             FamilyGroup newFam = familyGroups.get(famIndex);
     
             if (victim.getFamily() != null && victim.getFamily() != newFam) {
-                FamilyGroup oldFam = victim.getFamily();
-                ArrayList<Person> members = oldFam.getFamilyMembers();
-                for (int i = 0; i < members.size(); i++) {
-                    if (members.get(i).getId() == victim.getId()) {
-                        members.remove(i);
-                        break;
-                    }
-                }
+                victim.getFamily().getFamilyMembers().remove(victim);
+                isFamilyEmpty();
             }
     
             newFam.addFamilyMember(victim);
@@ -538,15 +566,9 @@ public class ReliefController {
         } 
         else {
             if (victim.getFamily() != null) {
-                FamilyGroup currentFam = victim.getFamily();
-                ArrayList<Person> members = currentFam.getFamilyMembers();
-                for (int i = 0; i < members.size(); i++) {
-                    if (members.get(i).getId() == victim.getId()) {
-                        members.remove(i);
-                        break;
-                    }
-                }
+                victim.getFamily().getFamilyMembers().remove(victim);
                 victim.setFamily(null);
+                isFamilyEmpty();
             }
         }
     
@@ -567,28 +589,36 @@ public class ReliefController {
     
         System.out.println(languageManager.getTranslation("EnterNewPhone"));
         String phone = scanner.nextLine().trim();
-        if (phone.isEmpty()) {
+        if (phone.isEmpty() || !phone.matches("[0-9\\-]+")) {
             System.out.println(languageManager.getTranslation("InvalidPhoneNumber"));
             return;
         }
         inquirer.setPhone(phone);
     
         viewFamilies();
-        System.out.println(languageManager.getTranslation("EnterFamilyIndexOrLeaveBlank"));
-        int famIndex = getValidatedIndex(familyGroups.size());
+        System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
     
-        if (famIndex != -1) {
+        int famIndex = getValidatedIndex(familyGroups.size() + 1);
+    
+        if (famIndex == familyGroups.size()) {
+            FamilyGroup newFamily = new FamilyGroup();
+            newFamily.setId(); 
+            familyGroups.add(newFamily);
+    
+            if (inquirer.getFamily() != null) {
+                inquirer.getFamily().getFamilyMembers().remove(inquirer);
+                isFamilyEmpty();
+            }
+    
+            newFamily.addFamilyMember(inquirer);
+            inquirer.setFamily(newFamily);
+        } 
+        else if (famIndex != -1) {
             FamilyGroup newFam = familyGroups.get(famIndex);
     
             if (inquirer.getFamily() != null && inquirer.getFamily() != newFam) {
-                FamilyGroup oldFam = inquirer.getFamily();
-                ArrayList<Person> members = oldFam.getFamilyMembers();
-                for (int i = 0; i < members.size(); i++) {
-                    if (members.get(i).getId() == inquirer.getId()) {
-                        members.remove(i);
-                        break;
-                    }
-                }
+                inquirer.getFamily().getFamilyMembers().remove(inquirer);
+                isFamilyEmpty();
             }
     
             newFam.addFamilyMember(inquirer);
@@ -596,21 +626,16 @@ public class ReliefController {
         } 
         else {
             if (inquirer.getFamily() != null) {
-                FamilyGroup currentFam = inquirer.getFamily();
-                ArrayList<Person> members = currentFam.getFamilyMembers();
-                for (int i = 0; i < members.size(); i++) {
-                    if (members.get(i).getId() == inquirer.getId()) {
-                        members.remove(i);
-                        break;
-                    }
-                }
+                inquirer.getFamily().getFamilyMembers().remove(inquirer);
                 inquirer.setFamily(null);
+                isFamilyEmpty();
             }
         }
     
         model.updateInquirer(inquirer);
         System.out.println(languageManager.getTranslation("InquirerUpdated"));
     }
+    
     
     
     
@@ -884,6 +909,17 @@ public class ReliefController {
 		}
 		
 	}
+
+    private static void isFamilyEmpty() {
+        Iterator<FamilyGroup> iterator = familyGroups.iterator();
+        while (iterator.hasNext()) {
+            FamilyGroup f = iterator.next();
+            if (f.getFamilyMembers().isEmpty()) {
+                iterator.remove(); 
+            }
+        }
+    }
+    
     
     
 }
