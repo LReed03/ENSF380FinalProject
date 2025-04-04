@@ -17,6 +17,10 @@ public interface DBAccess {
     
     void removeVictimFromLocation(int personId, int locationId);
 
+    void updateSupplyToLocation(int supplyId, int locationId);
+    
+    void removeSupplyAllocation(int supplyId);
+
     ArrayList<InventoryItem> getAllInventory(ArrayList<DisasterVictim> victims, ArrayList<Location> locations);
 
     ArrayList<ReliefService> getAllInquiries(ArrayList<Inquirer> inquirers, ArrayList<DisasterVictim> victims, ArrayList<Location> locations);

@@ -710,30 +710,40 @@ public class ReliefController {
     
         Location location = locations.get(locationIndex);
     
-        ArrayList<InventoryItem> unallocatedInventory = new ArrayList<>();
+        ArrayList<InventoryItem> allocatableInventory = new ArrayList<>();
         for (InventoryItem item : supply) {
-            if (item.getAllocatedToPerson() == null && item.getAllocatedToLocation() == null) {
-                if (item.getItemType() != ItemType.PERSONALBELONGINGS) {
-                    unallocatedInventory.add(item);
-                }
+            if (item.getItemType() != ItemType.PERSONALBELONGINGS) {
+                allocatableInventory.add(item);
             }
         }
     
-        if (unallocatedInventory.isEmpty()) {
+        if (allocatableInventory.isEmpty()) {
             System.out.println(languageManager.getTranslation("NoUnallocatedInventory"));
             return;
         }
     
-        for (int i = 0; i < unallocatedInventory.size(); i++) {
-            System.out.println(i + ": " + unallocatedInventory.get(i).getItemType());
+        for (int i = 0; i < allocatableInventory.size(); i++) {
+            System.out.println(i + ": " + allocatableInventory.get(i).getItemType());
         }
     
-        int invIndex = getValidatedIndex(unallocatedInventory.size());
+        int invIndex = getValidatedIndex(allocatableInventory.size());
         if (invIndex == -1) return;
     
-        InventoryItem selectedItem = unallocatedInventory.get(invIndex);
-        location.addSupply(selectedItem); 
-        model.allocateInventoryToLocation(selectedItem.getId(), location.getId()); 
+        InventoryItem selectedItem = allocatableInventory.get(invIndex);
+    
+        if (selectedItem.getAllocatedToPerson() != null) {
+            selectedItem.getAllocatedToPerson().removeBelongings(selectedItem);
+            selectedItem.setAllocatedToPerson(null);
+        }
+        if (selectedItem.getAllocatedToLocation() != null) {
+            selectedItem.getAllocatedToLocation().removeSupply(selectedItem);
+            selectedItem.setAllocatedToLocation(null);
+        }
+    
+        location.addSupply(selectedItem);
+        selectedItem.setAllocatedToLocation(location);
+    
+        model.updateSupplyToLocation(selectedItem.getId(), location.getId());
     
         System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
     }
@@ -781,6 +791,7 @@ public class ReliefController {
         InventoryItem selectedItem = matchingInventory.get(invIndex);
         selectedItem.setAllocatedToPerson(victim);
         victim.addBelongings(selectedItem);
+        model.removeSupplyAllocation(selectedItem.getId());
         model.allocateInventoryToPerson(selectedItem.getId(), victim.getId());
     
         System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));

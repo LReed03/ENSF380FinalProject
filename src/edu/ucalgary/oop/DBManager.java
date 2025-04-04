@@ -1,5 +1,6 @@
 package edu.ucalgary.oop;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class DBManager implements DBAccess{
@@ -639,6 +640,56 @@ public class DBManager implements DBAccess{
         }
     
     }
+
+    public void updateSupplyToPerson(int supplyId, int personId) {
+        try {
+            String query = "UPDATE SupplyAllocation SET person_id = ?, location_id = NULL, allocation_date = ? WHERE supply_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, personId);
+            stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            stmt.setInt(3, supplyId);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void removeSupplyAllocation(int supplyId) {
+        try {
+            String query = "DELETE FROM SupplyAllocation WHERE supply_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, supplyId);
+            stmt.executeUpdate();
+            stmt.close();
+        } 
+        catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+    
+
+    public void updateSupplyToLocation(int supplyId, int locationId) {
+        try {
+            String query = "UPDATE SupplyAllocation SET location_id = ?, person_id = NULL, allocation_date = ? WHERE supply_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, locationId);
+            stmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            stmt.setInt(3, supplyId);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+    
+
     
      
     

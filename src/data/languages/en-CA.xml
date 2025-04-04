@@ -23,8 +23,10 @@
         <key>InvalidDateFormat</key>
         <value>Invalid date format (YYYY-MM-DD)</value>
     </translation>
-
-    <!-- Person -->
+    <translation>
+        <key>ViewFamilies</key>
+        <value>View Family Groups</value>
+    </translation>
     <translation>
         <key>EnterFirstName</key>
         <value>Enter the person's first name</value>

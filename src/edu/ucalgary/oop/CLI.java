@@ -84,16 +84,25 @@ public class CLI {
         System.out.println("4. " + languageManager.getTranslation("ViewMedicalRecords"));
         System.out.println("5. " + languageManager.getTranslation("ViewInquiries"));
         System.out.println("6. " + languageManager.getTranslation("ViewInventory"));
+        System.out.println("7. " + languageManager.getTranslation("ViewFamilies"));
         System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
 
         String choice = scanner.nextLine().trim();
         switch (choice) {
-            case "1": controller.viewDisasterVictims(); break;
-            case "2": controller.viewInquirers(); break;
-            case "3": controller.viewLocations(); break;
-            case "4": controller.viewMedicalRecords(); break;
-            case "5": controller.viewInquiries(); break;
-            case "6": controller.viewInventory(); break;
+            case "1": controller.viewDisasterVictims(); 
+            break;
+            case "2": controller.viewInquirers(); 
+            break;
+            case "3": controller.viewLocations(); 
+            break;
+            case "4": controller.viewMedicalRecords(); 
+            break;
+            case "5": controller.viewInquiries(); 
+            break;
+            case "6": controller.viewInventory(); 
+            break;
+            case "7": controller.viewFamilies(); 
+            break;
             default: System.out.println(languageManager.getTranslation("InvalidInputNumber"));
         }
     }

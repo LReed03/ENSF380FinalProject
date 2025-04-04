@@ -52,3 +52,8 @@
 
 [2025-04-04T14:47:49.856547400] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
 
+[2025-04-04T15:31:22.752263700] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
+
+[2025-04-04T15:33:52.540216] ERROR: duplicate key value violates unique constraint "personlocation_pkey"
+  Detail: Key (person_id, location_id)=(5, 2) already exists.
+
