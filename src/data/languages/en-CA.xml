@@ -20,6 +20,14 @@
         <value>Invalid input</value>
     </translation>
     <translation>
+        <key>CreateNewInquirer</key>
+        <value>Create new inquirer</value>
+    </translation>
+    <translation>
+        <key>CreateNewVictim</key>
+        <value>Create new disaster victim</value>
+    </translation>
+    <translation>
         <key>InvalidDateFormat</key>
         <value>Invalid date format (YYYY-MM-DD)</value>
     </translation>

@@ -38,45 +38,59 @@ public class ReliefController {
     Initializes the application by loading data from the database.
      */
     public void StartUp(){
-        model.removeExpiredWater();
-        this.familyGroups = model.getFamilyGroups();
-        this.disastervictims = model.getAllDisasterVictims(this.familyGroups);
-        this.inquirers = model.getAllInquirers(this.familyGroups);
-        this.locations = model.getAllLocations();
-        this.inquiries = model.getAllInquiries(this.inquirers, this.disastervictims, this.locations);
-        this.supply = model.getAllInventory(this.disastervictims, this.locations);
-        model.getAllMedicalRecords(this.locations, this.disastervictims);
-        model.assignVictimsToLocations(disastervictims, locations);
+        try{
+            model.removeExpiredWater();
+            this.familyGroups = model.getFamilyGroups();
+            this.disastervictims = model.getAllDisasterVictims(this.familyGroups);
+            this.inquirers = model.getAllInquirers(this.familyGroups);
+            this.locations = model.getAllLocations();
+            this.inquiries = model.getAllInquiries(this.inquirers, this.disastervictims, this.locations);
+            this.supply = model.getAllInventory(this.disastervictims, this.locations);
+            model.getAllMedicalRecords(this.locations, this.disastervictims);
+            model.assignVictimsToLocations(disastervictims, locations);
+        }
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
     }
 
     /**
     Allocates a disaster victim to a location.
      */
     public void allocateVictimToLocation() {
-        viewDisasterVictims();
-        int victimIndex = getValidatedIndex(disastervictims.size());
-        if (victimIndex == -1) return;
-    
-        DisasterVictim victim = disastervictims.get(victimIndex);
-    
-        viewLocations();
-        int locationIndex = getValidatedIndex(locations.size());
-        if (locationIndex == -1) return;
-    
-        Location newLocation = locations.get(locationIndex);
-    
-        for (Location loc : locations) {
-            if (loc.getOccupants().contains(victim)) {
-                loc.removeOccupant(victim); 
-                model.removeVictimFromLocation(victim.getId(), loc.getId()); 
-                break;
+        try{
+            viewDisasterVictims();
+            int victimIndex = getValidatedIndex(disastervictims.size());
+            if (victimIndex == -1) return;
+        
+            DisasterVictim victim = disastervictims.get(victimIndex);
+        
+            viewLocations();
+            int locationIndex = getValidatedIndex(locations.size());
+            if (locationIndex == -1) return;
+        
+            Location newLocation = locations.get(locationIndex);
+        
+            for (Location loc : locations) {
+                if (loc.getOccupants().contains(victim)) {
+                    loc.removeOccupant(victim); 
+                    model.removeVictimFromLocation(victim.getId(), loc.getId()); 
+                    break;
+                }
             }
+        
+            newLocation.addOccupant(victim);
+            model.addDisasterVictimToLocation(victim.getId(), newLocation.getId());
+        
+            System.out.println(languageManager.getTranslation("VictimSuccessfullyAllocated"));
         }
-    
-        newLocation.addOccupant(victim);
-        model.addDisasterVictimToLocation(victim.getId(), newLocation.getId());
-    
-        System.out.println(languageManager.getTranslation("VictimSuccessfullyAllocated"));
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
     }
     
     /**
@@ -468,358 +482,422 @@ public class ReliefController {
     Logs a new inquiry in the system.
      */
     public void logInquiry() {
-        System.out.println(languageManager.getTranslation("WhoIsLoggingInquiry"));
-        System.out.println("1. " + languageManager.getTranslation("Inquirer"));
-        System.out.println("2. " + languageManager.getTranslation("DisasterVictim"));
-        System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
-    
-        String typeChoice = scanner.nextLine().trim();
-    
-        int personId = 0;
-        boolean isInquirer = true;
-        Person loggedBy = null;
-    
-        if (typeChoice.equals("1")) {
-            System.out.println(languageManager.getTranslation("SelectInquirer"));
-            viewInquirers();
-            int inquirerIndex = getValidatedIndex(inquirers.size());
-            if (inquirerIndex == -1) return;
-            Inquirer inquirer = inquirers.get(inquirerIndex);
-            personId = inquirer.getId();
-            isInquirer = true;
-            loggedBy = inquirer;
-    
-        } 
-        else if (typeChoice.equals("2")) {
-            System.out.println(languageManager.getTranslation("SelectDisasterVictim"));
-            viewDisasterVictims();
-            int victimIndex = getValidatedIndex(disastervictims.size());
-            if (victimIndex == -1) return;
-            DisasterVictim victim = disastervictims.get(victimIndex);
-            personId = victim.getId();
-            isInquirer = false;
-            loggedBy = victim;
-        } 
-        else {
-            System.out.println(languageManager.getTranslation("InvalidInputNumber"));
-            return;
-        }
-    
-        System.out.println(languageManager.getTranslation("SelectMissingPerson"));
-        viewDisasterVictims();
-        int missingIndex = getValidatedIndex(disastervictims.size());
-        if (missingIndex == -1) return;
-        DisasterVictim missingPerson = disastervictims.get(missingIndex);
-    
-        System.out.println(languageManager.getTranslation("SelectLocation"));
-        viewLocations();
-        int locationIndex = getValidatedIndex(locations.size());
-        if (locationIndex == -1) return;
-        Location location = locations.get(locationIndex);
-    
-        System.out.println(languageManager.getTranslation("EnterComments"));
-        String comments = scanner.nextLine().trim();
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());    
-        String fullString = timestamp.toString();  
-
-        String[] parts = fullString.split(" ");  
-        String date = parts[0];              
-
-        model.logInquiry(personId, missingPerson.getId(), location.getId(), timestamp, comments);
-        ReliefService inquiry = new ReliefService(loggedBy, missingPerson, date, comments, location);
-        inquiries.add(inquiry);
+        try{
+            System.out.println(languageManager.getTranslation("WhoIsLoggingInquiry"));
+            System.out.println("1. " + languageManager.getTranslation("Inquirer"));
+            System.out.println("2. " + languageManager.getTranslation("DisasterVictim"));
+            System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
         
-    
-        System.out.println(languageManager.getTranslation("InquiryLoggedSuccessfully"));
+            String typeChoice = scanner.nextLine().trim();
+            Person loggedBy = null;
+        
+            if (typeChoice.equals("1")) {
+                System.out.println(languageManager.getTranslation("SelectInquirer"));
+                viewInquirers();
+                System.out.println(inquirers.size() + ": " + languageManager.getTranslation("CreateNewInquirer"));
+                int inquirerIndex = getValidatedIndex(inquirers.size() + 1);
+                if (inquirerIndex == -1) return;
+        
+                if (inquirerIndex == inquirers.size()) {
+                    addNewInquirer(); 
+                    loggedBy = inquirers.get(inquirers.size() - 1);
+                } 
+                else {
+                    loggedBy = inquirers.get(inquirerIndex);
+                }
+        
+            } 
+            else if (typeChoice.equals("2")) {
+                System.out.println(languageManager.getTranslation("SelectDisasterVictim"));
+                viewDisasterVictims();
+                System.out.println(disastervictims.size() + ": " + languageManager.getTranslation("CreateNewVictim"));
+                int victimIndex = getValidatedIndex(disastervictims.size() + 1);
+                if (victimIndex == -1) return;
+        
+                if (victimIndex == disastervictims.size()) {
+                    addDisasterVictim();
+                    loggedBy = disastervictims.get(disastervictims.size() - 1);
+                } else {
+                    loggedBy = disastervictims.get(victimIndex);
+                }
+        
+            }
+            else {
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
+        
+            System.out.println(languageManager.getTranslation("SelectMissingPerson"));
+            viewDisasterVictims();
+            System.out.println(disastervictims.size() + ": " + languageManager.getTranslation("CreateNewVictim"));
+            int missingIndex = getValidatedIndex(disastervictims.size() + 1);
+            if (missingIndex == -1) return;
+
+            DisasterVictim missingPerson;
+            if (missingIndex == disastervictims.size()) {
+                addDisasterVictim();
+                missingPerson = disastervictims.get(disastervictims.size() - 1);
+            } 
+            else {
+                missingPerson = disastervictims.get(missingIndex);
+            }
+
+        
+            System.out.println(languageManager.getTranslation("SelectLocation"));
+            viewLocations();
+            int locationIndex = getValidatedIndex(locations.size());
+            if (locationIndex == -1) return;
+            Location location = locations.get(locationIndex);
+        
+            System.out.println(languageManager.getTranslation("EnterComments"));
+            String comments = scanner.nextLine().trim();
+        
+            Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+            String date = timestamp.toLocalDateTime().toLocalDate().toString();
+        
+            model.logInquiry(loggedBy.getId(), missingPerson.getId(), location.getId(), timestamp, comments);
+            ReliefService inquiry = new ReliefService(loggedBy, missingPerson, date, comments, location);
+            inquiries.add(inquiry);
+        
+            System.out.println(languageManager.getTranslation("InquiryLoggedSuccessfully"));
+        }
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
     }
+    
     
     /**
     Updates the details of an existing disaster victim.
      */
     public void updateDisasterVictim() {
-        viewDisasterVictims(); 
-        int index = getValidatedIndex(disastervictims.size());
-        if (index == -1) return;
-    
-        DisasterVictim victim = disastervictims.get(index);
-    
-        System.out.println(languageManager.getTranslation("EnterNewGender") + " (" + victim.getGender() + "):");
-        System.out.println("0. " + languageManager.getTranslation("GenderMale"));
-        System.out.println("1. " + languageManager.getTranslation("GenderFemale"));
-        System.out.println("2. " + languageManager.getTranslation("GenderNonBinary"));
-        int genderChoice = getValidatedIndex(3);
-        if (genderChoice != -1) {
-            Gender[] genders = Gender.values();
-            victim.setGender(genders[genderChoice]);
-        }
-    
-        System.out.println(languageManager.getTranslation("EnterNewComments") + " (" + victim.getComments() + "):");
-        String commentInput = scanner.nextLine().trim();
-        if (!commentInput.isEmpty()) {
-            victim.setComments(commentInput);
-        }
+        try{
+            viewDisasterVictims(); 
+            int index = getValidatedIndex(disastervictims.size());
+            if (index == -1) return;
+        
+            DisasterVictim victim = disastervictims.get(index);
+        
+            System.out.println(languageManager.getTranslation("EnterNewGender") + " (" + victim.getGender() + "):");
+            System.out.println("0. " + languageManager.getTranslation("GenderMale"));
+            System.out.println("1. " + languageManager.getTranslation("GenderFemale"));
+            System.out.println("2. " + languageManager.getTranslation("GenderNonBinary"));
+            int genderChoice = getValidatedIndex(3);
+            if (genderChoice != -1) {
+                Gender[] genders = Gender.values();
+                victim.setGender(genders[genderChoice]);
+            }
+        
+            System.out.println(languageManager.getTranslation("EnterNewComments") + " (" + victim.getComments() + "):");
+            String commentInput = scanner.nextLine().trim();
+            if (!commentInput.isEmpty()) {
+                victim.setComments(commentInput);
+            }
 
-        viewFamilies();
-        System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
-        int famIndex = getValidatedIndex(familyGroups.size() + 1);
-    
-        if (famIndex == familyGroups.size()) {
-            FamilyGroup newFamily = new FamilyGroup();
-            newFamily.setId(); 
-            familyGroups.add(newFamily);
-    
-            if (victim.getFamily() != null) {
-                victim.getFamily().getFamilyMembers().remove(victim);
-                isFamilyEmpty();
+            viewFamilies();
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
+            int famIndex = getValidatedIndex(familyGroups.size() + 1);
+        
+            if (famIndex == familyGroups.size()) {
+                FamilyGroup newFamily = new FamilyGroup();
+                newFamily.setId(); 
+                familyGroups.add(newFamily);
+        
+                if (victim.getFamily() != null) {
+                    victim.getFamily().getFamilyMembers().remove(victim);
+                    isFamilyEmpty();
+                }
+        
+                newFamily.addFamilyMember(victim);
+                victim.setFamily(newFamily);
+            } 
+            else if (famIndex != -1) {
+                FamilyGroup newFam = familyGroups.get(famIndex);
+        
+                if (victim.getFamily() != null && victim.getFamily() != newFam) {
+                    victim.getFamily().getFamilyMembers().remove(victim);
+                    isFamilyEmpty();
+                }
+        
+                newFam.addFamilyMember(victim);
+                victim.setFamily(newFam);
+            } 
+            else {
+                if (victim.getFamily() != null) {
+                    victim.getFamily().getFamilyMembers().remove(victim);
+                    victim.setFamily(null);
+                    isFamilyEmpty();
+                }
             }
-    
-            newFamily.addFamilyMember(victim);
-            victim.setFamily(newFamily);
-        } 
-        else if (famIndex != -1) {
-            FamilyGroup newFam = familyGroups.get(famIndex);
-    
-            if (victim.getFamily() != null && victim.getFamily() != newFam) {
-                victim.getFamily().getFamilyMembers().remove(victim);
-                isFamilyEmpty();
-            }
-    
-            newFam.addFamilyMember(victim);
-            victim.setFamily(newFam);
-        } 
-        else {
-            if (victim.getFamily() != null) {
-                victim.getFamily().getFamilyMembers().remove(victim);
-                victim.setFamily(null);
-                isFamilyEmpty();
-            }
+        
+            model.updateDisasterVictim(victim);
+            System.out.println(languageManager.getTranslation("VictimSuccessfullyUpdated"));
         }
-    
-        model.updateDisasterVictim(victim);
-        System.out.println(languageManager.getTranslation("VictimSuccessfullyUpdated"));
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
     }
     
     /**
     Updates the details of an existing inquirer.
      */
     public void updateInquirer() {
-        viewInquirers();
-        int index = getValidatedIndex(inquirers.size());
-        if (index == -1) return;
-    
-        Inquirer inquirer = inquirers.get(index);
-    
-        System.out.println(languageManager.getTranslation("EnterNewPhone"));
-        String phone = scanner.nextLine().trim();
-        if (phone.isEmpty() || !phone.matches("[0-9\\-]+")) {
-            System.out.println(languageManager.getTranslation("InvalidPhoneNumber"));
-            return;
+        try{
+            viewInquirers();
+            int index = getValidatedIndex(inquirers.size());
+            if (index == -1) return;
+        
+            Inquirer inquirer = inquirers.get(index);
+        
+            System.out.println(languageManager.getTranslation("EnterNewPhone"));
+            String phone = scanner.nextLine().trim();
+            if (phone.isEmpty() || !phone.matches("[0-9\\-]+")) {
+                System.out.println(languageManager.getTranslation("InvalidPhoneNumber"));
+                return;
+            }
+            inquirer.setPhone(phone);
+        
+            viewFamilies();
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
+        
+            int famIndex = getValidatedIndex(familyGroups.size() + 1);
+        
+            if (famIndex == familyGroups.size()) {
+                FamilyGroup newFamily = new FamilyGroup();
+                newFamily.setId(); 
+                familyGroups.add(newFamily);
+        
+                if (inquirer.getFamily() != null) {
+                    inquirer.getFamily().getFamilyMembers().remove(inquirer);
+                    isFamilyEmpty();
+                }
+        
+                newFamily.addFamilyMember(inquirer);
+                inquirer.setFamily(newFamily);
+            } 
+            else if (famIndex != -1) {
+                FamilyGroup newFam = familyGroups.get(famIndex);
+        
+                if (inquirer.getFamily() != null && inquirer.getFamily() != newFam) {
+                    inquirer.getFamily().getFamilyMembers().remove(inquirer);
+                    isFamilyEmpty();
+                }
+        
+                newFam.addFamilyMember(inquirer);
+                inquirer.setFamily(newFam);
+            } 
+            else {
+                if (inquirer.getFamily() != null) {
+                    inquirer.getFamily().getFamilyMembers().remove(inquirer);
+                    inquirer.setFamily(null);
+                    isFamilyEmpty();
+                }
+            }
+        
+            model.updateInquirer(inquirer);
+            System.out.println(languageManager.getTranslation("InquirerUpdated"));
         }
-        inquirer.setPhone(phone);
-    
-        viewFamilies();
-        System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), familyGroups.size()));
-    
-        int famIndex = getValidatedIndex(familyGroups.size() + 1);
-    
-        if (famIndex == familyGroups.size()) {
-            FamilyGroup newFamily = new FamilyGroup();
-            newFamily.setId(); 
-            familyGroups.add(newFamily);
-    
-            if (inquirer.getFamily() != null) {
-                inquirer.getFamily().getFamilyMembers().remove(inquirer);
-                isFamilyEmpty();
-            }
-    
-            newFamily.addFamilyMember(inquirer);
-            inquirer.setFamily(newFamily);
-        } 
-        else if (famIndex != -1) {
-            FamilyGroup newFam = familyGroups.get(famIndex);
-    
-            if (inquirer.getFamily() != null && inquirer.getFamily() != newFam) {
-                inquirer.getFamily().getFamilyMembers().remove(inquirer);
-                isFamilyEmpty();
-            }
-    
-            newFam.addFamilyMember(inquirer);
-            inquirer.setFamily(newFam);
-        } 
-        else {
-            if (inquirer.getFamily() != null) {
-                inquirer.getFamily().getFamilyMembers().remove(inquirer);
-                inquirer.setFamily(null);
-                isFamilyEmpty();
-            }
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
-    
-        model.updateInquirer(inquirer);
-        System.out.println(languageManager.getTranslation("InquirerUpdated"));
     }
     
     /**
     Updates an existing medical record for a disaster victim.
      */
     public void updateMedicalRecord() {
-        ArrayList<DisasterVictim> victimsWithRecords = new ArrayList<>();
-        for (DisasterVictim victim : disastervictims) {
-            if (victim.getMedicalRecords() != null && !victim.getMedicalRecords().isEmpty()) {
-                victimsWithRecords.add(victim);
+        try{
+            ArrayList<DisasterVictim> victimsWithRecords = new ArrayList<>();
+            for (DisasterVictim victim : disastervictims) {
+                if (victim.getMedicalRecords() != null && !victim.getMedicalRecords().isEmpty()) {
+                    victimsWithRecords.add(victim);
+                }
             }
+        
+            for (int i = 0; i < victimsWithRecords.size(); i++) {
+                DisasterVictim v = victimsWithRecords.get(i);
+                System.out.println(i + ": " + languageManager.getTranslation("Name") + " " + v.getFirstName() + " " + v.getLastName() + " | " + languageManager.getTranslation("DateOfBirth") + ": " + v.getDateOfBirth());
+            }
+        
+            int victimIndex = getValidatedIndex(victimsWithRecords.size());
+            if (victimIndex == -1) return;
+        
+            DisasterVictim selectedVictim = victimsWithRecords.get(victimIndex);
+            ArrayList<MedicalRecord> records = selectedVictim.getMedicalRecords();
+        
+            for (int i = 0; i < records.size(); i++) {
+                System.out.println(i + ": " + records.get(i).getTreatmentDetails());
+            }
+        
+            int recordIndex = getValidatedIndex(records.size());
+            if (recordIndex == -1) return;
+        
+            MedicalRecord record = records.get(recordIndex);
+        
+            System.out.println(languageManager.getTranslation("EnterNewTreatment"));
+            String newDetails = scanner.nextLine().trim();
+            if (newDetails.isEmpty()) return;
+        
+            System.out.println(languageManager.getTranslation("EnterNewDate"));
+            String newDate = scanner.nextLine().trim();
+            if (!isValidDateFormat(newDate)) return;
+        
+            record.setTreatmentDetails(newDetails);
+            record.setDateOfTreatment(newDate);
+        
+            model.updateMedicalRecord(record, record.getId());
+            System.out.println(languageManager.getTranslation("MedicalRecordUpdated"));
         }
-    
-        for (int i = 0; i < victimsWithRecords.size(); i++) {
-            DisasterVictim v = victimsWithRecords.get(i);
-            System.out.println(i + ": " + languageManager.getTranslation("Name") + " " + v.getFirstName() + " " + v.getLastName() + " | " + languageManager.getTranslation("DateOfBirth") + ": " + v.getDateOfBirth());
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
-    
-        int victimIndex = getValidatedIndex(victimsWithRecords.size());
-        if (victimIndex == -1) return;
-    
-        DisasterVictim selectedVictim = victimsWithRecords.get(victimIndex);
-        ArrayList<MedicalRecord> records = selectedVictim.getMedicalRecords();
-    
-        for (int i = 0; i < records.size(); i++) {
-            System.out.println(i + ": " + records.get(i).getTreatmentDetails());
-        }
-    
-        int recordIndex = getValidatedIndex(records.size());
-        if (recordIndex == -1) return;
-    
-        MedicalRecord record = records.get(recordIndex);
-    
-        System.out.println(languageManager.getTranslation("EnterNewTreatment"));
-        String newDetails = scanner.nextLine().trim();
-        if (newDetails.isEmpty()) return;
-    
-        System.out.println(languageManager.getTranslation("EnterNewDate"));
-        String newDate = scanner.nextLine().trim();
-        if (!isValidDateFormat(newDate)) return;
-    
-        record.setTreatmentDetails(newDetails);
-        record.setDateOfTreatment(newDate);
-    
-        model.updateMedicalRecord(record, record.getId());
-        System.out.println(languageManager.getTranslation("MedicalRecordUpdated"));
     }
     
     /**
     Updates an existing inquiry in the system.
      */
     public void updateInquiry() {
-        viewInquiries();
-        int index = getValidatedIndex(inquiries.size());
-        if (index == -1) return;
+        try{
+            viewInquiries();
+            int index = getValidatedIndex(inquiries.size());
+            if (index == -1) return;
 
-        ReliefService inquiry = inquiries.get(index);
+            ReliefService inquiry = inquiries.get(index);
 
-        System.out.println(languageManager.getTranslation("EnterNewInquiryComments"));
-        String comments = scanner.nextLine().trim();
-        if (comments.isEmpty()) return;
-        inquiry.setInfoProvided(comments);
+            System.out.println(languageManager.getTranslation("EnterNewInquiryComments"));
+            String comments = scanner.nextLine().trim();
+            if (comments.isEmpty()) return;
+            inquiry.setInfoProvided(comments);
 
-        model.updateInquiry(inquiry, inquiry.getId());
-        System.out.println(languageManager.getTranslation("InquiryUpdated"));
+            model.updateInquiry(inquiry, inquiry.getId());
+            System.out.println(languageManager.getTranslation("InquiryUpdated"));
+        }
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
     }
 
     /**
     Allocates inventory to a location.
      */
     public void allocateInventoryToLocation() {
-        viewLocations();
-        int locationIndex = getValidatedIndex(locations.size());
-        if (locationIndex == -1) return;
-    
-        Location location = locations.get(locationIndex);
-    
-        ArrayList<InventoryItem> allocatableInventory = new ArrayList<>();
-        for (InventoryItem item : supply) {
-            if (item.getItemType() != ItemType.PERSONALBELONGINGS) {
-                allocatableInventory.add(item);
+        try{
+            viewLocations();
+            int locationIndex = getValidatedIndex(locations.size());
+            if (locationIndex == -1) return;
+        
+            Location location = locations.get(locationIndex);
+        
+            ArrayList<InventoryItem> allocatableInventory = new ArrayList<>();
+            for (InventoryItem item : supply) {
+                if (item.getItemType() != ItemType.PERSONALBELONGINGS) {
+                    allocatableInventory.add(item);
+                }
             }
+        
+            if (allocatableInventory.isEmpty()) {
+                System.out.println(languageManager.getTranslation("NoUnallocatedInventory"));
+                return;
+            }
+        
+            for (int i = 0; i < allocatableInventory.size(); i++) {
+                System.out.println(i + ": " + allocatableInventory.get(i).getItemType());
+            }
+        
+            int invIndex = getValidatedIndex(allocatableInventory.size());
+            if (invIndex == -1) return;
+        
+            InventoryItem selectedItem = allocatableInventory.get(invIndex);
+        
+            if (selectedItem.getAllocatedToPerson() != null) {
+                selectedItem.getAllocatedToPerson().removeBelongings(selectedItem);
+                selectedItem.setAllocatedToPerson(null);
+            }
+            if (selectedItem.getAllocatedToLocation() != null) {
+                selectedItem.getAllocatedToLocation().removeSupply(selectedItem);
+                selectedItem.setAllocatedToLocation(null);
+            }
+        
+            location.addSupply(selectedItem);
+            selectedItem.setAllocatedToLocation(location);
+        
+            model.updateSupplyToLocation(selectedItem.getId(), location.getId());
+        
+            System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
         }
-    
-        if (allocatableInventory.isEmpty()) {
-            System.out.println(languageManager.getTranslation("NoUnallocatedInventory"));
-            return;
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
-    
-        for (int i = 0; i < allocatableInventory.size(); i++) {
-            System.out.println(i + ": " + allocatableInventory.get(i).getItemType());
-        }
-    
-        int invIndex = getValidatedIndex(allocatableInventory.size());
-        if (invIndex == -1) return;
-    
-        InventoryItem selectedItem = allocatableInventory.get(invIndex);
-    
-        if (selectedItem.getAllocatedToPerson() != null) {
-            selectedItem.getAllocatedToPerson().removeBelongings(selectedItem);
-            selectedItem.setAllocatedToPerson(null);
-        }
-        if (selectedItem.getAllocatedToLocation() != null) {
-            selectedItem.getAllocatedToLocation().removeSupply(selectedItem);
-            selectedItem.setAllocatedToLocation(null);
-        }
-    
-        location.addSupply(selectedItem);
-        selectedItem.setAllocatedToLocation(location);
-    
-        model.updateSupplyToLocation(selectedItem.getId(), location.getId());
-    
-        System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
     }
     
     /**
     Allocates inventory to a disaster victim.
      */
     public void allocateInventoryToPerson() {
-        viewDisasterVictims();
-        int victimIndex = getValidatedIndex(disastervictims.size());
-        if (victimIndex == -1) return;
-    
-        DisasterVictim victim = disastervictims.get(victimIndex);
-        Location victimLocation = null;
-    
-        for (Location loc : locations) {
-            if (loc.getOccupants().contains(victim)) {
-                victimLocation = loc;
-                break;
+        try{
+            viewDisasterVictims();
+            int victimIndex = getValidatedIndex(disastervictims.size());
+            if (victimIndex == -1) return;
+        
+            DisasterVictim victim = disastervictims.get(victimIndex);
+            Location victimLocation = null;
+        
+            for (Location loc : locations) {
+                if (loc.getOccupants().contains(victim)) {
+                    victimLocation = loc;
+                    break;
+                }
             }
-        }
-    
-        if (victimLocation == null) {
-            System.out.println(languageManager.getTranslation("VictimNotAllocatedToLocation"));
-            return;
-        }
-    
-        ArrayList<InventoryItem> matchingInventory = new ArrayList<>();
-        for (InventoryItem item : supply) {
-            if (item.getAllocatedToLocation() == victimLocation) {
-                matchingInventory.add(item);
+        
+            if (victimLocation == null) {
+                System.out.println(languageManager.getTranslation("VictimNotAllocatedToLocation"));
+                return;
             }
+        
+            ArrayList<InventoryItem> matchingInventory = new ArrayList<>();
+            for (InventoryItem item : supply) {
+                if (item.getAllocatedToLocation() == victimLocation) {
+                    matchingInventory.add(item);
+                }
+            }
+        
+            if (matchingInventory.isEmpty()) {
+                System.out.println(languageManager.getTranslation("NoInventoryAtVictimLocation"));
+                return;
+            }
+        
+            for (int i = 0; i < matchingInventory.size(); i++) {
+                System.out.println(i + ": " + matchingInventory.get(i).getItemType());
+            }
+        
+            int invIndex = getValidatedIndex(matchingInventory.size());
+            if (invIndex == -1) return;
+        
+            InventoryItem selectedItem = matchingInventory.get(invIndex);
+            selectedItem.setAllocatedToPerson(victim);
+            victim.addBelongings(selectedItem);
+            model.removeSupplyAllocation(selectedItem.getId());
+            model.allocateInventoryToPerson(selectedItem.getId(), victim.getId());
+        
+            System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
         }
-    
-        if (matchingInventory.isEmpty()) {
-            System.out.println(languageManager.getTranslation("NoInventoryAtVictimLocation"));
-            return;
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
         }
-    
-        for (int i = 0; i < matchingInventory.size(); i++) {
-            System.out.println(i + ": " + matchingInventory.get(i).getItemType());
-        }
-    
-        int invIndex = getValidatedIndex(matchingInventory.size());
-        if (invIndex == -1) return;
-    
-        InventoryItem selectedItem = matchingInventory.get(invIndex);
-        selectedItem.setAllocatedToPerson(victim);
-        victim.addBelongings(selectedItem);
-        model.removeSupplyAllocation(selectedItem.getId());
-        model.allocateInventoryToPerson(selectedItem.getId(), victim.getId());
-    
-        System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
     }
     
     /**
