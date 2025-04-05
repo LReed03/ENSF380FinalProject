@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.*;
-
+/**
+ @author Landon Reed
+ @version 1.0
+ Created on: April 5, 2025
+ */
 public class ReliefController {
     private static ArrayList<DisasterVictim> disastervictims;
     private static ArrayList<Inquirer> inquirers;
@@ -18,6 +22,11 @@ public class ReliefController {
     private static Scanner scanner;
     private static LanguageManager languageManager;
 
+    /**
+    @param scanner Scanner object for user input.
+    @param model DBAccess object for database operations.
+    @param languageManager LanguageManager object for translations.
+     */
     public ReliefController(Scanner scanner, DBAccess model, LanguageManager languageManager){
         this.scanner = scanner;
         this.model = model;
@@ -25,6 +34,9 @@ public class ReliefController {
         this.StartUp();
     }
 
+    /**
+    Initializes the application by loading data from the database.
+     */
     public void StartUp(){
         model.removeExpiredWater();
         this.familyGroups = model.getFamilyGroups();
@@ -37,6 +49,9 @@ public class ReliefController {
         model.assignVictimsToLocations(disastervictims, locations);
     }
 
+    /**
+    Allocates a disaster victim to a location.
+     */
     public void allocateVictimToLocation() {
         viewDisasterVictims();
         int victimIndex = getValidatedIndex(disastervictims.size());
@@ -64,9 +79,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("VictimSuccessfullyAllocated"));
     }
     
-    
-    
-
+    /**
+    Adds a new disaster victim to the system.
+     */
     public void addDisasterVictim() {
         try {
             System.out.println(languageManager.getTranslation("EnterFirstName"));
@@ -159,6 +174,9 @@ public class ReliefController {
         }
     }
     
+    /**
+    Adds a new inquirer to the system.
+     */
     public void addNewInquirer() {
         try {
             System.out.print(languageManager.getTranslation("EnterFirstName") + ": ");
@@ -217,8 +235,9 @@ public class ReliefController {
         }
     }
     
-    
-
+    /**
+    Adds a new medical record for a disaster victim.
+     */
     public void addNewMedicalRecord() {
         try {
             System.out.println(languageManager.getTranslation("MedicalRecordSelectVictim"));
@@ -270,7 +289,9 @@ public class ReliefController {
         }
     }
     
-
+    /**
+    Adds a new supply item to the system and allocates it to a location or person.
+     */
     public void addNewSupply() {
         try {
             System.out.println(languageManager.getTranslation("SelectItem"));
@@ -443,8 +464,9 @@ public class ReliefController {
         }
     }
     
-    
-
+    /**
+    Logs a new inquiry in the system.
+     */
     public void logInquiry() {
         System.out.println(languageManager.getTranslation("WhoIsLoggingInquiry"));
         System.out.println("1. " + languageManager.getTranslation("Inquirer"));
@@ -511,8 +533,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("InquiryLoggedSuccessfully"));
     }
     
-    
-
+    /**
+    Updates the details of an existing disaster victim.
+     */
     public void updateDisasterVictim() {
         viewDisasterVictims(); 
         int index = getValidatedIndex(disastervictims.size());
@@ -576,10 +599,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("VictimSuccessfullyUpdated"));
     }
     
-    
-    
-    
-
+    /**
+    Updates the details of an existing inquirer.
+     */
     public void updateInquirer() {
         viewInquirers();
         int index = getValidatedIndex(inquirers.size());
@@ -636,11 +658,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("InquirerUpdated"));
     }
     
-    
-    
-    
-
-
+    /**
+    Updates an existing medical record for a disaster victim.
+     */
     public void updateMedicalRecord() {
         ArrayList<DisasterVictim> victimsWithRecords = new ArrayList<>();
         for (DisasterVictim victim : disastervictims) {
@@ -684,8 +704,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("MedicalRecordUpdated"));
     }
     
-        
-
+    /**
+    Updates an existing inquiry in the system.
+     */
     public void updateInquiry() {
         viewInquiries();
         int index = getValidatedIndex(inquiries.size());
@@ -702,7 +723,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("InquiryUpdated"));
     }
 
-
+    /**
+    Allocates inventory to a location.
+     */
     public void allocateInventoryToLocation() {
         viewLocations();
         int locationIndex = getValidatedIndex(locations.size());
@@ -748,7 +771,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
     }
     
-
+    /**
+    Allocates inventory to a disaster victim.
+     */
     public void allocateInventoryToPerson() {
         viewDisasterVictims();
         int victimIndex = getValidatedIndex(disastervictims.size());
@@ -797,7 +822,9 @@ public class ReliefController {
         System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
     }
     
-
+    /**
+    Displays a list of all disaster victims.
+     */
     public void viewDisasterVictims(){
         for (int i = 0; i < disastervictims.size(); i++) {
             DisasterVictim v = disastervictims.get(i);
@@ -805,6 +832,9 @@ public class ReliefController {
         }
     }
 
+    /**
+    Displays a list of all inquirers.
+     */
     public void viewInquirers(){
         for(int i = 0; i < inquirers.size(); i++){
             Inquirer in = inquirers.get(i);
@@ -813,6 +843,9 @@ public class ReliefController {
 
     }
 
+    /**
+    Displays a list of all locations.
+     */
     public void viewLocations(){
         for (int i = 0; i < locations.size(); i++) {
             Location loc = locations.get(i);
@@ -820,6 +853,9 @@ public class ReliefController {
         }
     }
 
+    /**
+    Displays medical records for a selected disaster victim.
+     */
     public void viewMedicalRecords(){
         System.out.println(languageManager.getTranslation("MedicalRecordView"));
         viewDisasterVictims();
@@ -832,6 +868,9 @@ public class ReliefController {
         }
     }
 
+    /**
+    Displays a list of all inquiries.
+     */
     public void viewInquiries(){
         for(int i = 0; i < inquiries.size(); i++){
             ReliefService inquiry = inquiries.get(i);
@@ -839,6 +878,9 @@ public class ReliefController {
     }
 }
 
+    /**
+    Displays a list of all inventory items.
+     */
     public void viewInventory(){
         for(int i = 0; i < supply.size(); i++){
             InventoryItem item = supply.get(i);
@@ -846,6 +888,9 @@ public class ReliefController {
         }
     }
 
+    /**
+    Displays a list of all family groups and their members.
+     */
     public void viewFamilies() {
         for (int i =0; i < familyGroups.size(); i++) {
             System.out.println(languageManager.getTranslation("FamilyID") + ": " + i);
@@ -858,7 +903,11 @@ public class ReliefController {
         }
     }
     
-
+    /**
+    Checks if a disaster victim already exists in the system.
+    @param victim DisasterVictim object to check.
+    @return true if the victim exists, false otherwise.
+     */
     private static boolean checkPersonExists(DisasterVictim victim){
         for(DisasterVictim v: disastervictims){
             if(v.getFirstName().equalsIgnoreCase(victim.getFirstName()) && v.getLastName().equalsIgnoreCase(victim.getLastName()) && v.getDateOfBirth().equals(victim.getDateOfBirth())){
@@ -868,6 +917,12 @@ public class ReliefController {
         return false;
 
     }
+
+    /**
+    alidates and retrieves a user input index within a specified range.
+    @param upperBound The upper bound for the index.
+    @return The validated index, or -1 if invalid.
+     */
     private int getValidatedIndex(int upperBound) {
         int index = -1;
     
@@ -904,10 +959,20 @@ public class ReliefController {
         return index;
     }
 
+    /**
+    Validates a name string.
+    @param name The name string to validate.
+    @return true if the name is valid, false otherwise.
+     */
     private boolean isValidName(String name) {
         return name.matches("[a-zA-Z\\-\\s]+"); 
     }
 
+    /**
+    Validates a date string format (YYYY-MM-DD).
+    @param date The date string to validate.
+    @return true if the date format is valid, false otherwise.
+     */
     private static boolean isValidDateFormat(String date){
 		String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
 		Pattern myPattern = Pattern.compile(dateRegex);
@@ -921,6 +986,9 @@ public class ReliefController {
 		
 	}
 
+    /**
+    Removes empty family groups from the system.
+     */
     private static void isFamilyEmpty() {
         Iterator<FamilyGroup> iterator = familyGroups.iterator();
         while (iterator.hasNext()) {

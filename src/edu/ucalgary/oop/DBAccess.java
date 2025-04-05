@@ -2,7 +2,11 @@ package edu.ucalgary.oop;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-
+/**
+ @author Landon Reed
+ @version 1.0
+ Created on: April 5, 2025
+ */
 public interface DBAccess {
 
     ArrayList<DisasterVictim> getAllDisasterVictims(ArrayList<FamilyGroup> families);

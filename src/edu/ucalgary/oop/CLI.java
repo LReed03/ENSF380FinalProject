@@ -4,12 +4,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ @author Landon Reed
+ @version 1.0
+ Created on: April 5, 2025
+ */
 public class CLI {
     private ReliefController controller;
     private Scanner scanner;
     private LanguageManager languageManager;
     private ArrayList<String> languageCodes = new ArrayList<>(Arrays.asList("en-CA", "fr-CA"));
 
+    /**
+    Constructs a CLI object, initializes the language manager, database manager, 
+    and the relief controller. Prompts the user to select a language.
+     */
     public CLI() {
         this.scanner = new Scanner(System.in);
         System.out.println("Available Languages: ");
@@ -33,6 +42,9 @@ public class CLI {
         this.controller = new ReliefController(scanner, dbManager, languageManager);
     }
 
+    /**
+    Starts the main loop of the command-line interface, allowing user to navigate
+     */
     public void run() {
         boolean running = true;
         while (running) {
@@ -63,6 +75,9 @@ public class CLI {
         }
     }
 
+    /**
+    displays the insert menu and handles user input for adding new data 
+     */
     private void insertMenu() {
         System.out.println("\n=== " + languageManager.getTranslation("InsertData") + " ===");
         System.out.println("1. " + languageManager.getTranslation("AddDisasterVictim"));
@@ -94,6 +109,9 @@ public class CLI {
         }
     }
 
+    /**
+    Displays the view menu and handles user input for viewing different types of data  
+     */
     private void viewMenu() {
         System.out.println("\n=== " + languageManager.getTranslation("ViewData") + " ===");
         System.out.println("1. " + languageManager.getTranslation("ViewVictims"));
@@ -133,6 +151,9 @@ public class CLI {
         }
     }
 
+    /**
+    Displays the update menu and handles user input for updating data 
+     */
     private void updateMenu() {
         System.out.println("\n=== " + languageManager.getTranslation("UpdateData") + " ===");
         System.out.println("1. " + languageManager.getTranslation("UpdateVictim"));

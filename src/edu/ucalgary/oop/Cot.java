@@ -1,39 +1,68 @@
 package edu.ucalgary.oop;
-
-public class Cot extends InventoryItem{
+/**
+ @author Landon Reed
+ @version 1.0
+ Created on: April 5, 2025
+ */
+public class Cot extends InventoryItem {
     private int roomNumber;
     private String gridLocation;
 
-    public Cot(int rmNum, String gridLocation, DisasterVictim person){
+    /**
+    Constructs a Cot allocated to a disaster victim.
+    @param rmNum        The room number where the cot is located.
+    @param gridLocation The grid location of the cot.
+    @param person       The disaster victim to whom the cot is allocated.
+     */
+    public Cot(int rmNum, String gridLocation, DisasterVictim person) {
         this.roomNumber = rmNum;
         this.gridLocation = gridLocation;
         this.allocatedToPerson = person;
         this.ITEMTYPE = ItemType.COT;
     }
 
-    public Cot(int rmNum, String gridLocation, Location location){
+    /**
+    Constructs a Cot allocated to a specific location.
+    @param rmNum        The room number where the cot is located.
+    @param gridLocation The grid location of the cot.
+    @param location     The location to which the cot is allocated.
+     */
+    public Cot(int rmNum, String gridLocation, Location location) {
         this.roomNumber = rmNum;
         this.gridLocation = gridLocation;
         this.allocatedToLocation = location;
         this.ITEMTYPE = ItemType.COT;
     }
 
-    public void setRoomNumber(int rmNum){
-
+    /**
+    Sets the room number for the cot.
+    @param rmNum The room number to set.
+     */
+    public void setRoomNumber(int rmNum) {
+        this.roomNumber = rmNum;
     }
 
-    public int getRoomNumber(){
+    /**
+    Gets the room number of the cot.
+    @return The room number of the cot.
+     */
+    public int getRoomNumber() {
         return this.roomNumber;
     }
 
-    public void setGridLocation(String gridLocation){
-
+    /**
+    Sets the grid location for the cot.
+    @param gridLocation The grid location to set.
+     */
+    public void setGridLocation(String gridLocation) {
+        this.gridLocation = gridLocation;
     }
 
-    public String getGridLocaiton(){
+    /**
+    Gets the grid location of the cot.
+    @return The grid location of the cot.
+     */
+    public String getGridLocaiton() {
         return this.gridLocation;
     }
-
-
-
 }

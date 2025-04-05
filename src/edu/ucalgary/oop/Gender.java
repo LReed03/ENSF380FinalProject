@@ -1,10 +1,20 @@
 package edu.ucalgary.oop;
 
+/**
+ @author Landon Reed
+ @version 1.0
+ Created on: April 5, 2025
+ */
 public enum Gender {
     MALE,
     FEMALE,
     NONBINARY;
 
+    /**
+    Converts a Gender enum value to its string representation.
+    @param gender The Gender enum value to convert.
+    @return A string representation of the gender ("male", "female", "non-binary").
+     */
     public String toString(Gender gender){
         if(gender == MALE){
             return "male";
@@ -18,6 +28,11 @@ public enum Gender {
         return "";
     }
 
+    /**
+    Converts a string representation of a gender to its corresponding Gender enum value.
+    @param value The string representation of the gender.
+    @return The corresponding Gender value, or null if the input is not in the Gender.
+     */
     public static Gender fromString(String value) {
         if (value == null) return null;
     
