@@ -23,7 +23,6 @@ public class LanguageManager {
      */
     private LanguageManager(String languageCode){
         setLanguageCode(languageCode);
-        loadLanguageFile(this.languageCode);
     }
 
     /**
@@ -48,14 +47,14 @@ public class LanguageManager {
     
 
     /**
-    Loads the language file corresponding to the specified language code.
-    Clears any previously loaded keys and values.
+    Loads the language file from the specified language code.
     @param languageCode The language code of the file to load.
      */
     public void loadLanguageFile(String languageCode) {
         keys.clear();
         values.clear();
-        File dataFolder = new File("data");
+        File back = new File("..");
+        File dataFolder = new File(back,"data");
         File languagesFolder = new File(dataFolder, "languages");
         File languageFile = new File(languagesFolder, languageCode.concat(".xml"));
 
@@ -108,7 +107,7 @@ public class LanguageManager {
     /**
     Retrieves the translation for a given key.
     @param key The key to look up in the translations.
-    @return The corresponding translation, or a placeholder if the key is missing.
+    @return The translation
      */
     public String getTranslation(String key) {
         for (int i = 0; i < keys.size(); i++) {

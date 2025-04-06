@@ -1,6 +1,7 @@
 package edu.ucalgary.oop;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -17,12 +18,16 @@ public class ErrorLog {
     @param e The exception to log.
      */
     public ErrorLog(Exception e) {
-        BufferedWriter out = null;
+    BufferedWriter out = null;
         try {
-            out = new BufferedWriter(new FileWriter("errorlog.txt", true)); 
+            File baseDir = new File(".."); 
+            File dataDir = new File(baseDir, "data");
+            File logFile = new File(dataDir, "errorlog.txt");
+
+            out = new BufferedWriter(new FileWriter(logFile, true));
             out.write("[" + LocalDateTime.now() + "] " + e.getMessage());
             out.newLine();
-            out.newLine(); 
+            out.newLine();
         } 
         catch (IOException ex) {
             System.out.println("Could not write to errorlog.txt.");
@@ -37,6 +42,7 @@ public class ErrorLog {
                 }
             }
         }
-    }
+}
+
 
 }

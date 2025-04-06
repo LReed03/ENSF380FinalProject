@@ -117,7 +117,7 @@
     <!-- Location -->
     <translation>
         <key>SelectLocation</key>
-        <value>Select a location</value>
+        <value>Select last known location</value>
     </translation>
     <translation>
         <key>LocationName</key>
