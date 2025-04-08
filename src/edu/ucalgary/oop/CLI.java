@@ -3,6 +3,8 @@ package edu.ucalgary.oop;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  @author Landon Reed
@@ -39,7 +41,7 @@ public class CLI {
 
         DBManager dbManager = DBManager.getInstance();
 
-        this.controller = new ReliefController(scanner, dbManager, languageManager);
+        this.controller = new ReliefController(dbManager, languageManager);
     }
 
     /**
@@ -90,19 +92,19 @@ public class CLI {
         String choice = scanner.nextLine().trim();
         switch (choice) {
             case "1":
-                controller.addDisasterVictim();
+                addDisasterVictimCLI();
                 break;
             case "2":
-                controller.addNewInquirer();
+                addNewInquirerCLI();
                 break;
             case "3":
-                controller.addNewMedicalRecord();
+                addNewMedicalRecord();
                 break;
             case "4":
-                controller.addNewSupply();
+                addNewSupplyCLI();
                 break;
             case "5":
-                controller.logInquiry();
+                logInquiryCLI();
                 break;
             default:
                 System.out.println(languageManager.getTranslation("InvalidInputNumber"));
@@ -167,26 +169,646 @@ public class CLI {
         String choice = scanner.nextLine().trim();
         switch (choice) {
             case "1":
-                controller.updateDisasterVictim();
+                updateDisasterVictimCLI();
                 break;
             case "2":
-                controller.updateInquirer();
+                updateDisasterVictimCLI();
                 break;
             case "3":
-                controller.updateMedicalRecord();
+                updateMedicalRecordCLI();
                 break;
             case "4":
-                controller.updateInquiry();
+                updateInquiryCLI();
                 break;
             case "5":
-                controller.allocateInventoryToPerson();
+                allocateInventoryToPersonCLI();
                 break;
             case "6":
-                controller.allocateVictimToLocation();
+                allocateVictimToLocationCLI();
                 break;
             default:
                 System.out.println(languageManager.getTranslation("InvalidInputNumber"));
         }
     }
 
+    public void addDisasterVictimCLI() {
+        try{
+            System.out.println(languageManager.getTranslation("EnterFirstName"));
+            String firstName = scanner.nextLine().trim();
+
+            System.out.println(languageManager.getTranslation("EnterLastName"));
+            String lastName = scanner.nextLine().trim();
+
+            System.out.println(languageManager.getTranslation("EnterDOB"));
+            String dob = scanner.nextLine().trim();
+
+            System.out.println(languageManager.getTranslation("EnterGender"));
+            System.out.println("0. " + languageManager.getTranslation("GenderMale"));
+            System.out.println("1. " + languageManager.getTranslation("GenderFemale"));
+            System.out.println("2. " + languageManager.getTranslation("GenderNonBinary"));
+            int genderIndex = getValidatedIndex(3);
+            Gender[] genderList = {Gender.MALE, Gender.FEMALE, Gender.NONBINARY};
+            Gender gender = genderList[genderIndex];
+
+            System.out.println(languageManager.getTranslation("EnterComments"));
+            String comments = scanner.nextLine().trim();
+
+            FamilyGroup family = selectOrCreateFamily();
+
+            boolean added = controller.addDisasterVictim(firstName, lastName, dob, gender, comments, family);
+
+            if (added) {
+                System.out.println(languageManager.getTranslation("VictimSuccessfullyAdded"));
+            } 
+            else {
+                System.out.println(languageManager.getTranslation("VictimAlreadyExists"));
+            }
+        }
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void addNewInquirerCLI() {
+        try {
+            System.out.print(languageManager.getTranslation("EnterFirstName") + ": ");
+            String firstName = scanner.nextLine().trim();
+    
+            System.out.print(languageManager.getTranslation("EnterLastName") + ": ");
+            String lastName = scanner.nextLine().trim();
+    
+            System.out.print(languageManager.getTranslation("EnterPhoneNumber") + ": ");
+            String phoneNumber = scanner.nextLine().trim();
+    
+            controller.viewFamilies();
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroups().size()));
+            int familyIndex = getValidatedIndex(controller.getFamilyGroups().size() + 1);
+    
+            FamilyGroup family = null;
+            if (familyIndex == controller.getFamilyGroups().size()) {
+                family = new FamilyGroup();
+                family.setId();
+                controller.getFamilyGroups().add(family);
+            } 
+            else if (familyIndex != -1) {
+                family = controller.getFamilyGroups().get(familyIndex);
+            }
+    
+            boolean added = controller.addInquirer(firstName, lastName, phoneNumber, family);
+    
+            if (added) {
+                System.out.println(languageManager.getTranslation("InquirerAddedSuccess"));
+            } 
+            else {
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+            }
+    
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void addNewSupplyCLI() {
+        try {
+            System.out.println(languageManager.getTranslation("SelectItem"));
+            System.out.println("0. " + languageManager.getTranslation("SupplyBlanket"));
+            System.out.println("1. " + languageManager.getTranslation("SupplyCot"));
+            System.out.println("2. " + languageManager.getTranslation("SupplyBelongings"));
+            System.out.println("3. " + languageManager.getTranslation("SupplyWater"));
+            int type = getValidatedIndex(4);
+            if (type == -1) return;
+    
+            System.out.println(languageManager.getTranslation("LocationOrPerson"));
+            int locOrPerson = getValidatedIndex(2);
+            if (locOrPerson == -1) return;
+    
+            int index = -1;
+            if (locOrPerson == 0) {
+                controller.viewLocations();
+                index = getValidatedIndex(controller.getLocations().size());
+            } else {
+                controller.viewDisasterVictims();
+                index = getValidatedIndex(controller.getDisasterVictims().size());
+            }
+    
+            if (index == -1) return;
+    
+            boolean success = false;
+            switch (type) {
+                case 0:
+                    success = controller.addBlanket(locOrPerson == 0, index);
+                    break;
+                case 1:
+                    System.out.println(languageManager.getTranslation("EnterRoomNumber"));
+                    int roomNum = Integer.parseInt(scanner.nextLine().trim());
+                    System.out.println(languageManager.getTranslation("EnterGridLocation"));
+                    String gridLoc = scanner.nextLine().trim();
+                    success = controller.addCot(locOrPerson == 0, index, roomNum, gridLoc);
+                    break;
+                case 2:
+                    System.out.println(languageManager.getTranslation("EnterPersonalDescription"));
+                    String desc = scanner.nextLine().trim();
+                    success = controller.addPersonalBelongings(desc, index);
+                    break;
+                case 3:
+                    success = controller.addWater(locOrPerson == 0, index);
+                    break;
+            }
+    
+            if (success){
+                System.out.println(languageManager.getTranslation("SupplyAddedSuccess"));
+            }
+            else{
+                System.out.println(languageManager.getTranslation("UnexpectedError"));
+            }
+    
+        } 
+        catch (Exception e) {
+            new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void addNewMedicalRecord() {
+        try {
+            System.out.println(languageManager.getTranslation("MedicalRecordSelectVictim"));
+            controller.viewDisasterVictims();
+            int victimIndex = getValidatedIndex(controller.getDisasterVictims().size());
+            if (victimIndex == -1) return;
+    
+            DisasterVictim victim = controller.getDisasterVictims().get(victimIndex);
+    
+            boolean isAllocated = false;
+            for (Location loc : controller.getLocations()) {
+                if (loc.getOccupants().contains(victim)) {
+                    isAllocated = true;
+                    break;
+                }
+            }
+    
+            if (!isAllocated) {
+                System.out.println(languageManager.getTranslation("VictimNotAllocatedToLocation"));
+                return;
+            }
+    
+            System.out.println(languageManager.getTranslation("EnterTreatmentDetails"));
+            String treatmentDetails = scanner.nextLine().trim();
+            if (treatmentDetails.isEmpty()) {
+                System.out.println(languageManager.getTranslation("InvalidTreatmentDetails"));
+                return;
+            }
+    
+            System.out.println(languageManager.getTranslation("EnterDateOfTreatment"));
+            String dateOfTreatment = scanner.nextLine().trim();
+            if (!isValidDateFormat(dateOfTreatment)) {
+                System.out.println(languageManager.getTranslation("InvalidDateFormat"));
+                return;
+            }
+    
+            boolean success = controller.addMedicalRecordToVictim(victimIndex, treatmentDetails, dateOfTreatment);
+            if (success) {
+                System.out.println(languageManager.getTranslation("MedicalRecordAddedSuccess"));
+            } else {
+                System.out.println(languageManager.getTranslation("UnexpectedError"));
+            }
+    
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void logInquiryCLI() {
+        try {
+            System.out.println(languageManager.getTranslation("WhoIsLoggingInquiry"));
+            System.out.println("1. " + languageManager.getTranslation("Inquirer"));
+            System.out.println("2. " + languageManager.getTranslation("DisasterVictim"));
+            System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
+    
+            String typeChoice = scanner.nextLine().trim();
+            Person loggedBy = null;
+    
+            if (typeChoice.equals("1")) {
+                System.out.println(languageManager.getTranslation("SelectInquirer"));
+                controller.viewInquirers();
+                System.out.println(controller.getInquirers().size() + ": " + languageManager.getTranslation("CreateNewInquirer"));
+                int inquirerIndex = getValidatedIndex(controller.getInquirers().size() + 1);
+                if (inquirerIndex == -1) return;
+    
+                if (inquirerIndex == controller.getInquirers().size()) {
+                    addNewInquirerCLI();
+                    loggedBy = controller.getInquirers().get(controller.getInquirers().size() - 1);
+                } 
+                else {
+                    loggedBy = controller.getInquirers().get(inquirerIndex);
+                }
+    
+            } else if (typeChoice.equals("2")) {
+                System.out.println(languageManager.getTranslation("SelectDisasterVictim"));
+                controller.viewDisasterVictims();
+                System.out.println(controller.getDisasterVictims().size() + ": " + languageManager.getTranslation("CreateNewVictim"));
+                int victimIndex = getValidatedIndex(controller.getDisasterVictims().size() + 1);
+                if (victimIndex == -1) return;
+    
+                if (victimIndex == controller.getDisasterVictims().size()) {
+                    addDisasterVictimCLI();
+                    loggedBy = controller.getDisasterVictims().get(controller.getDisasterVictims().size() - 1);
+                } 
+                else {
+                    loggedBy = controller.getDisasterVictims().get(victimIndex);
+                }
+            } 
+            else {
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
+    
+            System.out.println(languageManager.getTranslation("SelectMissingPerson"));
+            controller.viewDisasterVictims();
+            System.out.println(controller.getDisasterVictims().size() + ": " + languageManager.getTranslation("CreateNewVictim"));
+            int missingIndex = getValidatedIndex(controller.getDisasterVictims().size() + 1);
+            if (missingIndex == -1) return;
+    
+            DisasterVictim missingPerson;
+            if (missingIndex == controller.getDisasterVictims().size()) {
+                addDisasterVictimCLI();
+                missingPerson = controller.getDisasterVictims().get(controller.getDisasterVictims().size() - 1);
+            } 
+            else {
+                missingPerson = controller.getDisasterVictims().get(missingIndex);
+            }
+    
+            System.out.println(languageManager.getTranslation("SelectLocation"));
+            controller.viewLocations();
+            int locationIndex = getValidatedIndex(controller.getLocations().size());
+            if (locationIndex == -1) return;
+            Location location = controller.getLocations().get(locationIndex);
+    
+            System.out.println(languageManager.getTranslation("EnterComments"));
+            String comments = scanner.nextLine().trim();
+    
+            controller.logInquiry(loggedBy, missingPerson, location, comments);
+            System.out.println(languageManager.getTranslation("InquiryLoggedSuccessfully"));
+    
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void updateDisasterVictimCLI() {
+        try {
+            controller.viewDisasterVictims();
+            int index = getValidatedIndex(controller.getDisasterVictims().size());
+            if (index == -1) return;
+    
+            DisasterVictim victim = controller.getDisasterVictims().get(index);
+    
+            // GENDER
+            System.out.println(languageManager.getTranslation("EnterNewGender") + " (" + victim.getGender() + "):");
+            System.out.println("0. " + languageManager.getTranslation("GenderMale"));
+            System.out.println("1. " + languageManager.getTranslation("GenderFemale"));
+            System.out.println("2. " + languageManager.getTranslation("GenderNonBinary"));
+            int genderChoice = getValidatedIndex(3);
+            Gender newGender = (genderChoice != -1) ? Gender.values()[genderChoice] : null;
+    
+            // COMMENTS
+            System.out.println(languageManager.getTranslation("EnterNewComments") + " (" + victim.getComments() + "):");
+            String newComments = scanner.nextLine().trim();
+    
+            // FAMILY
+            controller.viewFamilies();
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroups().size()));
+            int famIndex = getValidatedIndex(controller.getFamilyGroups().size() + 1);
+    
+            FamilyGroup newFamily = null;
+            if (famIndex == controller.getFamilyGroups().size()) {
+                newFamily = new FamilyGroup();
+                newFamily.setId();
+                controller.getFamilyGroups().add(newFamily);
+            } else if (famIndex != -1) {
+                newFamily = controller.getFamilyGroups().get(famIndex);
+            }
+    
+            controller.updateDisasterVictim(victim, newGender, newComments, newFamily);
+            System.out.println(languageManager.getTranslation("VictimSuccessfullyUpdated"));
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void updateInquirerCLI() {
+        try {
+            controller.viewInquirers();
+            int index = getValidatedIndex(controller.getInquirers().size());
+            if (index == -1) return;
+    
+            Inquirer inquirer = controller.getInquirers().get(index);
+    
+            System.out.println(languageManager.getTranslation("EnterNewPhone"));
+            String phone = scanner.nextLine().trim();
+            if (phone.isEmpty() || !phone.matches("[0-9\\-]+")) {
+                System.out.println(languageManager.getTranslation("InvalidPhoneNumber"));
+                return;
+            }
+    
+            controller.viewFamilies();
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroups().size()));
+            int famIndex = getValidatedIndex(controller.getFamilyGroups().size() + 1);
+    
+            FamilyGroup newFamily = null;
+            if (famIndex == controller.getFamilyGroups().size()) {
+                newFamily = new FamilyGroup();
+                newFamily.setId();
+                controller.getFamilyGroups().add(newFamily);
+            } 
+            else if (famIndex != -1) {
+                newFamily = controller.getFamilyGroups().get(famIndex);
+            }
+    
+            controller.updateInquirer(inquirer, phone, newFamily);
+            System.out.println(languageManager.getTranslation("InquirerUpdated"));
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void updateInquiryCLI() {
+        try {
+            controller.viewInquiries();
+            int index = getValidatedIndex(controller.getInquiries().size());
+            if (index == -1) return;
+    
+            ReliefService inquiry = controller.getInquiries().get(index);
+    
+            System.out.println(languageManager.getTranslation("EnterNewInquiryComments"));
+            String comments = scanner.nextLine().trim();
+            if (comments.isEmpty()) return;
+            controller.updateInquiry(inquiry, comments);
+            System.out.println(languageManager.getTranslation("InquiryUpdated"));
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    public void updateMedicalRecordCLI() {
+        try {
+            ArrayList<DisasterVictim> victimsWithRecords = new ArrayList<>();
+            for (DisasterVictim victim : controller.getDisasterVictims()) {
+                if (victim.getMedicalRecords() != null && !victim.getMedicalRecords().isEmpty()) {
+                    victimsWithRecords.add(victim);
+                }
+            }
+    
+            if (victimsWithRecords.isEmpty()) {
+                System.out.println(languageManager.getTranslation("NoMedicalRecordsFound"));
+                return;
+            }
+    
+            for (int i = 0; i < victimsWithRecords.size(); i++) {
+                DisasterVictim v = victimsWithRecords.get(i);
+                System.out.println(i + ": " + languageManager.getTranslation("Name") + " " + v.getFirstName() + " " + v.getLastName() + " | " + languageManager.getTranslation("DateOfBirth") + ": " + v.getDateOfBirth());
+            }
+    
+            int victimIndex = getValidatedIndex(victimsWithRecords.size());
+            if (victimIndex == -1) return;
+    
+            DisasterVictim selectedVictim = victimsWithRecords.get(victimIndex);
+            ArrayList<MedicalRecord> records = selectedVictim.getMedicalRecords();
+    
+            for (int i = 0; i < records.size(); i++) {
+                System.out.println(i + ": " + records.get(i).getTreatmentDetails());
+            }
+    
+            int recordIndex = getValidatedIndex(records.size());
+            if (recordIndex == -1) return;
+    
+            MedicalRecord record = records.get(recordIndex);
+    
+            System.out.println(languageManager.getTranslation("EnterNewTreatment"));
+            String newDetails = scanner.nextLine().trim();
+            if (newDetails.isEmpty()) return;
+    
+            System.out.println(languageManager.getTranslation("EnterNewDate"));
+            String newDate = scanner.nextLine().trim();
+            if (!isValidDateFormat(newDate)) return;
+    
+            boolean success = controller.updateMedicalRecord(record, newDetails, newDate);
+    
+            if (success) {
+                System.out.println(languageManager.getTranslation("MedicalRecordUpdated"));
+            } else {
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+            }
+    
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+    
+
+    public void allocateInventoryToLocationCLI() {
+        try {
+            controller.viewLocations();
+            int locationIndex = getValidatedIndex(controller.getLocations().size());
+            if (locationIndex == -1) return;
+    
+            Location location = controller.getLocations().get(locationIndex);
+    
+            ArrayList<InventoryItem> allocatable = new ArrayList<>();
+            for (InventoryItem item : controller.getSupply()) {
+                if (item.getItemType() != ItemType.PERSONALBELONGINGS) {
+                    allocatable.add(item);
+                }
+            }
+    
+            if (allocatable.isEmpty()) {
+                System.out.println(languageManager.getTranslation("NoUnallocatedInventory"));
+                return;
+            }
+    
+            for (int i = 0; i < allocatable.size(); i++) {
+                System.out.println(i + ": " + allocatable.get(i).getItemType());
+            }
+    
+            int itemIndex = getValidatedIndex(allocatable.size());
+            if (itemIndex == -1) return;
+    
+            InventoryItem selectedItem = allocatable.get(itemIndex);
+    
+            boolean success = controller.allocateInventoryToLocation(selectedItem, location);
+            if (success) {
+                System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
+            } 
+            else {
+                System.out.println(languageManager.getTranslation("InvalidInventorySelection"));
+            }
+    
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+    
+    
+    public void allocateInventoryToPersonCLI() {
+        try {
+            controller.viewDisasterVictims();
+            int victimIndex = getValidatedIndex(controller.getDisasterVictims().size());
+            if (victimIndex == -1) return;
+    
+            DisasterVictim victim = controller.getDisasterVictims().get(victimIndex);
+    
+            Location victimLocation = null;
+            for (Location loc : controller.getLocations()) {
+                if (loc.getOccupants().contains(victim)) {
+                    victimLocation = loc;
+                    break;
+                }
+            }
+    
+            if (victimLocation == null) {
+                System.out.println(languageManager.getTranslation("VictimNotAllocatedToLocation"));
+                return;
+            }
+    
+            ArrayList<InventoryItem> matchingInventory = new ArrayList<>();
+            for (InventoryItem item : controller.getSupply()) {
+                if (item.getAllocatedToLocation() == victimLocation) {
+                    matchingInventory.add(item);
+                }
+            }
+    
+            if (matchingInventory.isEmpty()) {
+                System.out.println(languageManager.getTranslation("NoInventoryAtVictimLocation"));
+                return;
+            }
+    
+            for (int i = 0; i < matchingInventory.size(); i++) {
+                System.out.println(i + ": " + matchingInventory.get(i).getItemType());
+            }
+    
+            int invIndex = getValidatedIndex(matchingInventory.size());
+            if (invIndex == -1) return;
+    
+            InventoryItem selectedItem = matchingInventory.get(invIndex);
+            boolean success = controller.allocateInventoryToPerson(victim, selectedItem);
+    
+            if (success) {
+                System.out.println(languageManager.getTranslation("InventoryAllocatedSuccessfully"));
+            } 
+            else {
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+            }
+    
+        } 
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+    
+    
+    public FamilyGroup createNewFamilyGroup() {
+        FamilyGroup newFamily = new FamilyGroup();
+        newFamily.setId(); 
+        controller.getFamilyGroups().add(newFamily);
+        return newFamily;
+    }
+    
+    
+    
+    private FamilyGroup selectOrCreateFamily() {
+        controller.viewFamilies();
+        System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroupCount()));
+        int index = getValidatedIndex(controller.getFamilyGroups().size());
+        if (index == controller.getFamilyGroups().size()) {
+            return createNewFamilyGroup();
+        } 
+        else if (index >= 0) {
+            return controller.getFamilyGroups().get(index);
+        }
+        return null;
+    }
+
+    public void allocateVictimToLocationCLI() {
+        try {
+            controller.viewDisasterVictims();
+            int victimIndex = getValidatedIndex(controller.getDisasterVictims().size());
+            if (victimIndex == -1) return;
+    
+            controller.viewLocations();
+            int locationIndex = getValidatedIndex(controller.getLocations().size());
+            if (locationIndex == -1) return;
+    
+            boolean success = controller.allocateVictimToLocation(victimIndex, locationIndex);
+            if (success) {
+                System.out.println(languageManager.getTranslation("VictimSuccessfullyAllocated"));
+            } else {
+                System.out.println(languageManager.getTranslation("UnexpectedError"));
+            }
+        } 
+        catch (Exception e) {
+            new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
+    }
+
+    private static boolean isValidDateFormat(String date){
+		String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
+		Pattern myPattern = Pattern.compile(dateRegex);
+		Matcher mymatcher = myPattern.matcher(date);
+		if(mymatcher.find()){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
+
+
+    private int getValidatedIndex(int size) {
+        while (true) {
+            try {
+                int index = Integer.parseInt(scanner.nextLine().trim());
+                if (index >= 0 && index < size) {
+                    return index;
+                } 
+                else {
+                    System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                }
+            } 
+            catch (NumberFormatException e) {
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            }
+        }
+    }
+    
 }
