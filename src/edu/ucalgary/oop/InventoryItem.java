@@ -11,7 +11,7 @@ public abstract class InventoryItem {
     protected Location allocatedToLocation = null;
     protected ItemType ITEMTYPE;
     protected int itemId;
-    protected static int highestId;
+    protected static int highestId = 0;
 
     /**
     Retrieves the type of the inventory item.
@@ -39,7 +39,7 @@ public abstract class InventoryItem {
     @param person The disaster victim to check against.
     @return True if in the same location, false otherwise.
      */
-    protected boolean sameLocation(DisasterVictim person){
+    public boolean sameLocation(DisasterVictim person){
         ArrayList<DisasterVictim> occupants = this.allocatedToLocation.getOccupants();
         for(DisasterVictim occupant: occupants){
             if(occupant == person){
@@ -54,7 +54,7 @@ public abstract class InventoryItem {
     Updates the highest ID if the new ID is greater.
     @param id The new ID to set.
      */
-    protected void setId(int id){
+    public void setId(int id){
         if(id > highestId){
             highestId = id;
         }
@@ -65,7 +65,7 @@ public abstract class InventoryItem {
     Automatically assigns a new unique ID to the inventory item.
     Increments the highest ID and assigns it to the item.
      */
-    protected void setId(){
+    public void setId(){
         highestId = highestId + 1;
         this.itemId = highestId;
     }

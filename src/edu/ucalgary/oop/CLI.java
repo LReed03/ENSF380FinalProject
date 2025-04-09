@@ -867,18 +867,6 @@ public class CLI {
     }
     
     /**
-    Creates a new family group and adds it to the controller.
-    @return The newly created FamilyGroup object.
-     */
-    public FamilyGroup createNewFamilyGroup() {
-        FamilyGroup newFamily = new FamilyGroup();
-        newFamily.setId(); 
-        controller.getFamilyGroups().add(newFamily);
-        return newFamily;
-    }
-    
-
-    /**
     Allocates a disaster victim to a location through the CLI.
     Prompts the user to select a victim and a location.
      */
