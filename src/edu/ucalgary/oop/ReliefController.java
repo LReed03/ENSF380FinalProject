@@ -62,7 +62,7 @@ public class ReliefController {
     @return True if the allocation is successful, false otherwise.
      */
     public boolean allocateVictimToLocation(int victimIndex, int locationIndex) {
-        try{
+        
             if (victimIndex < 0 || victimIndex >= disastervictims.size() ||
                 locationIndex < 0 || locationIndex >= locations.size()) {
                 return false;
@@ -83,12 +83,8 @@ public class ReliefController {
             model.addDisasterVictimToLocation(victim.getId(), newLocation.getId());
             return true;
         }
-        catch (Exception e) {
-            ErrorLog error = new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
-            System.exit(1);
-        }
-    }
+       
+    
 
     /**
      * Adds a new disaster victim to the system.
