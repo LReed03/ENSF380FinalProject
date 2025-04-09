@@ -15,8 +15,8 @@ public class Cot extends InventoryItem {
     @param person       The disaster victim to whom the cot is allocated.
      */
     public Cot(int rmNum, String gridLocation, DisasterVictim person) {
-        this.roomNumber = rmNum;
-        this.gridLocation = gridLocation;
+        setRoomNumber(rmNum);              
+        setGridLocation(gridLocation);   
         this.allocatedToPerson = person;
         this.ITEMTYPE = ItemType.COT;
     }
@@ -28,8 +28,8 @@ public class Cot extends InventoryItem {
     @param location     The location to which the cot is allocated.
      */
     public Cot(int rmNum, String gridLocation, Location location) {
-        this.roomNumber = rmNum;
-        this.gridLocation = gridLocation;
+        setRoomNumber(rmNum);             
+        setGridLocation(gridLocation);     
         this.allocatedToLocation = location;
         this.ITEMTYPE = ItemType.COT;
     }
@@ -39,6 +39,9 @@ public class Cot extends InventoryItem {
     @param rmNum The room number to set.
      */
     public void setRoomNumber(int rmNum) {
+        if (rmNum < 100 || rmNum > 999) {
+            throw new IllegalArgumentException("Room number must be a 3-digit number");
+        }
         this.roomNumber = rmNum;
     }
 
@@ -55,6 +58,9 @@ public class Cot extends InventoryItem {
     @param gridLocation The grid location to set.
      */
     public void setGridLocation(String gridLocation) {
+        if (gridLocation == null || gridLocation.trim().isEmpty() || !gridLocation.matches("^[A-Za-z]{1}\\d+$")) {
+            throw new IllegalArgumentException("Invalid grid location format");
+        }
         this.gridLocation = gridLocation;
     }
 
@@ -62,7 +68,7 @@ public class Cot extends InventoryItem {
     Gets the grid location of the cot.
     @return The grid location of the cot.
      */
-    public String getGridLocaiton() {
+    public String getGridLocation() {
         return this.gridLocation;
     }
 }

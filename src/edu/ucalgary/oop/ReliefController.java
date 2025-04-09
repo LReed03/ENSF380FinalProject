@@ -50,7 +50,7 @@ public class ReliefController {
         } 
         catch (Exception e) {
             ErrorLog error = new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.out.println("UnexpectedError");
             System.exit(1);
         }
     }
@@ -152,37 +152,29 @@ public class ReliefController {
     @return True if the medical record is successfully added, false otherwise.
      */
     public boolean addMedicalRecordToVictim(int victimIndex, String treatmentDetails, String dateOfTreatment) {
-        try {
-            DisasterVictim victim = disastervictims.get(victimIndex);
-            int victimId = victim.getId();
-    
-            Location location = null;
-            for (Location loc : locations) {
-                if (loc.getOccupants().contains(victim)) {
-                    location = loc;
-                    break;
-                }
+        DisasterVictim victim = disastervictims.get(victimIndex);
+        int victimId = victim.getId();
+
+        Location location = null;
+        for (Location loc : locations) {
+            if (loc.getOccupants().contains(victim)) {
+                location = loc;
+                break;
             }
-    
-            if (location == null) {
-                return false; 
-            }
-    
-            int locationId = location.getId();
-    
-            MedicalRecord record = new MedicalRecord(location, treatmentDetails, dateOfTreatment);
-            record.setId();
-            victim.addMedicalRecord(record);
-            model.addMedicalRecord(record, locationId, victimId);
-    
-            return true;
-        } 
-        catch (Exception e) {
-            ErrorLog error = new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
-            System.exit(1);
-            return false;
         }
+
+        if (location == null) {
+            return false; 
+        }
+
+        int locationId = location.getId();
+
+        MedicalRecord record = new MedicalRecord(location, treatmentDetails, dateOfTreatment);
+        record.setId();
+        victim.addMedicalRecord(record);
+        model.addMedicalRecord(record, locationId, victimId);
+
+        return true;
     }
 
     /**
@@ -192,32 +184,24 @@ public class ReliefController {
     @return True if the blanket is successfully added, false otherwise.
      */
     public boolean addBlanket(boolean toLocation, int index) {
-        try {
-            Blanket blanket;
-            if (toLocation) {
-                Location location = locations.get(index);
-                blanket = new Blanket(location);
-                blanket.setId();
-                location.addSupply(blanket);
-                model.addNewSupply("blanket", null);
-                model.allocateInventoryToLocation(blanket.getId(), location.getId());
-            } else {
-                DisasterVictim victim = disastervictims.get(index);
-                blanket = new Blanket(victim);
-                blanket.setId();
-                victim.addBelongings(blanket);
-                model.addNewSupply("blanket", null);
-                model.allocateInventoryToPerson(blanket.getId(), victim.getId());
-            }
-            supply.add(blanket);
-            return true;
-        } 
-        catch (Exception e) {
-            ErrorLog error = new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
-            System.exit(1);
-            return false;
+        Blanket blanket;
+        if (toLocation) {
+            Location location = locations.get(index);
+            blanket = new Blanket(location);
+            blanket.setId();
+            location.addSupply(blanket);
+            model.addNewSupply("blanket", null);
+            model.allocateInventoryToLocation(blanket.getId(), location.getId());
+        } else {
+            DisasterVictim victim = disastervictims.get(index);
+            blanket = new Blanket(victim);
+            blanket.setId();
+            victim.addBelongings(blanket);
+            model.addNewSupply("blanket", null);
+            model.allocateInventoryToPerson(blanket.getId(), victim.getId());
         }
+        supply.add(blanket);
+        return true;
     }
 
     /**
@@ -228,35 +212,29 @@ public class ReliefController {
     @param gridLoc Grid location for the cot.
     @return True if the cot is successfully added, false otherwise.
      */
-    public boolean addCot(boolean toLocation, int index, int roomNum, String gridLoc) {
-        try {
-            Cot cot;
-            String comments = roomNum + " " + gridLoc;
-    
-            if (toLocation) {
-                Location location = locations.get(index);
-                cot = new Cot(roomNum, gridLoc, location);
-                cot.setId();
-                location.addSupply(cot);
-                model.addNewSupply("cot", comments);
-                model.allocateInventoryToLocation(cot.getId(), location.getId());
-            } 
-            else {
-                DisasterVictim victim = disastervictims.get(index);
-                cot = new Cot(roomNum, gridLoc, victim);
-                cot.setId();
-                victim.addBelongings(cot);
-                model.addNewSupply("cot", comments);
-                model.allocateInventoryToPerson(cot.getId(), victim.getId());
-            }
-    
-            supply.add(cot);
-            return true;
+    public boolean addCot(boolean toLocation, int index, int roomNum, String gridLoc) { 
+        Cot cot;
+        String comments = roomNum + " " + gridLoc;
+
+        if (toLocation) {
+            Location location = locations.get(index);
+            cot = new Cot(roomNum, gridLoc, location);
+            cot.setId();
+            location.addSupply(cot);
+            model.addNewSupply("cot", comments);
+            model.allocateInventoryToLocation(cot.getId(), location.getId());
         } 
-        catch (Exception e) {
-            ErrorLog error = new ErrorLog(e);
-            return false;
+        else {
+            DisasterVictim victim = disastervictims.get(index);
+            cot = new Cot(roomNum, gridLoc, victim);
+            cot.setId();
+            victim.addBelongings(cot);
+            model.addNewSupply("cot", comments);
+            model.allocateInventoryToPerson(cot.getId(), victim.getId());
         }
+
+        supply.add(cot);
+        return true;
     }
 
     /**
@@ -266,22 +244,14 @@ public class ReliefController {
     @return True if the belongings are successfully added, false otherwise.
      */
     public boolean addPersonalBelongings(String description, int victimIndex) {
-        try {
-            DisasterVictim victim = disastervictims.get(victimIndex);
-            PersonalBelongings belongings = new PersonalBelongings(description, victim);
-            belongings.setId();
-            victim.addBelongings(belongings);
-            supply.add(belongings);
-            model.addNewSupply("personal item", description);
-            model.allocateInventoryToPerson(belongings.getId(), victim.getId());
-            return true;
-        } 
-        catch (Exception e) {
-            ErrorLog error = new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
-            System.exit(1);
-            return false;
-        }
+        DisasterVictim victim = disastervictims.get(victimIndex);
+        PersonalBelongings belongings = new PersonalBelongings(description, victim);
+        belongings.setId();
+        victim.addBelongings(belongings);
+        supply.add(belongings);
+        model.addNewSupply("personal item", description);
+        model.allocateInventoryToPerson(belongings.getId(), victim.getId());
+        return true;
     }
 
     /**
@@ -291,35 +261,27 @@ public class ReliefController {
     @return True if the water is successfully added, false otherwise.
      */
     public boolean addWater(boolean toLocation, int index) {
-        try {
-            Water water;
-    
-            if (toLocation) {
-                Location location = locations.get(index);
-                water = new Water(location);
-                water.setId();
-                location.addSupply(water);
-                model.addNewSupply("water", null);
-                model.allocateInventoryToLocation(water.getId(), location.getId());
-            } 
-            else {
-                DisasterVictim victim = disastervictims.get(index);
-                water = new Water(victim);
-                water.setId();
-                victim.addBelongings(water);
-                model.addNewSupply("water", null);
-                model.allocateInventoryToPerson(water.getId(), victim.getId());
-            }
-    
-            supply.add(water);
-            return true;
+        Water water;
+
+        if (toLocation) {
+            Location location = locations.get(index);
+            water = new Water(location);
+            water.setId();
+            location.addSupply(water);
+            model.addNewSupply("water", null);
+            model.allocateInventoryToLocation(water.getId(), location.getId());
         } 
-        catch (Exception e) {
-            ErrorLog error = new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
-            System.exit(1);
-            return false;
+        else {
+            DisasterVictim victim = disastervictims.get(index);
+            water = new Water(victim);
+            water.setId();
+            victim.addBelongings(water);
+            model.addNewSupply("water", null);
+            model.allocateInventoryToPerson(water.getId(), victim.getId());
         }
+
+        supply.add(water);
+        return true;
     }
 
     /**
@@ -330,19 +292,12 @@ public class ReliefController {
     @param comments Additional comments about the inquiry.
      */
     public void logInquiry(Person loggedBy, DisasterVictim missingPerson, Location location, String comments) {
-        try {
-            Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-            String date = timestamp.toLocalDateTime().toLocalDate().toString();
-    
-            model.logInquiry(loggedBy.getId(), missingPerson.getId(), location.getId(), timestamp, comments);
-            ReliefService inquiry = new ReliefService(loggedBy, missingPerson, date, comments, location);
-            inquiries.add(inquiry);
-        } 
-        catch (Exception e) {
-            ErrorLog error = new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
-            System.exit(1);        
-        }
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+        String date = timestamp.toLocalDateTime().toLocalDate().toString();
+
+        model.logInquiry(loggedBy.getId(), missingPerson.getId(), location.getId(), timestamp, comments);
+        ReliefService inquiry = new ReliefService(loggedBy, missingPerson, date, comments, location);
+        inquiries.add(inquiry);
     }
 
     /**

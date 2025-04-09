@@ -1,2 +1,0 @@
-[2025-04-06T13:11:10.664378400] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
-

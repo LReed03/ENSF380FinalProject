@@ -73,11 +73,10 @@ public class MedicalRecord {
     Sets the date of treatment.
     @param date The new date of treatment in the format "YYYY-MM-DD".
      */
-    public void setDateOfTreatment(String date) throws IllegalArgumentException{
-        boolean validEntryDate = isValidDateFormat(dateOfTreatment);
-        if (validEntryDate == false){
-			throw new IllegalArgumentException("Invalid date");
-		}
+    public void setDateOfTreatment(String date) throws IllegalArgumentException {
+        if (!isValidDateFormat(date)) {
+            throw new IllegalArgumentException("Invalid date");
+        }
         this.dateOfTreatment = date;
     }
 
@@ -87,6 +86,9 @@ public class MedicalRecord {
     @return True if the date format is valid, false otherwise.
      */
     private static boolean isValidDateFormat(String date){
+        if(date == null){
+            return false;
+        }
         String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
         Pattern myPattern = Pattern.compile(dateRegex);
         Matcher mymatcher = myPattern.matcher(date);

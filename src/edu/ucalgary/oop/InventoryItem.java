@@ -39,15 +39,15 @@ public abstract class InventoryItem {
     @param person The disaster victim to check against.
     @return True if in the same location, false otherwise.
      */
-    public boolean sameLocation(DisasterVictim person){
-        ArrayList<DisasterVictim> occupants = this.allocatedToLocation.getOccupants();
-        for(DisasterVictim occupant: occupants){
-            if(occupant == person){
-                return true;
-            }
+    public boolean sameLocation(DisasterVictim person) {
+        if (this.allocatedToLocation == null || person == null) {
+            return false;
         }
-        return false;
+    
+        ArrayList<DisasterVictim> occupants = this.allocatedToLocation.getOccupants();
+        return occupants != null && occupants.contains(person);
     }
+    
 
     /**
     Sets the ID of the inventory item.

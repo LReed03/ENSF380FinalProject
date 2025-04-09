@@ -20,6 +20,21 @@ public class Inquirer extends Person {
         this.phoneNumber = phone;
     }
 
+
+    /**
+    Constructor to initialize an Inquirer with a first name, last name, and phone number.
+    @param firstName The first name of the inquirer.
+    @param lastName The last name of the inquirer.
+    @param phone The phone number of the inquirer.
+    @param info The info of the inquirer
+     */
+    public Inquirer(String firstName, String lastName, String phone, String info){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phone;
+        this.info = info;
+    }
+
     /**
     Retrieves the information associated with the inquirer.
     @return The information as a string.
@@ -28,7 +43,7 @@ public class Inquirer extends Person {
         return this.info;
     }
 
-    /**
+    /** 
     Sets the information associated with the inquirer.
     @param info The information to set.
      */

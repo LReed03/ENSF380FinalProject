@@ -19,6 +19,7 @@ public class Water extends InventoryItem {
     public Water(Location location) {
         this.allocatedToLocation = location;
         this.ITEMTYPE = ItemType.WATER;
+        this.avalible = true;
     }
 
     /**
@@ -28,6 +29,7 @@ public class Water extends InventoryItem {
     public Water(DisasterVictim person) {
         this.allocatedToPerson = person;
         this.ITEMTYPE = ItemType.WATER;
+        this.avalible = true;
     }
 
     /**
@@ -56,6 +58,14 @@ public class Water extends InventoryItem {
 			throw new IllegalArgumentException("Invalid date");
 		}
         this.allocationDate = allocationDate;
+    }
+
+    /**
+    Retrieves the allocation date of the water.
+    @return The allocation date in the format "YYYY-MM-DD".
+     */
+    public String getAllocationDate() {
+        return this.allocationDate;
     }
 
     /**
