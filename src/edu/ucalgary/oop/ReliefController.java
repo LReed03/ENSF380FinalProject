@@ -46,8 +46,9 @@ public class ReliefController {
             this.inquiries = model.getAllInquiries(this.inquirers, this.disastervictims, this.locations);
             this.supply = model.getAllInventory(this.disastervictims, this.locations);
             model.getAllMedicalRecords(this.locations, this.disastervictims);
-            model.assignVictimsToLocations(disastervictims, locations);
-        } catch (Exception e) {
+            model.assignVictimsToLocations(this.disastervictims, this.locations);
+        } 
+        catch (Exception e) {
             ErrorLog error = new ErrorLog(e);
             System.out.println(languageManager.getTranslation("UnexpectedError"));
             System.exit(1);
@@ -61,25 +62,32 @@ public class ReliefController {
     @return True if the allocation is successful, false otherwise.
      */
     public boolean allocateVictimToLocation(int victimIndex, int locationIndex) {
-        if (victimIndex < 0 || victimIndex >= disastervictims.size() ||
-            locationIndex < 0 || locationIndex >= locations.size()) {
-            return false;
-        }
-    
-        DisasterVictim victim = disastervictims.get(victimIndex);
-        Location newLocation = locations.get(locationIndex);
-    
-        for (Location loc : locations) {
-            if (loc.getOccupants().contains(victim)) {
-                loc.removeOccupant(victim);
-                model.removeVictimFromLocation(victim.getId(), loc.getId());
-                break;
+        try{
+            if (victimIndex < 0 || victimIndex >= disastervictims.size() ||
+                locationIndex < 0 || locationIndex >= locations.size()) {
+                return false;
             }
+        
+            DisasterVictim victim = disastervictims.get(victimIndex);
+            Location newLocation = locations.get(locationIndex);
+        
+            for (Location loc : locations) {
+                if (loc.getOccupants().contains(victim)) {
+                    loc.removeOccupant(victim);
+                    model.removeVictimFromLocation(victim.getId(), loc.getId());
+                    break;
+                }
+            }
+        
+            newLocation.addOccupant(victim);
+            model.addDisasterVictimToLocation(victim.getId(), newLocation.getId());
+            return true;
         }
-    
-        newLocation.addOccupant(victim);
-        model.addDisasterVictimToLocation(victim.getId(), newLocation.getId());
-        return true;
+        catch (Exception e) {
+            ErrorLog error = new ErrorLog(e);
+            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.exit(1);
+        }
     }
 
     /**
