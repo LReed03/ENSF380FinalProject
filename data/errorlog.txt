@@ -1,2 +1,10 @@
 [2025-04-06T13:13:38.572758100] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
 
+[2025-04-08T16:40:02.803546600] null
+
+[2025-04-08T17:08:11.719503100] null
+
+[2025-04-08T18:12:08.528737900] Index -1 out of bounds for length 3
+
+[2025-04-08T18:22:26.816903100] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
+

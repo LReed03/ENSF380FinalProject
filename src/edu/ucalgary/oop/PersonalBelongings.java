@@ -13,7 +13,7 @@ public class PersonalBelongings extends InventoryItem {
     @param person The disaster victim to whom the belongings are allocated.
      */
     public PersonalBelongings(String description, DisasterVictim person) throws IllegalArgumentException {
-        if(description.length() == 0){
+        if(description == null || description.length() == 0){
             throw new IllegalArgumentException("Description can not be empty");
         }
         this.description = description;
@@ -35,7 +35,7 @@ public class PersonalBelongings extends InventoryItem {
     @param description The new description to set.
      */
     public void setDescription(String description){
-        if(description.length() == 0){
+        if(description == null || description.length() == 0){
             throw new IllegalArgumentException("Description can not be empty");
         }
         this.description = description;

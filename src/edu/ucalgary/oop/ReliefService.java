@@ -122,9 +122,11 @@ public class ReliefService {
     return True if the date format is valid, false otherwise.
      */
     private static boolean isValidDateFormat(String date) {
+        if (date == null) return false;
         String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
         Pattern myPattern = Pattern.compile(dateRegex);
         Matcher mymatcher = myPattern.matcher(date);
+        
         if (mymatcher.find()) {
             return true;
         } else {
@@ -136,8 +138,11 @@ public class ReliefService {
     Sets the unique ID of the inquiry.
     @param inquiryID The ID to set.
      */
-    public void setId(int inquiryID) {
-        this.inquiryID = inquiryID;
+    public void setId(int inquiryId) {
+        if(inquiryId > highestId){
+            highestId = inquiryId;
+        }
+        this.inquiryID = inquiryId;
     }
 
     /**

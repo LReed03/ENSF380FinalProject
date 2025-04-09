@@ -83,7 +83,9 @@ public abstract class Person {
     @param id The new ID to set.
      */
     public void setId(int id){
-        highestId = id;
+        if(id > highestId){
+            highestId = id;
+        }
         this.personId = id;
 
     }
