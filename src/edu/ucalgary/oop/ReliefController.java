@@ -149,7 +149,7 @@ public class ReliefController {
             }
     
             if (location == null) {
-                return false; // Not allocated
+                return false; 
             }
     
             int locationId = location.getId();
@@ -181,16 +181,17 @@ public class ReliefController {
                 blanket = new Blanket(location);
                 blanket.setId();
                 location.addSupply(blanket);
+                model.addNewSupply("blanket", null);
                 model.allocateInventoryToLocation(blanket.getId(), location.getId());
             } else {
                 DisasterVictim victim = disastervictims.get(index);
                 blanket = new Blanket(victim);
                 blanket.setId();
                 victim.addBelongings(blanket);
+                model.addNewSupply("blanket", null);
                 model.allocateInventoryToPerson(blanket.getId(), victim.getId());
             }
             supply.add(blanket);
-            model.addNewSupply("blanket", null);
             return true;
         } 
         catch (Exception e) {
@@ -211,17 +212,19 @@ public class ReliefController {
                 cot = new Cot(roomNum, gridLoc, location);
                 cot.setId();
                 location.addSupply(cot);
+                model.addNewSupply("cot", comments);
                 model.allocateInventoryToLocation(cot.getId(), location.getId());
-            } else {
+            } 
+            else {
                 DisasterVictim victim = disastervictims.get(index);
                 cot = new Cot(roomNum, gridLoc, victim);
                 cot.setId();
                 victim.addBelongings(cot);
+                model.addNewSupply("cot", comments);
                 model.allocateInventoryToPerson(cot.getId(), victim.getId());
             }
     
             supply.add(cot);
-            model.addNewSupply("cot", comments);
             return true;
         } 
         catch (Exception e) {
@@ -259,17 +262,19 @@ public class ReliefController {
                 water = new Water(location);
                 water.setId();
                 location.addSupply(water);
+                model.addNewSupply("water", null);
                 model.allocateInventoryToLocation(water.getId(), location.getId());
-            } else {
+            } 
+            else {
                 DisasterVictim victim = disastervictims.get(index);
                 water = new Water(victim);
                 water.setId();
                 victim.addBelongings(water);
+                model.addNewSupply("water", null);
                 model.allocateInventoryToPerson(water.getId(), victim.getId());
             }
     
             supply.add(water);
-            model.addNewSupply("water", null);
             return true;
         } 
         catch (Exception e) {
@@ -296,7 +301,8 @@ public class ReliefController {
         catch (Exception e) {
             ErrorLog error = new ErrorLog(e);
             System.out.println(languageManager.getTranslation("UnexpectedError"));
-            System.exit(1);        }
+            System.exit(1);        
+        }
     }
     
         
@@ -313,7 +319,6 @@ public class ReliefController {
             victim.setComments(newComments);
         }
     
-        // Family reassignment
         FamilyGroup oldFamily = victim.getFamily();
         if (oldFamily != null && oldFamily != newFamily) {
             oldFamily.getFamilyMembers().remove(victim);
@@ -321,7 +326,11 @@ public class ReliefController {
         }
     
         if (newFamily != null) {
-            newFamily.addFamilyMember(victim);
+            if (!familyGroups.contains(newFamily)) {
+                familyGroups.add(newFamily);
+            }
+    
+            
             victim.setFamily(newFamily);
         } else if (oldFamily != null) {
             victim.setFamily(null);
@@ -347,7 +356,11 @@ public class ReliefController {
         }
     
         if (newFamily != null) {
-            newFamily.addFamilyMember(inquirer);
+            if (!familyGroups.contains(newFamily)) {
+                familyGroups.add(newFamily);
+            }
+    
+            
             inquirer.setFamily(newFamily);
         } else if (oldFamily != null) {
             inquirer.setFamily(null);
@@ -356,6 +369,7 @@ public class ReliefController {
     
         model.updateInquirer(inquirer);
     }
+    
     
     
     /**

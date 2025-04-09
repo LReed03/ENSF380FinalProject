@@ -136,8 +136,10 @@ public class ReliefService {
     Sets the unique ID of the inquiry.
     @param inquiryID The ID to set.
      */
-    public void setId(int inquiryID) {
-        this.inquiryID = inquiryID;
+    public void setId(int inquiryId) {
+        if(inquiryId > highestId){
+            highestId = inquiryId;
+        }
     }
 
     /**

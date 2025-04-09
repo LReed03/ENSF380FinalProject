@@ -23,7 +23,9 @@ public class FamilyGroup {
     @param familyId The ID of the family group.
      */
     public FamilyGroup(int familyId){
-        highestId = familyId;
+        if(familyId > highestId){
+            highestId = familyId;
+        }
         this.familyId = familyId;
         this.familyMembers = new ArrayList<>();
     }
@@ -74,7 +76,9 @@ public class FamilyGroup {
     @param id The new ID to set for the family group.
      */
     public void setId(int id){
-        highestId = id;
+        if(familyId > highestId){
+            highestId = familyId;
+        }
         this.familyId = id;
     }
 

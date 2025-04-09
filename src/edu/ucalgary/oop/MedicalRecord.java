@@ -113,7 +113,9 @@ public class MedicalRecord {
     @param id The new ID to set.
      */
     public void setId(int id) {
-        highestId = id;
+        if(id > highestId){
+            highestId = id;
+        }
         this.medicalRecordId = id;
     }
 

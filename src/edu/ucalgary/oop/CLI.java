@@ -80,34 +80,40 @@ public class CLI {
     /**
     displays the insert menu and handles user input for adding new data 
      */
-    private void insertMenu() {
-        System.out.println("\n=== " + languageManager.getTranslation("InsertData") + " ===");
-        System.out.println("1. " + languageManager.getTranslation("AddDisasterVictim"));
-        System.out.println("2. " + languageManager.getTranslation("AddInquirer"));
-        System.out.println("3. " + languageManager.getTranslation("AddMedicalRecord"));
-        System.out.println("4. " + languageManager.getTranslation("AddSupply"));
-        System.out.println("5. " + languageManager.getTranslation("LogInquiry"));
-        System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
-
-        String choice = scanner.nextLine().trim();
-        switch (choice) {
-            case "1":
-                addDisasterVictimCLI();
-                break;
-            case "2":
-                addNewInquirerCLI();
-                break;
-            case "3":
-                addNewMedicalRecord();
-                break;
-            case "4":
-                addNewSupplyCLI();
-                break;
-            case "5":
-                logInquiryCLI();
-                break;
-            default:
-                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+    private void insertMenu() {    
+        while(true){
+            System.out.println("\n=== " + languageManager.getTranslation("InsertData") + " ===");
+            System.out.println("1. " + languageManager.getTranslation("AddDisasterVictim"));
+            System.out.println("2. " + languageManager.getTranslation("AddInquirer"));
+            System.out.println("3. " + languageManager.getTranslation("AddMedicalRecord"));
+            System.out.println("4. " + languageManager.getTranslation("AddSupply"));
+            System.out.println("5. " + languageManager.getTranslation("LogInquiry"));
+            System.err.println("0. " + languageManager.getTranslation("MainMenu"));
+            System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    addDisasterVictimCLI();
+                    break;
+                case "2":
+                    addNewInquirerCLI();
+                    break;
+                case "3":
+                    addNewMedicalRecord();
+                    break;
+                case "4":
+                    addNewSupplyCLI();
+                    break;
+                case "5":
+                    logInquiryCLI();
+                    break;
+                case "0":
+                    break;
+                default:
+                    System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                    continue;
+            }
+            break;
         }
     }
 
@@ -115,41 +121,47 @@ public class CLI {
     Displays the view menu and handles user input for viewing different types of data  
      */
     private void viewMenu() {
-        System.out.println("\n=== " + languageManager.getTranslation("ViewData") + " ===");
-        System.out.println("1. " + languageManager.getTranslation("ViewVictims"));
-        System.out.println("2. " + languageManager.getTranslation("ViewInquirers"));
-        System.out.println("3. " + languageManager.getTranslation("ViewLocations"));
-        System.out.println("4. " + languageManager.getTranslation("ViewMedicalRecords"));
-        System.out.println("5. " + languageManager.getTranslation("ViewInquiries"));
-        System.out.println("6. " + languageManager.getTranslation("ViewInventory"));
-        System.out.println("7. " + languageManager.getTranslation("ViewFamilies"));
-        System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
+        while(true){
+            System.out.println("\n=== " + languageManager.getTranslation("ViewData") + " ===");
+            System.out.println("1. " + languageManager.getTranslation("ViewVictims"));
+            System.out.println("2. " + languageManager.getTranslation("ViewInquirers"));
+            System.out.println("3. " + languageManager.getTranslation("ViewLocations"));
+            System.out.println("4. " + languageManager.getTranslation("ViewMedicalRecords"));
+            System.out.println("5. " + languageManager.getTranslation("ViewInquiries"));
+            System.out.println("6. " + languageManager.getTranslation("ViewInventory"));
+            System.out.println("7. " + languageManager.getTranslation("ViewFamilies"));
+            System.err.println("0. " + languageManager.getTranslation("MainMenu"));
+            System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
 
-        String choice = scanner.nextLine().trim();
-        switch (choice) {
-            case "1":
-                controller.viewDisasterVictims();
-                break;
-            case "2":
-                controller.viewInquirers();
-                break;
-            case "3":
-                controller.viewLocations();
-                break;
-            case "4":
-                controller.viewMedicalRecords();
-                break;
-            case "5":
-                controller.viewInquiries();
-                break;
-            case "6":
-                controller.viewInventory();
-                break;
-            case "7":
-                controller.viewFamilies();
-                break;
-            default:
-                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            String choice = scanner.nextLine().trim();
+            switch (choice) {
+                case "1":
+                    controller.viewDisasterVictims();
+                    break;
+                case "2":
+                    controller.viewInquirers();
+                    break;
+                case "3":
+                    controller.viewLocations();
+                    break;
+                case "4":
+                    controller.viewMedicalRecords();
+                    break;
+                case "5":
+                    controller.viewInquiries();
+                    break;
+                case "6":
+                    controller.viewInventory();
+                    break;
+                case "7":
+                    controller.viewFamilies();
+                    break;
+                case "0":
+                    break;
+                default:
+                    System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            }
+        break;
         }
     }
 
@@ -157,6 +169,7 @@ public class CLI {
     Displays the update menu and handles user input for updating data 
      */
     private void updateMenu() {
+        while(true){
         System.out.println("\n=== " + languageManager.getTranslation("UpdateData") + " ===");
         System.out.println("1. " + languageManager.getTranslation("UpdateVictim"));
         System.out.println("2. " + languageManager.getTranslation("UpdateInquirer"));
@@ -164,31 +177,36 @@ public class CLI {
         System.out.println("4. " + languageManager.getTranslation("UpdateInquiry"));
         System.out.println("5. " + languageManager.getTranslation("AllocateInventoryToPerson"));
         System.out.println("6. " + languageManager.getTranslation("AllocateVictimToLocation"));
+        System.err.println("0. " + languageManager.getTranslation("MainMenu"));
         System.out.print(languageManager.getTranslation("EnterChoice") + ": ");
 
         String choice = scanner.nextLine().trim();
-        switch (choice) {
-            case "1":
-                updateDisasterVictimCLI();
-                break;
-            case "2":
-                updateDisasterVictimCLI();
-                break;
-            case "3":
-                updateMedicalRecordCLI();
-                break;
-            case "4":
-                updateInquiryCLI();
-                break;
-            case "5":
-                allocateInventoryToPersonCLI();
-                break;
-            case "6":
-                allocateVictimToLocationCLI();
-                break;
-            default:
-                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
-        }
+            switch (choice) {
+                case "1":
+                    updateDisasterVictimCLI();
+                    break;
+                case "2":
+                    updateInquirerCLI();
+                    break;
+                case "3":
+                    updateMedicalRecordCLI();
+                    break;
+                case "4":
+                    updateInquiryCLI();
+                    break;
+                case "5":
+                    allocateInventoryToPersonCLI();
+                    break;
+                case "6":
+                    allocateVictimToLocationCLI();
+                    break;
+                case "0":
+                    break;
+                default:
+                    System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+            }
+        break;
+    }
     }
 
     public void addDisasterVictimCLI() {
@@ -208,13 +226,27 @@ public class CLI {
             System.out.println("2. " + languageManager.getTranslation("GenderNonBinary"));
             int genderIndex = getValidatedIndex(3);
             Gender[] genderList = {Gender.MALE, Gender.FEMALE, Gender.NONBINARY};
+            if(genderIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
             Gender gender = genderList[genderIndex];
 
             System.out.println(languageManager.getTranslation("EnterComments"));
             String comments = scanner.nextLine().trim();
 
-            FamilyGroup family = selectOrCreateFamily();
+            System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroups().size()));
+            int familyIndex = getValidatedIndex(controller.getFamilyGroups().size() + 1);
 
+            FamilyGroup family = null;
+            if (familyIndex == controller.getFamilyGroups().size()) {
+                family = new FamilyGroup();
+                family.setId();
+                controller.getFamilyGroups().add(family);
+            } 
+            else if (familyIndex != -1) {
+                family = controller.getFamilyGroups().get(familyIndex);
+            }
             boolean added = controller.addDisasterVictim(firstName, lastName, dob, gender, comments, family);
 
             if (added) {
@@ -281,11 +313,17 @@ public class CLI {
             System.out.println("2. " + languageManager.getTranslation("SupplyBelongings"));
             System.out.println("3. " + languageManager.getTranslation("SupplyWater"));
             int type = getValidatedIndex(4);
-            if (type == -1) return;
+            if (type == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            } 
     
             System.out.println(languageManager.getTranslation("LocationOrPerson"));
             int locOrPerson = getValidatedIndex(2);
-            if (locOrPerson == -1) return;
+            if (locOrPerson == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            } 
     
             int index = -1;
             if (locOrPerson == 0) {
@@ -296,8 +334,10 @@ public class CLI {
                 index = getValidatedIndex(controller.getDisasterVictims().size());
             }
     
-            if (index == -1) return;
-    
+            if (index == -1) {
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
             boolean success = false;
             switch (type) {
                 case 0:
@@ -340,7 +380,10 @@ public class CLI {
             System.out.println(languageManager.getTranslation("MedicalRecordSelectVictim"));
             controller.viewDisasterVictims();
             int victimIndex = getValidatedIndex(controller.getDisasterVictims().size());
-            if (victimIndex == -1) return;
+            if (victimIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
     
             DisasterVictim victim = controller.getDisasterVictims().get(victimIndex);
     
@@ -374,7 +417,8 @@ public class CLI {
             boolean success = controller.addMedicalRecordToVictim(victimIndex, treatmentDetails, dateOfTreatment);
             if (success) {
                 System.out.println(languageManager.getTranslation("MedicalRecordAddedSuccess"));
-            } else {
+            } 
+            else {
                 System.out.println(languageManager.getTranslation("UnexpectedError"));
             }
     
@@ -401,8 +445,10 @@ public class CLI {
                 controller.viewInquirers();
                 System.out.println(controller.getInquirers().size() + ": " + languageManager.getTranslation("CreateNewInquirer"));
                 int inquirerIndex = getValidatedIndex(controller.getInquirers().size() + 1);
-                if (inquirerIndex == -1) return;
-    
+                if (inquirerIndex == -1) {
+                    System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                    return;
+                }
                 if (inquirerIndex == controller.getInquirers().size()) {
                     addNewInquirerCLI();
                     loggedBy = controller.getInquirers().get(controller.getInquirers().size() - 1);
@@ -416,7 +462,10 @@ public class CLI {
                 controller.viewDisasterVictims();
                 System.out.println(controller.getDisasterVictims().size() + ": " + languageManager.getTranslation("CreateNewVictim"));
                 int victimIndex = getValidatedIndex(controller.getDisasterVictims().size() + 1);
-                if (victimIndex == -1) return;
+                if (victimIndex == -1){
+                    System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                    return;                
+                } 
     
                 if (victimIndex == controller.getDisasterVictims().size()) {
                     addDisasterVictimCLI();
@@ -435,7 +484,10 @@ public class CLI {
             controller.viewDisasterVictims();
             System.out.println(controller.getDisasterVictims().size() + ": " + languageManager.getTranslation("CreateNewVictim"));
             int missingIndex = getValidatedIndex(controller.getDisasterVictims().size() + 1);
-            if (missingIndex == -1) return;
+            if (missingIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            } 
     
             DisasterVictim missingPerson;
             if (missingIndex == controller.getDisasterVictims().size()) {
@@ -449,7 +501,10 @@ public class CLI {
             System.out.println(languageManager.getTranslation("SelectLocation"));
             controller.viewLocations();
             int locationIndex = getValidatedIndex(controller.getLocations().size());
-            if (locationIndex == -1) return;
+            if (locationIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            } 
             Location location = controller.getLocations().get(locationIndex);
     
             System.out.println(languageManager.getTranslation("EnterComments"));
@@ -470,23 +525,28 @@ public class CLI {
         try {
             controller.viewDisasterVictims();
             int index = getValidatedIndex(controller.getDisasterVictims().size());
-            if (index == -1) return;
-    
+            if (index == -1) {
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
             DisasterVictim victim = controller.getDisasterVictims().get(index);
     
-            // GENDER
             System.out.println(languageManager.getTranslation("EnterNewGender") + " (" + victim.getGender() + "):");
             System.out.println("0. " + languageManager.getTranslation("GenderMale"));
             System.out.println("1. " + languageManager.getTranslation("GenderFemale"));
             System.out.println("2. " + languageManager.getTranslation("GenderNonBinary"));
             int genderChoice = getValidatedIndex(3);
-            Gender newGender = (genderChoice != -1) ? Gender.values()[genderChoice] : null;
-    
-            // COMMENTS
+            Gender[] genderList = {Gender.MALE, Gender.FEMALE, Gender.NONBINARY};
+            Gender gender = null;
+            if(genderChoice != -1){
+                gender = genderList[genderChoice];
+            }
+            else{
+                gender = victim.getGender();
+            }
             System.out.println(languageManager.getTranslation("EnterNewComments") + " (" + victim.getComments() + "):");
             String newComments = scanner.nextLine().trim();
     
-            // FAMILY
             controller.viewFamilies();
             System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroups().size()));
             int famIndex = getValidatedIndex(controller.getFamilyGroups().size() + 1);
@@ -496,11 +556,14 @@ public class CLI {
                 newFamily = new FamilyGroup();
                 newFamily.setId();
                 controller.getFamilyGroups().add(newFamily);
-            } else if (famIndex != -1) {
+                newFamily.addFamilyMember(victim);
+            } 
+            else if (famIndex != -1) {
                 newFamily = controller.getFamilyGroups().get(famIndex);
+                newFamily.addFamilyMember(victim);
             }
     
-            controller.updateDisasterVictim(victim, newGender, newComments, newFamily);
+            controller.updateDisasterVictim(victim, gender, newComments, newFamily);
             System.out.println(languageManager.getTranslation("VictimSuccessfullyUpdated"));
         } 
         catch (Exception e) {
@@ -514,8 +577,10 @@ public class CLI {
         try {
             controller.viewInquirers();
             int index = getValidatedIndex(controller.getInquirers().size());
-            if (index == -1) return;
-    
+            if (index == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
             Inquirer inquirer = controller.getInquirers().get(index);
     
             System.out.println(languageManager.getTranslation("EnterNewPhone"));
@@ -534,9 +599,12 @@ public class CLI {
                 newFamily = new FamilyGroup();
                 newFamily.setId();
                 controller.getFamilyGroups().add(newFamily);
+                newFamily.addFamilyMember(inquirer);
+
             } 
             else if (famIndex != -1) {
                 newFamily = controller.getFamilyGroups().get(famIndex);
+                newFamily.addFamilyMember(inquirer);
             }
     
             controller.updateInquirer(inquirer, phone, newFamily);
@@ -553,7 +621,10 @@ public class CLI {
         try {
             controller.viewInquiries();
             int index = getValidatedIndex(controller.getInquiries().size());
-            if (index == -1) return;
+            if (index == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
     
             ReliefService inquiry = controller.getInquiries().get(index);
     
@@ -590,7 +661,10 @@ public class CLI {
             }
     
             int victimIndex = getValidatedIndex(victimsWithRecords.size());
-            if (victimIndex == -1) return;
+            if (victimIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            } 
     
             DisasterVictim selectedVictim = victimsWithRecords.get(victimIndex);
             ArrayList<MedicalRecord> records = selectedVictim.getMedicalRecords();
@@ -600,15 +674,17 @@ public class CLI {
             }
     
             int recordIndex = getValidatedIndex(records.size());
-            if (recordIndex == -1) return;
-    
+            if (recordIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
             MedicalRecord record = records.get(recordIndex);
     
-            System.out.println(languageManager.getTranslation("EnterNewTreatment"));
+            System.out.println(languageManager.getTranslation("EnterNewTreatment") + "(" + record.getTreatmentDetails() + ")");
             String newDetails = scanner.nextLine().trim();
             if (newDetails.isEmpty()) return;
     
-            System.out.println(languageManager.getTranslation("EnterNewDate"));
+            System.out.println(languageManager.getTranslation("EnterNewDate") +  "(" + record.getDateOfTreatment() + ")");
             String newDate = scanner.nextLine().trim();
             if (!isValidDateFormat(newDate)) return;
     
@@ -633,8 +709,10 @@ public class CLI {
         try {
             controller.viewLocations();
             int locationIndex = getValidatedIndex(controller.getLocations().size());
-            if (locationIndex == -1) return;
-    
+            if (locationIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            } 
             Location location = controller.getLocations().get(locationIndex);
     
             ArrayList<InventoryItem> allocatable = new ArrayList<>();
@@ -654,7 +732,10 @@ public class CLI {
             }
     
             int itemIndex = getValidatedIndex(allocatable.size());
-            if (itemIndex == -1) return;
+            if (itemIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return; 
+            } 
     
             InventoryItem selectedItem = allocatable.get(itemIndex);
     
@@ -679,8 +760,10 @@ public class CLI {
         try {
             controller.viewDisasterVictims();
             int victimIndex = getValidatedIndex(controller.getDisasterVictims().size());
-            if (victimIndex == -1) return;
-    
+            if (victimIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            } 
             DisasterVictim victim = controller.getDisasterVictims().get(victimIndex);
     
             Location victimLocation = null;
@@ -713,8 +796,10 @@ public class CLI {
             }
     
             int invIndex = getValidatedIndex(matchingInventory.size());
-            if (invIndex == -1) return;
-    
+            if (invIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }
             InventoryItem selectedItem = matchingInventory.get(invIndex);
             boolean success = controller.allocateInventoryToPerson(victim, selectedItem);
     
@@ -741,31 +826,21 @@ public class CLI {
         return newFamily;
     }
     
-    
-    
-    private FamilyGroup selectOrCreateFamily() {
-        controller.viewFamilies();
-        System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroupCount()));
-        int index = getValidatedIndex(controller.getFamilyGroups().size());
-        if (index == controller.getFamilyGroups().size()) {
-            return createNewFamilyGroup();
-        } 
-        else if (index >= 0) {
-            return controller.getFamilyGroups().get(index);
-        }
-        return null;
-    }
 
     public void allocateVictimToLocationCLI() {
         try {
             controller.viewDisasterVictims();
             int victimIndex = getValidatedIndex(controller.getDisasterVictims().size());
-            if (victimIndex == -1) return;
-    
+            if (victimIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }    
             controller.viewLocations();
             int locationIndex = getValidatedIndex(controller.getLocations().size());
-            if (locationIndex == -1) return;
-    
+            if (locationIndex == -1){
+                System.out.println(languageManager.getTranslation("InvalidInputNumber"));
+                return;
+            }    
             boolean success = controller.allocateVictimToLocation(victimIndex, locationIndex);
             if (success) {
                 System.out.println(languageManager.getTranslation("VictimSuccessfullyAllocated"));
@@ -797,7 +872,11 @@ public class CLI {
     private int getValidatedIndex(int size) {
         while (true) {
             try {
-                int index = Integer.parseInt(scanner.nextLine().trim());
+                String input = scanner.nextLine().trim();
+                if (input.isEmpty()){
+                    return -1;
+                }
+                int index = Integer.parseInt(input);
                 if (index >= 0 && index < size) {
                     return index;
                 } 

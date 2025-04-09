@@ -68,7 +68,6 @@
         <value>Phone number must contain only digits or hyphens</value>
     </translation>
 
-    <!-- Disaster Victim -->
     <translation>
         <key>VictimAlreadyAllocated</key>
         <value>This victim is already allocated to that location</value>
@@ -94,7 +93,6 @@
         <value>This victim is not currently allocated to a location</value>
     </translation>
 
-    <!-- Inquirer -->
     <translation>
         <key>InquirerAddedSuccess</key>
         <value>Inquirer added successfully</value>
@@ -104,7 +102,6 @@
         <value>Inquirer updated successfully</value>
     </translation>
 
-    <!-- Family -->
     <translation>
         <key>EnterFamilyGroupOrSkip</key>
         <value>Enter a family group index or enter %s to create a new family group</value>
@@ -114,7 +111,6 @@
         <value>Assign this person to a family group?</value>
     </translation>
 
-    <!-- Location -->
     <translation>
         <key>SelectLocation</key>
         <value>Select last known location</value>
@@ -132,7 +128,10 @@
         <value>Room number must be exactly 3 digits</value>
     </translation>
 
-    <!-- Inventory -->
+    <translation>
+        <key>MainMenu</key>
+        <value>Back to Main Menu</value>
+    </translation>
     <translation>
         <key>SelectItem</key>
         <value>Select inventory item type</value>
@@ -166,7 +165,6 @@
         <value>Inventory successfully allocated</value>
     </translation>
 
-    <!-- Inquiry -->
     <translation>
         <key>SelectInquirer</key>
         <value>Select an inquirer</value>
@@ -192,7 +190,6 @@
         <value>Inquiry updated successfully</value>
     </translation>
 
-    <!-- Medical Record -->
     <translation>
         <key>MedicalRecordSelectVictim</key>
         <value>Select a victim for the medical record</value>
@@ -226,7 +223,6 @@
         <value>Medical record updated successfully</value>
     </translation>
 
-    <!-- Display Fields -->
     <translation>
         <key>FirstName</key>
         <value>First Name</value>
@@ -300,7 +296,6 @@
         <value>Invalid input. Please enter a valid number.</value>
     </translation>
 
-    <!-- Insert Menu -->
     <translation>
         <key>AddDisasterVictim</key>
         <value>Add Disaster Victim</value>
@@ -321,8 +316,6 @@
         <key>LogInquiry</key>
         <value>Log Inquiry</value>
     </translation>
-
-    <!-- View Menu -->
     <translation>
         <key>ViewVictims</key>
         <value>View Disaster Victims</value>
@@ -347,8 +340,6 @@
         <key>ViewInventory</key>
         <value>View Inventory</value>
     </translation>
-
-    <!-- Update Menu -->
     <translation>
         <key>UpdateVictim</key>
         <value>Update Victim</value>

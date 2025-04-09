@@ -55,7 +55,9 @@ public abstract class InventoryItem {
     @param id The new ID to set.
      */
     protected void setId(int id){
-        highestId = id;
+        if(id > highestId){
+            highestId = id;
+        }
         this.itemId = id;
     }
 
