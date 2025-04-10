@@ -743,6 +743,12 @@ public class DBManager implements DBAccess{
     
     }
 
+
+    /**
+    Updates supply allocation to person
+    @param supplyId SupplyId
+    @param personId  PersonId
+     */
     public void updateSupplyToPerson(int supplyId, int personId) {
         try {
             String query = "UPDATE SupplyAllocation SET person_id = ?, location_id = NULL, allocation_date = ? WHERE supply_id = ?";
@@ -760,6 +766,13 @@ public class DBManager implements DBAccess{
         }
     }
 
+    
+    /**
+    Removes supply allocation
+    @param supplyId SupplyId
+    @param personId  PersonId
+     */
+
     public void removeSupplyAllocation(int supplyId) {
         try {
             String query = "DELETE FROM SupplyAllocation WHERE supply_id = ?";
@@ -775,6 +788,12 @@ public class DBManager implements DBAccess{
         }
     }
     
+    
+    /**
+    Updates supply allocation to location
+    @param supplyId SupplyId
+    @param locationId  LocationId
+     */
 
     public void updateSupplyToLocation(int supplyId, int locationId) {
         try {
