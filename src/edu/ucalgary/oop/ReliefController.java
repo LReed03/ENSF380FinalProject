@@ -23,9 +23,9 @@ public class ReliefController {
     private static LanguageManager languageManager;
 
     /**
-     * Creates a ReliefController object and initializes the system.
-    @param model DBAccess object for database operations.
-    @param languageManager LanguageManager object for translations.
+     * Creates a ReliefController object and initializes the system
+    @param model DBAccess object for database operations
+    @param languageManager LanguageManager object for translations
      */
     public ReliefController(DBAccess model, LanguageManager languageManager) {
         this.model = model;
@@ -34,7 +34,7 @@ public class ReliefController {
     }
 
     /**
-    Initializes the application by loading data from the database.
+    Initializes the application by loading data from the database
      */
     public void StartUp() {
         try {
@@ -56,10 +56,10 @@ public class ReliefController {
     }
 
     /**
-    Allocates a disaster victim to a location.
-    @param victimIndex Index of the disaster victim.
-    @param locationIndex Index of the location.
-    @return True if the allocation is successful, false otherwise.
+    Allocates a disaster victim to a location
+    @param victimIndex Index of the disaster victim
+    @param locationIndex Index of the location
+    @return True if the allocation is successful, false otherwise
      */
     public boolean allocateVictimToLocation(int victimIndex, int locationIndex) {
         
@@ -87,14 +87,14 @@ public class ReliefController {
     
 
     /**
-     * Adds a new disaster victim to the system.
-    @param firstName First name of the victim.
-    @param lastName Last name of the victim.
-    @param dob Date of birth of the victim.
-    @param gender Gender of the victim.
-    @param comments Additional comments about the victim.
-    @param family Family group of the victim.
-    @return True if the victim is successfully added, false otherwise.
+     * Adds a new disaster victim to the system
+    @param firstName First name of the victim
+    @param lastName Last name of the victim
+    @param dob Date of birth of the victim
+    @param gender Gender of the victim
+    @param comments Additional comments about the victim
+    @param family Family group of the victim
+    @return True if the victim is successfully added, false otherwise
      */
     public boolean addDisasterVictim(String firstName, String lastName, String dob, Gender gender, String comments, FamilyGroup family) {
         if (firstName == null || lastName == null || dob == null || gender == null) {
@@ -106,6 +106,7 @@ public class ReliefController {
         victim.setDateOfBirth(dob);
         victim.setGender(gender);
         victim.setComments(comments);
+        victim.setId();
         if (family != null) {
             family.addFamilyMember(victim);
             victim.setFamily(family);
@@ -119,12 +120,12 @@ public class ReliefController {
     }
 
     /**
-     * Adds a new inquirer to the system.
-    @param firstName First name of the inquirer.
-    @param lastName Last name of the inquirer.
-    @param phoneNumber Phone number of the inquirer.
-    @param family Family group of the inquirer.
-    @return True if the inquirer is successfully added, false otherwise.
+     * Adds a new inquirer to the system
+    @param firstName First name of the inquirer
+    @param lastName Last name of the inquirer
+    @param phoneNumber Phone number of the inquirer
+    @param family Family group of the inquirer
+    @return True if the inquirer is successfully added, false otherwise
      */
     public boolean addInquirer(String firstName, String lastName, String phoneNumber, FamilyGroup family) {
         if (firstName == null || !firstName.matches("[a-zA-Z]+")) return false;
@@ -145,11 +146,11 @@ public class ReliefController {
     }
 
     /**
-    Adds a new medical record for a disaster victim.
-    @param victimIndex Index of the disaster victim.
-    @param treatmentDetails Details of the treatment.
-    @param dateOfTreatment Date of the treatment.
-    @return True if the medical record is successfully added, false otherwise.
+    Adds a new medical record for a disaster victim
+    @param victimIndex Index of the disaster victim
+    @param treatmentDetails Details of the treatment
+    @param dateOfTreatment Date of the treatment
+    @return True if the medical record is successfully added, false otherwise
      */
     public boolean addMedicalRecordToVictim(int victimIndex, String treatmentDetails, String dateOfTreatment) {
         DisasterVictim victim = disastervictims.get(victimIndex);
@@ -178,10 +179,10 @@ public class ReliefController {
     }
 
     /**
-    Adds a new blanket item and allocates it to a location or person.
-    @param toLocation True if the blanket is allocated to a location, false if to a person.
-    @param index Index of the location or person.
-    @return True if the blanket is successfully added, false otherwise.
+    Adds a new blanket item and allocates it to a location or person
+    @param toLocation True if the blanket is allocated to a location, false if to a person
+    @param index Index of the location or person
+    @return True if the blanket is successfully added, false otherwise
      */
     public boolean addBlanket(boolean toLocation, int index) {
         Blanket blanket;
@@ -190,14 +191,14 @@ public class ReliefController {
             blanket = new Blanket(location);
             blanket.setId();
             location.addSupply(blanket);
-            model.addNewSupply("blanket", null);
+            model.addNewSupply("blanket", null, blanket);
             model.allocateInventoryToLocation(blanket.getId(), location.getId());
         } else {
             DisasterVictim victim = disastervictims.get(index);
             blanket = new Blanket(victim);
             blanket.setId();
             victim.addBelongings(blanket);
-            model.addNewSupply("blanket", null);
+            model.addNewSupply("blanket", null, blanket);
             model.allocateInventoryToPerson(blanket.getId(), victim.getId());
         }
         supply.add(blanket);
@@ -205,15 +206,22 @@ public class ReliefController {
     }
 
     /**
-    Adds a new cot item and allocates it to a location or person.
-    @param toLocation True if the cot is allocated to a location, false if to a person.
-    @param index Index of the location or person.
-    @param roomNum Room number for the cot.
-    @param gridLoc Grid location for the cot.
-    @return True if the cot is successfully added, false otherwise.
+    Adds a new cot item and allocates it to a location or person
+    @param toLocation True if the cot is allocated to a location, false if to a person
+    @param index Index of the location or person
+    @param roomNum Room number for the cot
+    @param gridLoc Grid location for the cot
+    @return True if the cot is successfully added, false otherwise
      */
     public boolean addCot(boolean toLocation, int index, int roomNum, String gridLoc) { 
         Cot cot;
+        if (roomNum < 100 || roomNum > 999) {
+            return false;
+        }
+        if (!gridLoc.matches("^[A-Za-z]\\d+$")) {
+            return false;
+        }
+    
         String comments = roomNum + " " + gridLoc;
 
         if (toLocation) {
@@ -221,7 +229,7 @@ public class ReliefController {
             cot = new Cot(roomNum, gridLoc, location);
             cot.setId();
             location.addSupply(cot);
-            model.addNewSupply("cot", comments);
+            model.addNewSupply("cot", comments, cot);
             model.allocateInventoryToLocation(cot.getId(), location.getId());
         } 
         else {
@@ -229,7 +237,7 @@ public class ReliefController {
             cot = new Cot(roomNum, gridLoc, victim);
             cot.setId();
             victim.addBelongings(cot);
-            model.addNewSupply("cot", comments);
+            model.addNewSupply("cot", comments, cot);
             model.allocateInventoryToPerson(cot.getId(), victim.getId());
         }
 
@@ -238,27 +246,30 @@ public class ReliefController {
     }
 
     /**
-    Adds personal belongings to a disaster victim.
-    @param description Description of the belongings.
-    @param victimIndex Index of the disaster victim.
-    @return True if the belongings are successfully added, false otherwise.
+    Adds personal belongings to a disaster victim
+    @param description Description of the belongings
+    @param victimIndex Index of the disaster victim
+    @return True if the belongings are successfully added, false otherwise
      */
     public boolean addPersonalBelongings(String description, int victimIndex) {
         DisasterVictim victim = disastervictims.get(victimIndex);
+        if(description.length() == 0){
+            return false;
+        }
         PersonalBelongings belongings = new PersonalBelongings(description, victim);
         belongings.setId();
         victim.addBelongings(belongings);
         supply.add(belongings);
-        model.addNewSupply("personal item", description);
+        model.addNewSupply("personal item", description, belongings);
         model.allocateInventoryToPerson(belongings.getId(), victim.getId());
         return true;
     }
 
     /**
-    Adds a new water item and allocates it to a location or person.
-    @param toLocation True if the water is allocated to a location, false if to a person.
-    @param index Index of the location or person.
-    @return True if the water is successfully added, false otherwise.
+    Adds a new water item and allocates it to a location or person
+    @param toLocation True if the water is allocated to a location, false if to a person
+    @param index Index of the location or person
+    @return True if the water is successfully added, false otherwise
      */
     public boolean addWater(boolean toLocation, int index) {
         Water water;
@@ -268,7 +279,7 @@ public class ReliefController {
             water = new Water(location);
             water.setId();
             location.addSupply(water);
-            model.addNewSupply("water", null);
+            model.addNewSupply("water", null, water);
             model.allocateInventoryToLocation(water.getId(), location.getId());
         } 
         else {
@@ -276,7 +287,7 @@ public class ReliefController {
             water = new Water(victim);
             water.setId();
             victim.addBelongings(water);
-            model.addNewSupply("water", null);
+            model.addNewSupply("water", null, water);
             model.allocateInventoryToPerson(water.getId(), victim.getId());
         }
 
@@ -286,10 +297,10 @@ public class ReliefController {
 
     /**
     Logs a new inquiry in the system
-    @param loggedBy Person logging the inquiry.
-    @param missingPerson Missing person being inquired about.
-    @param location Location of the inquiry.
-    @param comments Additional comments about the inquiry.
+    @param loggedBy Person logging the inquiry
+    @param missingPerson Missing person being inquired about
+    @param location Location of the inquiry
+    @param comments Additional comments about the inquiry
      */
     public void logInquiry(Person loggedBy, DisasterVictim missingPerson, Location location, String comments) {
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
@@ -301,11 +312,11 @@ public class ReliefController {
     }
 
     /**
-    Updates the details of an existing disaster victim.
-    @param victim Disaster victim to update.
-    @param newGender New gender of the victim.
-    @param newComments New comments about the victim.
-    @param newFamily New family group of the victim.
+    Updates the details of an existing disaster victim
+    @param victim Disaster victim to update
+    @param newGender New gender of the victim
+    @param newComments New comments about the victim
+    @param newFamily New family group of the victim
      */
     public void updateDisasterVictim(DisasterVictim victim, Gender newGender, String newComments, FamilyGroup newFamily) {
         if (newGender != null) {
@@ -337,10 +348,10 @@ public class ReliefController {
     }
 
     /**
-    Updates the details of an existing inquirer.
-    @param inquirer Inquirer to update.
-    @param newPhone New phone number of the inquirer.
-    @param newFamily New family group of the inquirer.
+    Updates the details of an existing inquirer
+    @param inquirer Inquirer to update
+    @param newPhone New phone number of the inquirer
+    @param newFamily New family group of the inquirer
      */
     public void updateInquirer(Inquirer inquirer, String newPhone, FamilyGroup newFamily) {
         if (newPhone != null && !newPhone.isEmpty()) {
@@ -359,7 +370,8 @@ public class ReliefController {
             }
     
             inquirer.setFamily(newFamily);
-        } else if (oldFamily != null) {
+        } 
+        else if (oldFamily != null) {
             inquirer.setFamily(null);
             isFamilyEmpty();
         }
@@ -368,11 +380,11 @@ public class ReliefController {
     }
 
     /**
-    Updates an existing medical record for a disaster victim.
-    @param record Medical record to update.
-    @param newDetails New treatment details.
-    @param newDate New date of treatment.
-    @return True if the medical record is successfully updated, false otherwise.
+    Updates an existing medical record for a disaster victim
+    @param record Medical record to update
+    @param newDetails New treatment details
+    @param newDate New date of treatment
+    @return True if the medical record is successfully updated, false otherwise
      */
     public boolean updateMedicalRecord(MedicalRecord record, String newDetails, String newDate) {
         if (record == null || newDetails == null || newDetails.isEmpty() || !isValidDateFormat(newDate)) {
@@ -386,9 +398,9 @@ public class ReliefController {
     }
 
     /**
-    Updates an existing inquiry in the system.
-    @param inquiry Inquiry to update.
-    @param newComments New comments for the inquiry.
+    Updates an existing inquiry in the system
+    @param inquiry Inquiry to update
+    @param newComments New comments for the inquiry
      */
     public void updateInquiry(ReliefService inquiry, String newComments) {
         if (newComments != null && !newComments.isEmpty()) {
@@ -398,10 +410,10 @@ public class ReliefController {
     }
 
     /**
-    Allocates inventory to a location.
-    @param item Inventory item to allocate.
-    @param location Location to allocate the item to.
-    @return True if the allocation is successful, false otherwise.
+    Allocates inventory to a location
+    @param item Inventory item to allocate
+    @param location Location to allocate the item to
+    @return True if the allocation is successful, false otherwise
      */
     public boolean allocateInventoryToLocation(InventoryItem item, Location location) {
         if (item == null || location == null || item.getItemType() == ItemType.PERSONALBELONGINGS) {
@@ -426,10 +438,10 @@ public class ReliefController {
     }
 
     /**
-    Allocates inventory to a disaster victim.
-    @param victim Disaster victim to allocate the inventory to.
-    @param item Inventory item to allocate.
-    @return True if the allocation is successful, false otherwise.
+    Allocates inventory to a disaster victim
+    @param victim Disaster victim to allocate the inventory to
+    @param item Inventory item to allocate
+    @return True if the allocation is successful, false otherwise
      */
     public boolean allocateInventoryToPerson(DisasterVictim victim, InventoryItem item) {
         if (victim == null || item == null) return false;
@@ -449,7 +461,7 @@ public class ReliefController {
     }
 
     /**
-    Displays a list of all disaster victims.
+    Displays a list of all disaster victims
      */
     public void viewDisasterVictims() {
         for (int i = 0; i < disastervictims.size(); i++) {
@@ -459,7 +471,7 @@ public class ReliefController {
     }
 
     /**
-    Displays a list of all inquirers.
+    Displays a list of all inquirers
      */
     public void viewInquirers() {
         for(int i = 0; i < inquirers.size(); i++){
@@ -469,7 +481,7 @@ public class ReliefController {
     }
 
     /**
-    Displays a list of all locations.
+    Displays a list of all locations
      */
     public void viewLocations() {
         for (int i = 0; i < locations.size(); i++) {
@@ -479,7 +491,7 @@ public class ReliefController {
     }
 
     /**
-    Displays medical records for disaster victims.
+    Displays medical records for disaster victims
      */
     public void viewMedicalRecords() {
         System.out.println(languageManager.getTranslation("MedicalRecordView"));
@@ -502,7 +514,7 @@ public class ReliefController {
     }
 
     /**
-    Displays a list of all inquiries.
+    Displays a list of all inquiries
      */
     public void viewInquiries() {
         for(int i = 0; i < inquiries.size(); i++){
@@ -512,7 +524,7 @@ public class ReliefController {
     }
 
     /**
-    Displays a list of all inventory items.
+    Displays a list of all inventory items
      */
     public void viewInventory() {
         for(int i = 0; i < supply.size(); i++){
@@ -522,7 +534,7 @@ public class ReliefController {
     }
 
     /**
-    Displays a list of all family groups and their members.
+    Displays a list of all family groups and their members
      */
     public void viewFamilies() {
         for (int i =0; i < familyGroups.size(); i++) {
@@ -537,9 +549,9 @@ public class ReliefController {
     }
 
     /**
-    Checks if a disaster victim already exists in the system.
-    @param victim Disaster victim to check.
-    @return True if the victim exists, false otherwise.
+    Checks if a disaster victim already exists in the system
+    @param victim Disaster victim to check
+    @return True if the victim exists, false otherwise
      */
     private static boolean checkPersonExists(DisasterVictim victim) {
         for(DisasterVictim v: disastervictims){
@@ -551,9 +563,9 @@ public class ReliefController {
     }
 
     /**
-    Validates a date string format (YYYY-MM-DD).
-    @param date The date string to validate.
-    @return True if the date format is valid, false otherwise.
+    Validates a date string format (YYYY-MM-DD)
+    @param date The date string to validate
+    @return True if the date format is valid, false otherwise
      */
     private static boolean isValidDateFormat(String date) {
         String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
@@ -568,7 +580,7 @@ public class ReliefController {
     }
 
     /**
-    Removes empty family groups from the system.
+    Removes empty family groups from the system
      */
     private static void isFamilyEmpty() {
         Iterator<FamilyGroup> iterator = familyGroups.iterator();
@@ -581,48 +593,48 @@ public class ReliefController {
     }
 
     /**
-    Gets the list of disaster victims. 
-    @return List of disaster victims.
+    Gets the list of disaster victims
+    @return List of disaster victims
      */
     public ArrayList<DisasterVictim> getDisasterVictims() {
         return disastervictims;
     }
 
     /**
-    Gets the list of inquirers.
-    @return List of inquirers.
+    Gets the list of inquirers
+    @return List of inquirers
      */
     public ArrayList<Inquirer> getInquirers() {
         return inquirers;
     }
 
     /**
-    Gets the list of locations.
-    @return List of locations.
+    Gets the list of locations
+    @return List of locations
      */
     public ArrayList<Location> getLocations() {
         return locations;
     }
 
     /**
-    Gets the list of inquiries.
-    @return List of inquiries.
+    Gets the list of inquiries
+    @return List of inquiries
      */
     public ArrayList<ReliefService> getInquiries() {
         return inquiries;
     }
 
     /**
-    Gets the list of inventory items.
-    @return List of inventory items.
+    Gets the list of inventory items
+    @return List of inventory items
      */
     public ArrayList<InventoryItem> getSupply() {
         return supply;
     }
 
     /**
-    Gets the list of family groups.
-    @return List of family groups.
+    Gets the list of family groups
+    @return List of family groups
      */
     public ArrayList<FamilyGroup> getFamilyGroups() {
         return familyGroups;

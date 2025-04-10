@@ -8,8 +8,8 @@ package edu.ucalgary.oop;
 public class Blanket extends InventoryItem {
 
     /**
-    Constructs a Blanket object and allocates it to a disaster victim.
-    @param person The disaster victim to whom the blanket is allocated.
+    Constructs a Blanket object and allocates it to a disaster victim
+    @param person The disaster victim to whom the blanket is allocated
      */
     public Blanket(DisasterVictim person) {
         this.allocatedToPerson = person;
@@ -17,8 +17,8 @@ public class Blanket extends InventoryItem {
     }
 
     /**
-    Constructs a Blanket object and allocates it to a specific location. 
-    @param location The location to which the blanket is allocated.
+    Constructs a Blanket object and allocates it to a specific location
+    @param location The location to which the blanket is allocated
      */
     public Blanket(Location location) {
         this.allocatedToLocation = location;

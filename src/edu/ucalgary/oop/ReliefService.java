@@ -18,12 +18,12 @@ public class ReliefService {
     private static int highestId = 0;
 
     /**
-    Constructor to initialize a relief service inquiry.
-    @param inquirer The person making the inquiry.
-    @param missingPerson The person being inquired about.
-    @param dateOfInquiry The date of the inquiry in the format "YYYY-MM-DD".
-    @param infoProvided Additional information provided during the inquiry.
-    @param lastKnownLocation The last known location of the missing person.
+    Constructor to initialize a relief service inquiry
+    @param inquirer The person making the inquiry
+    @param missingPerson The person being inquired about
+    @param dateOfInquiry The date of the inquiry in the format "YYYY-MM-DD"
+    @param infoProvided Additional information provided during the inquiry
+    @param lastKnownLocation The last known location of the missing person
      */
     public ReliefService(Person inquirer, Person missingPerson, String dateOfInquiry, String infoProvided, Location lastKnownLocation) throws IllegalArgumentException {
         this.inquirer = inquirer;
@@ -34,48 +34,48 @@ public class ReliefService {
     }
 
     /**
-    Retrieves the person making the inquiry.
-    @return The inquirer.
+    Retrieves the person making the inquiry
+    @return The inquirer
      */
     public Person getInquirer() {
         return this.inquirer;
     }
 
     /**
-    Sets the person making the inquiry.
-    @param inquirer The inquirer to set.
+    Sets the person making the inquiry
+    @param inquirer The inquirer to set
      */
     public void setInquirer(Person inquirer) {
         this.inquirer = inquirer;
     }
 
     /**
-    Retrieves the person being inquired about.
-    @return The missing person.
+    Retrieves the person being inquired about
+    @return The missing person
      */
     public Person getMissingPerson() {
         return this.missingPerson;
     }
 
     /**
-    Sets the person being inquired about.
-    @param person The missing person to set.
+    Sets the person being inquired about
+    @param person The missing person to set
      */
     public void setMissingPerson(Person person) {
         this.missingPerson = person;
     }
 
     /**
-    Retrieves the date of the inquiry.
-    @return The date of the inquiry in the format "YYYY-MM-DD".
+    Retrieves the date of the inquiry
+    @return The date of the inquiry in the format "YYYY-MM-DD"
      */
     public String getDateOfInquiry() throws IllegalArgumentException {
         return this.dateOfInquiry;
     }
 
     /**
-    Sets the date of the inquiry.
-    @param dateOfInquiry The date of the inquiry in the format "YYYY-MM-DD".
+    Sets the date of the inquiry
+    @param dateOfInquiry The date of the inquiry in the format "YYYY-MM-DD"
      */
     public void setDateOfInquiry(String dateOfInquiry) throws IllegalArgumentException {
         if(!isValidDateFormat(dateOfInquiry)){
@@ -85,41 +85,41 @@ public class ReliefService {
     }
 
     /**
-    Retrieves the additional information provided during the inquiry.
-    @return The information provided.
+    Retrieves the additional information provided during the inquiry
+    @return The information provided
      */
     public String getInfoProvided() {
         return this.infoProvided;
     }
 
     /**
-    Sets the additional information provided during the inquiry.
-    @param info The information to set.
+    Sets the additional information provided during the inquiry
+    @param info The information to set
      */
     public void setInfoProvided(String info) {
         this.infoProvided = info;
     }
 
     /**
-    Retrieves the last known location of the missing person.
-    @return The last known location.
+    Retrieves the last known location of the missing person
+    @return The last known location
      */
     public Location getLastKnownLocation() {
         return this.lastKnownLocation;
     }
 
     /**
-    Sets the last known location of the missing person.
-    @param lastKnownLocation The location to set.
+    Sets the last known location of the missing person
+    @param lastKnownLocation The location to set
      */
     public void setLastKnownLocation(Location lastKnownLocation) {
         this.lastKnownLocation = lastKnownLocation;
     }
 
     /**
-    Validates the format of a date string.
-    @param date The date string to validate.
-    return True if the date format is valid, false otherwise.
+    Validates the format of a date string
+    @param date The date string to validate
+    return True if the date format is valid, false otherwise
      */
     private static boolean isValidDateFormat(String date) {
         if (date == null) return false;
@@ -135,8 +135,8 @@ public class ReliefService {
     }
 
     /**
-    Sets the unique ID of the inquiry.
-    @param inquiryID The ID to set.
+    Sets the unique ID of the inquiry
+    @param inquiryID The ID to set
      */
     public void setId(int inquiryId) {
         if(inquiryId > highestId){
@@ -146,16 +146,16 @@ public class ReliefService {
     }
 
     /**
-     Retrieves the unique ID of the inquiry.
-    @return The ID of the inquiry.
+     Retrieves the unique ID of the inquiry
+    @return The ID of the inquiry
      */
     public int getId() {
         return this.inquiryID;
     }
 
     /**
-    automatically assigns a new unique ID to the inquiry.
-    Increments the highest ID and assigns it to the inquiry.
+    automatically assigns a new unique ID to the inquiry
+    Increments the highest ID and assigns it to the inquiry
      */
     protected void setId() {
         highestId = highestId + 1;

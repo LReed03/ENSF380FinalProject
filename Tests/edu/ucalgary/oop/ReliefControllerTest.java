@@ -173,4 +173,18 @@ public class ReliefControllerTest {
         boolean result = controller.allocateInventoryToPerson(null, item);
         assertFalse("Null victim should fail allocation", result);
     }
+
+    @Test
+    public void testRemoveFamilyAutomaticallyWhenVictimFamilyIsSetToNull() {
+        FamilyGroup oldFamily = controller.getFamilyGroups().get(0);
+        DisasterVictim victim = controller.getDisasterVictims().get(0);
+
+        controller.updateDisasterVictim(victim, victim.getGender(), victim.getComments(), null);
+        
+        assertNull("Victim's family should be set to null", victim.getFamily());
+
+        assertFalse("Old family should be automatically removed from the familyGroups list", controller.getFamilyGroups().contains(oldFamily));
+    }
+
+
 }

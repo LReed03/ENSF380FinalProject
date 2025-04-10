@@ -11,27 +11,27 @@ public enum Gender {
     NONBINARY;
 
     /**
-    Converts a Gender enum value to its string representation.
-    @param gender The Gender enum value to convert.
-    @return A string representation of the gender ("male", "female", "non-binary").
+    Converts a Gender enum value to its string representation
+    @param gender The Gender enum value to convert
+    @return A string representation of the gender ("male", "female", "non-binary")
      */
-    public String toString(Gender gender){
+    public static String toSQL(Gender gender){
         if(gender == MALE){
-            return "male";
+            return "Man";
         }
         if(gender == FEMALE){
-            return "female";
+            return "Woman";
         }
         if(gender == NONBINARY){
-            return "non-binary";
+            return "Non-binary person";
         }
         return "";
     }
 
     /**
-    Converts a string representation of a gender to its corresponding Gender enum value.
-    @param value The string representation of the gender.
-    @return The corresponding Gender value, or null if the input is not in the Gender.
+    Converts a string representation of a gender to its corresponding Gender enum value
+    @param value The string representation of the gender
+    @return The corresponding Gender value, or null if the input is not in the Gender
      */
     public static Gender fromString(String value) {
         if (value == null) return null;
@@ -44,7 +44,7 @@ public enum Gender {
             return FEMALE;
         } 
         else if (value.equals("nonbinary") || value.equals("non-binary") ||
-                   value.equals("non binary person") || value.equals("nonbinary person")) {
+                   value.equals("non binary person") || value.equals("non-binary person")) {
             return NONBINARY;
         }
     

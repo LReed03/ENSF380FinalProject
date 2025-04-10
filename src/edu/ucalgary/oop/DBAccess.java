@@ -49,7 +49,7 @@ public interface DBAccess {
 
     void allocateInventoryToLocation(int itemId, int locationId);
 
-    void addNewSupply(String type, String comments);
+    void addNewSupply(String type, String comments, InventoryItem item);
 
     void logInquiry(int inquirerId, int seekingId, int locationId, Timestamp date, String comments);
 

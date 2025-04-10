@@ -13,8 +13,8 @@ public class Water extends InventoryItem {
     private String allocationDate;
 
     /**
-     Constructor to initialize water allocated to a location.
-    @param location The location to which the water is allocated.
+     Constructor to initialize water allocated to a location
+    @param location The location to which the water is allocated
      */
     public Water(Location location) {
         this.allocatedToLocation = location;
@@ -23,8 +23,8 @@ public class Water extends InventoryItem {
     }
 
     /**
-    Constructor to initialize water allocated to a disaster victim.
-    @param person The disaster victim to whom the water is allocated.
+    Constructor to initialize water allocated to a disaster victim
+    @param person The disaster victim to whom the water is allocated
      */
     public Water(DisasterVictim person) {
         this.allocatedToPerson = person;
@@ -33,24 +33,24 @@ public class Water extends InventoryItem {
     }
 
     /**
-    Retrieves the availability status of the water.
-    @return True if the water is available, false otherwise.
+    Retrieves the availability status of the water
+    @return True if the water is available, false otherwise
      */
     public boolean getAvalible() {
         return this.avalible;
     }
 
     /**
-    Sets the availability status of the water.
-    @param avalible The availability status to set.
+    Sets the availability status of the water
+    @param avalible The availability status to set
      */
     public void setAvalible(boolean avalible) {
         this.avalible = avalible;
     }
 
     /**
-    Sets the allocation date of the water.
-    @param allocationDate The allocation date in the format "YYYY-MM-DD".
+    Sets the allocation date of the water
+    @param allocationDate The allocation date in the format "YYYY-MM-DD"
      */
     public void setAllocationDate(String allocationDate) {
         boolean validEntryDate = isValidDateFormat(allocationDate);
@@ -61,17 +61,17 @@ public class Water extends InventoryItem {
     }
 
     /**
-    Retrieves the allocation date of the water.
-    @return The allocation date in the format "YYYY-MM-DD".
+    Retrieves the allocation date of the water
+    @return The allocation date in the format "YYYY-MM-DD"
      */
     public String getAllocationDate() {
         return this.allocationDate;
     }
 
     /**
-    Checks if the water is expired based on the current date.
-    @param currentDate The current date in the format "YYYY-MM-DD".
-    @return True if the water is expired, false otherwise.
+    Checks if the water is expired based on the current date
+    @param currentDate The current date in the format "YYYY-MM-DD"
+    @return True if the water is expired, false otherwise
      */
     public boolean isExpired(String currentDate) throws IllegalArgumentException {
         boolean validCurrentDate = isValidDateFormat(currentDate);
@@ -87,8 +87,8 @@ public class Water extends InventoryItem {
     }
 
     /**
-    Marks the water as unavailable if it is expired based on the current date.
-    @param currentDate The current date in the format "YYYY-MM-DD".
+    Marks the water as unavailable if it is expired based on the current date
+    @param currentDate The current date in the format "YYYY-MM-DD"
      */
     public void useWater(String currentDate) {
         if(isExpired(currentDate)){
@@ -97,9 +97,9 @@ public class Water extends InventoryItem {
     }
 
     /**
-    Validates the format of a date string.
-    @param date The date string to validate.
-    @return True if the date format is valid, false if not.
+    Validates the format of a date string
+    @param date The date string to validate
+    @return True if the date format is valid, false if not
      */
     private static boolean isValidDateFormat(String date){
         String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
@@ -115,9 +115,9 @@ public class Water extends InventoryItem {
 	}
 
     /**
-    Converts a date string in the format "YYYY-MM-DD" to an integer for comparison.
-    @param dateStr The date string to convert.
-    @return The integer representation of the date.
+    Converts a date string in the format "YYYY-MM-DD" to an integer for comparison
+    @param dateStr The date string to convert
+    @return The integer representation of the date
      */
     private static int convertDateStringToInt(String dateStr){
 		dateStr = dateStr.replace("-", "");

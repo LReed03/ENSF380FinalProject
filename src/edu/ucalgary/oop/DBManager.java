@@ -17,8 +17,8 @@ public class DBManager implements DBAccess{
     private ResultSet results;
 
     /**
-    Private constructor to establish a database connection.
-    Initializes the LanguageManager instance.
+    Private constructor to establish a database connection
+    Initializes the LanguageManager instance
      */
     private DBManager(){
         try{
@@ -32,8 +32,8 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Returns the singleton instance of DBManager.
-    @return The singleton instance of DBManager.
+    Returns the singleton instance of DBManager
+    @return The singleton instance of DBManager
      */
     public static DBManager getInstance(){
         if (instance == null) {
@@ -43,9 +43,9 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Retrieves all disaster victims from the database.
-    @param families A list of family groups to associate with victims.
-    @return A list of DisasterVictim objects.
+    Retrieves all disaster victims from the database
+    @param families A list of family groups to associate with victims
+    @return A list of DisasterVictim objects
      */
     @Override
     public ArrayList<DisasterVictim> getAllDisasterVictims(ArrayList<FamilyGroup> families) {
@@ -92,8 +92,8 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Retrieves all family groups from the database.
-    @return A list of FamilyGroup objects.
+    Retrieves all family groups from the database
+    @return A list of FamilyGroup objects
      */
     @Override
     public ArrayList<FamilyGroup> getFamilyGroups() {
@@ -122,9 +122,9 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Assigns disaster victims to locations based on database records.
-    @param victims   A list of DisasterVictim objects.
-    @param locations A list of Location objects.
+    Assigns disaster victims to locations based on database records
+    @param victims   A list of DisasterVictim objects
+    @param locations A list of Location objects
      */
     @Override
     public void assignVictimsToLocations(ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
@@ -170,9 +170,9 @@ public class DBManager implements DBAccess{
 }
 
     /**
-    Retrieves all inquirers from the database.
-    @param families A list of family groups to associate with inquirers.
-    @return A list of Inquirer objects.
+    Retrieves all inquirers from the database
+    @param families A list of family groups to associate with inquirers
+    @return A list of Inquirer objects
      */
     @Override
     public ArrayList<Inquirer> getAllInquirers(ArrayList<FamilyGroup> families) {
@@ -217,8 +217,8 @@ public class DBManager implements DBAccess{
     
 
     /**
-    Inserts a new disaster victim into the database.
-    @param victim The DisasterVictim object to insert.
+    Inserts a new disaster victim into the database
+    @param victim The DisasterVictim object to insert
      */
     @Override
     public void insertDisasterVictim(DisasterVictim victim) {
@@ -229,7 +229,7 @@ public class DBManager implements DBAccess{
             myStmt.setString(1, victim.getFirstName());
             myStmt.setString(2, victim.getLastName());
             myStmt.setDate(3, java.sql.Date.valueOf(victim.getDateOfBirth())); 
-            myStmt.setString(4, victim.getGender().toString());
+            myStmt.setString(4, Gender.toSQL(victim.getGender()));
             myStmt.setString(5, victim.getComments());
             if(victim.getFamily() != null){
                 myStmt.setInt(6, victim.getFamily().getId());
@@ -248,8 +248,8 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Inserts a new inquirer into the database.
-    @param inquirer The Inquirer object to insert.
+    Inserts a new inquirer into the database
+    @param inquirer The Inquirer object to insert
      */
     @Override
     public void insertInquirer(Inquirer inquirer) {
@@ -277,18 +277,18 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    adds a new supply to the database.
-    @param type     The type of supply.
-    @param comments Additional comments about the supply.
+    adds a new supply to the database
+    @param type     The type of supply
+    @param comments Additional comments about the supply
      */
     @Override
-    public void addNewSupply(String type, String comments){
+    public void addNewSupply(String type, String comments, InventoryItem item){
         try{
-            String query = "INSERT INTO Supply (type, comments) VALUES (?,?)";
+            String query = "INSERT INTO Supply (supply_id, type, comments) VALUES (?,?,?)";
             PreparedStatement myStmt = connection.prepareStatement(query);
-
-            myStmt.setString(1, type);
-            myStmt.setString(2, comments);
+            myStmt.setInt(1, item.getId());
+            myStmt.setString(2, type);
+            myStmt.setString(3, comments);
             myStmt.executeUpdate();
 
             myStmt.close();
@@ -301,8 +301,8 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Updates an existing disaster victim in the database.
-    @param victim The DisasterVictim object with updated information.
+    Updates an existing disaster victim in the database
+    @param victim The DisasterVictim object with updated information
      */
     @Override
     public void updateDisasterVictim(DisasterVictim victim) {
@@ -310,7 +310,7 @@ public class DBManager implements DBAccess{
             String query = "UPDATE Person SET gender = ?, comments = ?, family_group = ? WHERE first_name = ? AND last_name = ? AND date_of_birth = ?";
             PreparedStatement myStmt = connection.prepareStatement(query);
     
-            myStmt.setString(1, victim.getGender().toString());
+            myStmt.setString(1, Gender.toSQL(victim.getGender()));
             myStmt.setString(2, victim.getComments());
             if(victim.getFamily() != null){
                 myStmt.setInt(3, victim.getFamily().getId());
@@ -333,8 +333,8 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Updates an existing inquirer in the database.
-    @param inquirer The Inquirer object with updated information.
+    Updates an existing inquirer in the database
+    @param inquirer The Inquirer object with updated information
      */
     @Override
     public void updateInquirer(Inquirer inquirer) {
@@ -364,9 +364,9 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Allocates an inventory item to a disaster victim.
-    @param itemId   The ID of the inventory item.
-    @param victimId The ID of the disaster victim.
+    Allocates an inventory item to a disaster victim
+    @param itemId   The ID of the inventory item
+    @param victimId The ID of the disaster victim
      */
     @Override
     public void allocateInventoryToPerson(int itemId, int victimId){
@@ -391,9 +391,9 @@ public class DBManager implements DBAccess{
     }
 
     /**
-     Allocates an inventory item to a location.
-    @param itemId     The ID of the inventory item.
-    @param locationId The ID of the location.
+     Allocates an inventory item to a location
+    @param itemId     The ID of the inventory item
+    @param locationId The ID of the location
      */
     @Override
     public void allocateInventoryToLocation(int itemId, int locationId){
@@ -418,11 +418,11 @@ public class DBManager implements DBAccess{
 
     /**
     Logs an inquiry in the database.
-    @param inquirerId The ID of the inquirer.
-    @param seekingId  The ID of the person being sought.
-    @param locationId The ID of the location.
-    @param date       The date of the inquiry.
-    @param comments   Additional comments about the inquiry.
+    @param inquirerId The ID of the inquirer
+    @param seekingId  The ID of the person being sought
+    @param locationId The ID of the location
+    @param date       The date of the inquiry
+    @param comments   Additional comments about the inquiry
      */
     @Override
     public void logInquiry(int inquirerId, int seekingId, int locationId, Timestamp date, String comments) {
@@ -450,34 +450,48 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Removes expired water supplies from the database.
+    Removes expired water supplies from the database
      */
     @Override
     public void removeExpiredWater() {
         try {
-            String query = """
+            String deleteAllocationsQuery = """
                 DELETE FROM SupplyAllocation
                 USING Supply
                 WHERE SupplyAllocation.supply_id = Supply.supply_id
-                  AND Supply.type = 'water'
-                  AND SupplyAllocation.allocation_date < CURRENT_DATE - INTERVAL '1 day'
-                """;
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.executeUpdate();
-            stmt.close();
+                AND Supply.type = 'water'
+                AND SupplyAllocation.allocation_date < CURRENT_DATE - INTERVAL '1 day'
+            """;
+
+            PreparedStatement stmt1 = connection.prepareStatement(deleteAllocationsQuery);
+            stmt1.executeUpdate();
+            stmt1.close();
+
+            String deleteSupplyQuery = """
+                DELETE FROM Supply
+                WHERE type = 'water'
+                AND supply_id NOT IN (SELECT supply_id FROM SupplyAllocation)
+            """;
+
+            PreparedStatement stmt2 = connection.prepareStatement(deleteSupplyQuery);
+            stmt2.executeUpdate();
+            stmt2.close();
+
         } 
         catch (SQLException e) {
+
             ErrorLog error = new ErrorLog(e);
             System.out.println(languageManager.getTranslation("UnexpectedError"));
             System.exit(1);
         }
     }
+
     
     /**
-    Retrieves all inventory items from the database.
-    @param victims   A list of DisasterVictim objects.
-    @param locations A list of Location objects.
-    @return A list of InventoryItem objects.
+    Retrieves all inventory items from the database
+    @param victims   A list of DisasterVictim objects
+    @param locations A list of Location objects
+    @return A list of InventoryItem objects
      */
     @Override
     public ArrayList<InventoryItem> getAllInventory(ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
@@ -568,11 +582,11 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Retrieves all inquiries from the database.
-    @param inquirers A list of Inquirer objects.
-    @param victims   A list of DisasterVictim objects.
-    @param locations A list of Location objects.
-    @return A list of ReliefService objects.
+    Retrieves all inquiries from the database
+    @param inquirers A list of Inquirer objects
+    @param victims   A list of DisasterVictim objects
+    @param locations A list of Location objects
+    @return A list of ReliefService objects
      */
     @Override
     public ArrayList<ReliefService> getAllInquiries(ArrayList<Inquirer> inquirers, ArrayList<DisasterVictim> victims, ArrayList<Location> locations) {
@@ -641,8 +655,8 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Retrieves all locations from the database.
-    @return A list of Location objects.
+    Retrieves all locations from the database
+    @return A list of Location objects
      */
     @Override
     public ArrayList<Location> getAllLocations() {
@@ -677,9 +691,9 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Retrieves all medical records from the database and associates them with victims.
-    @param allLocations A list of Location objects.
-    @param victims      A list of DisasterVictim objects.
+    Retrieves all medical records from the database and associates them with victims
+    @param allLocations A list of Location objects
+    @param victims      A list of DisasterVictim objects
      */
     @Override
     public void getAllMedicalRecords(ArrayList<Location> allLocations, ArrayList<DisasterVictim> victims) {
@@ -738,7 +752,8 @@ public class DBManager implements DBAccess{
             stmt.setInt(3, supplyId);
             stmt.executeUpdate();
             stmt.close();
-        } catch (SQLException e) {
+        } 
+        catch (SQLException e) {
             ErrorLog error = new ErrorLog(e);
             System.out.println(languageManager.getTranslation("UnexpectedError"));
             System.exit(1);
@@ -781,9 +796,9 @@ public class DBManager implements DBAccess{
 
     
     /**
-    Adds a disaster victim to a location in the database.
-    @param personId   The ID of the disaster victim.
-    @param locationId The ID of the location.
+    Adds a disaster victim to a location in the database
+    @param personId   The ID of the disaster victim
+    @param locationId The ID of the location
      */
     @Override
     public void addDisasterVictimToLocation(int personId, int locationId) {
@@ -805,9 +820,9 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Removes a disaster victim from a location in the database.
-    @param personId   The ID of the disaster victim.
-    @param locationId The ID of the location.
+    Removes a disaster victim from a location in the database
+    @param personId   The ID of the disaster victim
+    @param locationId The ID of the location
      */
     @Override
     public void removeVictimFromLocation(int personId, int locationId) {
@@ -827,10 +842,10 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Adds a medical record to the database.
-    @param record     The MedicalRecord object to add.
-    @param locationId The ID of the location.
-    @param personId   The ID of the disaster victim.
+    Adds a medical record to the database
+    @param record     The MedicalRecord object to add
+    @param locationId The ID of the location
+    @param personId   The ID of the disaster victim
      */
     @Override
     public void addMedicalRecord(MedicalRecord record, int locationId, int personId) {
@@ -855,9 +870,9 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Updates an existing medical record in the database.
-    @param record   The MedicalRecord object with updated information.
-    @param recordId The ID of the medical record.
+    Updates an existing medical record in the database
+    @param record   The MedicalRecord object with updated information
+    @param recordId The ID of the medical record
      */
     @Override
     public void updateMedicalRecord(MedicalRecord record, int recordId) {
@@ -878,17 +893,18 @@ public class DBManager implements DBAccess{
     }
 
     /**
-    Updates an existing inquiry in the database.
-    @param inquiry   The ReliefService object with updated information.
-    @param inquiryId The ID of the inquiry.
+    Updates an existing inquiry in the database
+    @param inquiry   The ReliefService object with updated information
+    @param inquiryId The ID of the inquiry
      */
     @Override
     public void updateInquiry(ReliefService inquiry, int inquiryId) {
         try {
             String query = "UPDATE Inquiry SET comments = ?, date_of_inquiry = ?, location_id = ? WHERE inquiry_id = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
+            Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
             stmt.setString(1, inquiry.getInfoProvided());
-            stmt.setString(2, inquiry.getDateOfInquiry());
+            stmt.setTimestamp(2, timestamp);
             stmt.setInt(3, inquiry.getLastKnownLocation().getId());
             stmt.setInt(4, inquiryId);
             stmt.executeUpdate();
@@ -902,10 +918,10 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Finds a family group by its ID.
-    @param list A list of FamilyGroup objects.
-    @param id   The ID of the family group.
-    @return The FamilyGroup object with the specified ID, or null if not found.
+    Finds a family group by its ID
+    @param list A list of FamilyGroup objects
+    @param id   The ID of the family group
+    @return The FamilyGroup object with the specified ID, or null if not found
      */
     private FamilyGroup findFamilyGroupById(ArrayList<FamilyGroup> list, int id) {
         for (FamilyGroup fg : list) {
@@ -917,7 +933,7 @@ public class DBManager implements DBAccess{
     }
     
     /**
-    Closes the database connection and result set.
+    Closes the database connection and result set
      */
     @Override
     public void close(){

@@ -197,7 +197,7 @@ public class MockDatabase implements DBAccess {
     }
 
     @Override
-    public void addNewSupply(String type, String comments) {
+    public void addNewSupply(String type, String comments, InventoryItem item) {
         // You can simulate logging if needed
     }
 

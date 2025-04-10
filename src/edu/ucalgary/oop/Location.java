@@ -14,9 +14,9 @@ public class Location {
     private static int highestId = 0;
 
     /**
-    Constructor to initialize a location with a name and address.
-    @param name The name of the location.
-    @param address The address of the location.
+    Constructor to initialize a location with a name and address
+    @param name The name of the location
+    @param address The address of the location
      */
     public Location(String name, String address) {
         if (name == null || address == null) {
@@ -29,16 +29,16 @@ public class Location {
     }
 
     /**
-    Retrieves the name of the location.
-    @return The name of the location.
+    Retrieves the name of the location
+    @return The name of the location
      */
     public String getName() {
         return this.name;
     }
 
     /**
-    Sets the name of the location.
-    @param name The new name of the location.
+    Sets the name of the location
+    @param name The new name of the location
      */
     public void setName(String name) {
         if (name == null) {
@@ -48,16 +48,16 @@ public class Location {
     }
 
     /**
-    Retrieves the address of the location.
-    @return The address of the location.
+    Retrieves the address of the location
+    @return The address of the location
      */
     public String getAddress() {
         return this.address;
     }
 
     /**
-    Sets the address of the location.
-    @param address The new address of the location.
+    Sets the address of the location
+    @param address The new address of the location
      */
     public void setAddress(String address) {
         if (address == null) {
@@ -67,32 +67,32 @@ public class Location {
     }
 
     /**
-    Retrieves the list of occupants at the location.
-    @return An ArrayList of disaster victims at the location.
+    Retrieves the list of occupants at the location
+    @return An ArrayList of disaster victims at the location
      */
     public ArrayList<DisasterVictim> getOccupants() {
         return this.occupants;
     }
 
     /**
-    Sets the list of occupants at the location.
-    @param occupants An ArrayList of disaster victims to set.
+    Sets the list of occupants at the location
+    @param occupants An ArrayList of disaster victims to set
      */
     public void setOccupants(ArrayList<DisasterVictim> occupants) {
         this.occupants = occupants;
     }
 
     /**
-    Retrieves the list of supplies at the location.
-    @return An ArrayList of inventory items at the location.
+    Retrieves the list of supplies at the location
+    @return An ArrayList of inventory items at the location
      */
     public ArrayList<InventoryItem> getSupplies() {
         return this.supplies;
     }
 
     /**
-    Sets the list of supplies at the location.
-    @param supplies An ArrayList of inventory items to set.
+    Sets the list of supplies at the location
+    @param supplies An ArrayList of inventory items to set
      */
     public void setSupplies(ArrayList<InventoryItem> supplies) throws IllegalArgumentException {
         for(int i = 0; i < supplies.size(); i++){
@@ -104,24 +104,24 @@ public class Location {
     }
 
     /**
-    Adds a disaster victim to the location's occupants.
-    @param occupant The disaster victim to add.
+    Adds a disaster victim to the location's occupants
+    @param occupant The disaster victim to add
      */
     public void addOccupant(DisasterVictim occupant) {
         this.occupants.add(occupant);
     }
 
     /**
-    Removes a disaster victim from the location's occupants.
-    @param occupant The disaster victim to remove.
+    Removes a disaster victim from the location's occupants
+    @param occupant The disaster victim to remove
      */
     public void removeOccupant(DisasterVictim occupant) {
         this.occupants.remove(occupant);
     }
 
     /**
-    Adds an inventory item to the location's supplies.
-    param supply The inventory item to add.
+    Adds an inventory item to the location's supplies
+    param supply The inventory item to add
      */
     public void addSupply(InventoryItem supply) throws IllegalArgumentException {
         if(supply.getItemType() == ItemType.PERSONALBELONGINGS){
@@ -131,25 +131,25 @@ public class Location {
     }
 
     /**
-    Removes an inventory item from the location's supplies.
-    @param supply The inventory item to remove.
+    Removes an inventory item from the location's supplies
+    @param supply The inventory item to remove
      */
     public void removeSupply(InventoryItem supply) {
         this.supplies.remove(supply);
     }
 
     /**
-    Retrieves the unique ID of the location.
-    @return The ID of the location.
+    Retrieves the unique ID of the location
+    @return The ID of the location
      */
     public int getId() {
         return locationId; 
     }
 
     /**
-    Sets the ID of the location.
-    Updates the highest ID if the new ID is greater.
-    @param id The new ID to set.
+    Sets the ID of the location
+    Updates the highest ID if the new ID is greater
+    @param id The new ID to set
      */
     public void setId(int id) {
         if(id > highestId){
@@ -159,8 +159,8 @@ public class Location {
     }
 
     /**
-    Automatically assigns a new unique ID to the location.
-    Increments the highest ID and assigns it to the location.
+    Automatically assigns a new unique ID to the location
+    Increments the highest ID and assigns it to the location
      */
     public void setId(){
         highestId = highestId + 1;

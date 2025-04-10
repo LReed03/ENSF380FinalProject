@@ -12,15 +12,15 @@ public class FamilyGroup {
     private static int highestId = 0;
 
     /**
-    Default constructor that initializes an empty family group.
+    Default constructor that initializes an empty family group
      */
     public FamilyGroup(){
         this.familyMembers = new ArrayList<>();
     }
     
     /**
-    Constructor that initializes a family group with a specific ID.
-    @param familyId The ID of the family group.
+    Constructor that initializes a family group with a specific ID
+    @param familyId The ID of the family group
      */
     public FamilyGroup(int familyId){
         if(familyId > highestId){
@@ -31,8 +31,8 @@ public class FamilyGroup {
     }
 
     /**
-    Adds a person to the family group.
-    @param person The person to be added to the family group.
+    Adds a person to the family group
+    @param person The person to be added to the family group
      */
     public void addFamilyMember(Person person) {
         if (!this.familyMembers.contains(person)) {
@@ -41,41 +41,41 @@ public class FamilyGroup {
     }
 
     /**
-    Removes a person from the family group.
-    @param person The person to be removed from the family group.
+    Removes a person from the family group
+    @param person The person to be removed from the family group
      */
     public void removeFamilyMember(Person person){
         this.familyMembers.remove(person);
     }
 
     /**
-    Retrieves the list of family members in the group.
-    @return An ArrayList of family members.
+    Retrieves the list of family members in the group
+    @return An ArrayList of family members
      */
     public ArrayList<Person> getFamilyMembers(){
         return this.familyMembers;
     }
 
     /**
-    Sets the list of family members in the group.
-    @param family An ArrayList of family members to set.
+    Sets the list of family members in the group
+    @param family An ArrayList of family members to set
      */
     public void setFamilyMembers(ArrayList<Person> family){
         this.familyMembers = family;
     }
 
     /**
-    Retrieves the ID of the family group.
-    @return The ID of the family group.
+    Retrieves the ID of the family group
+    @return The ID of the family group
      */
     public int getId(){
         return this.familyId;
     }
 
     /**
-    Sets the ID of the family group.
-    Updates the highest ID if the new ID is greater.
-    @param id The new ID to set for the family group.
+    Sets the ID of the family group
+    Updates the highest ID if the new ID is greater
+    @param id The new ID to set for the family group
      */
     public void setId(int id){
         if(id > highestId){
@@ -85,8 +85,8 @@ public class FamilyGroup {
     }
 
     /**
-    Automatically assigns a new unique ID to the family group.
-    Increments the highest ID and assigns it to the family group.
+    Automatically assigns a new unique ID to the family group
+    Increments the highest ID and assigns it to the family group
      */
     public void setId(){
         highestId = highestId + 1;

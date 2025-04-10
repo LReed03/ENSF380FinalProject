@@ -8,3 +8,33 @@
 
 [2025-04-08T18:22:26.816903100] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
 
+[2025-04-10T14:53:06.917120200] No suitable driver found for jdbc:postgresql://localhost:5432/ensf380project
+
+[2025-04-10T14:54:13.570542800] FATAL: database "ensf380project" does not exist
+
+[2025-04-10T15:26:56.738059] ERROR: column "date_of_inquiry" is of type timestamp without time zone but expression is of type character varying
+  Hint: You will need to rewrite or cast the expression.
+  Position: 53
+
+[2025-04-10T15:33:15.165684300] ERROR: insert or update on table "supplyallocation" violates foreign key constraint "supplyallocation_supply_id_fkey"
+  Detail: Key (supply_id)=(6) is not present in table "supply".
+
+[2025-04-10T15:34:28.430097200] ERROR: insert or update on table "supplyallocation" violates foreign key constraint "supplyallocation_supply_id_fkey"
+  Detail: Key (supply_id)=(6) is not present in table "supply".
+
+[2025-04-10T15:47:43.523793900] ERROR: duplicate key value violates unique constraint "supply_pkey"
+  Detail: Key (supply_id)=(9) already exists.
+
+[2025-04-10T15:51:18.320122300] ERROR: duplicate key value violates unique constraint "supply_pkey"
+  Detail: Key (supply_id)=(9) already exists.
+
+[2025-04-10T15:55:33.034947900] ERROR: insert or update on table "inquiry" violates foreign key constraint "inquiry_inquirer_id_fkey"
+  Detail: Key (inquirer_id)=(0) is not present in table "person".
+
+[2025-04-10T16:01:38.179619800] ERROR: insert or update on table "inquiry" violates foreign key constraint "inquiry_inquirer_id_fkey"
+  Detail: Key (inquirer_id)=(0) is not present in table "person".
+
+[2025-04-10T16:18:55.272158400] Room number must be a 3-digit number
+
+[2025-04-10T16:35:58.424026100] Description can not be empty
+

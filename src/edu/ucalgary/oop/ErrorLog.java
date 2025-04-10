@@ -14,8 +14,8 @@ public class ErrorLog {
 
     /**
     Constructor for ErrorLog.
-    Logs the provided exception's message along with the current timestamp to "errorlog.txt". 
-    @param e The exception to log.
+    Logs the provided exception's message along with the current timestamp to "errorlog.txt".
+    @param e The exception to log
      */
     public ErrorLog(Exception e) {
     BufferedWriter out = null;

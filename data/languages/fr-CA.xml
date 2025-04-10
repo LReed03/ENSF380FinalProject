@@ -1,459 +1,458 @@
 <translations>
     <translation>
         <key>EnterValidIndex</key>
-        <value>Enter a valid index</value>
+        <value>Entrez un indice valide</value>
     </translation>
     <translation>
         <key>InvalidInputNumber</key>
-        <value>Invalid input, please enter a number</value>
+        <value>Entrée invalide, veuillez entrer un nombre</value>
     </translation>
     <translation>
         <key>InvalidIndex</key>
-        <value>Invalid index selected</value>
+        <value>Indice sélectionné invalide</value>
     </translation>
     <translation>
         <key>UnexpectedError</key>
-        <value>An unexpected error occurred</value>
+        <value>Une erreur inattendue s'est produite</value>
     </translation>
     <translation>
         <key>InvalidInput</key>
-        <value>Invalid input</value>
+        <value>Entrée invalide</value>
     </translation>
     <translation>
         <key>CreateNewInquirer</key>
-        <value>Create new inquirer</value>
+        <value>Créer un nouvel enquêteur</value>
     </translation>
     <translation>
         <key>CreateNewVictim</key>
-        <value>Create new disaster victim</value>
+        <value>Créer une nouvelle victime de catastrophe</value>
     </translation>
     <translation>
         <key>InvalidDateFormat</key>
-        <value>Invalid date format (YYYY-MM-DD)</value>
+        <value>Format de date invalide (AAAA-MM-JJ)</value>
     </translation>
     <translation>
         <key>ViewFamilies</key>
-        <value>View Family Groups</value>
+        <value>Voir les groupes familiaux</value>
     </translation>
     <translation>
         <key>EnterFirstName</key>
-        <value>Enter the person's first name (No numbers or spaces)</value>
+        <value>Entrez le prénom de la personne</value>
     </translation>
     <translation>
         <key>EnterLastName</key>
-        <value>Enter the person's last name (No numbers or spaces)</value>
+        <value>Entrez le nom de famille de la personne</value>
     </translation>
     <translation>
         <key>EnterDOB</key>
-        <value>Enter the person's date of birth (YYYY-MM-DD)</value>
+        <value>Entrez la date de naissance de la personne (AAAA-MM-JJ)</value>
     </translation>
     <translation>
         <key>EnterGender</key>
-        <value>Enter the person's gender (male/female/other)</value>
+        <value>Entrez le genre de la personne (homme/femme/autre)</value>
     </translation>
     <translation>
         <key>EnterComments</key>
-        <value>Enter comments (optional)</value>
-    </translation>
-    <translation>
-        <key>EnterInquiry</key>
-        <value>Enter comments (Cannot be blank)</value>
+        <value>Entrez des commentaires (optionnel)</value>
     </translation>
     <translation>
         <key>EnterPhoneNumber</key>
-        <value>Enter the person's phone number (###-####)</value>
+        <value>Entrez le numéro de téléphone de la personne (###-####)</value>
     </translation>
     <translation>
         <key>InvalidName</key>
-        <value>Name must only contain letters</value>
+        <value>Le nom ne doit contenir que des lettres</value>
     </translation>
     <translation>
         <key>InvalidPhoneNumber</key>
-        <value>Phone number must contain only digits or hyphens</value>
+        <value>Le numéro de téléphone ne doit contenir que des chiffres ou des traits d’union</value>
     </translation>
 
     <translation>
         <key>VictimAlreadyAllocated</key>
-        <value>This victim is already allocated to that location</value>
+        <value>Cette victime est déjà affectée à cet emplacement</value>
     </translation>
     <translation>
         <key>VictimSuccessfullyAllocated</key>
-        <value>Victim successfully allocated to location</value>
+        <value>Victime affectée avec succès à l’emplacement</value>
     </translation>
     <translation>
         <key>VictimAlreadyExists</key>
-        <value>A victim with this information already exists</value>
+        <value>Une victime avec ces informations existe déjà</value>
     </translation>
     <translation>
         <key>VictimSuccessfullyAdded</key>
-        <value>Victim added successfully</value>
+        <value>Victime ajoutée avec succès</value>
     </translation>
     <translation>
         <key>VictimSuccessfullyUpdated</key>
-        <value>Victim information updated successfully</value>
+        <value>Informations de la victime mises à jour avec succès</value>
     </translation>
     <translation>
         <key>VictimNotAllocatedToLocation</key>
-        <value>This victim is not currently allocated to a location</value>
+        <value>Cette victime n’est actuellement affectée à aucun emplacement</value>
     </translation>
 
     <translation>
         <key>InquirerAddedSuccess</key>
-        <value>Inquirer added successfully</value>
+        <value>Enquêteur ajouté avec succès</value>
     </translation>
     <translation>
         <key>InquirerUpdated</key>
-        <value>Inquirer updated successfully</value>
+        <value>Enquêteur mis à jour avec succès</value>
     </translation>
 
     <translation>
         <key>EnterFamilyGroupOrSkip</key>
-        <value>Enter a family group index or enter %s to create a new family group</value>
+        <value>Entrez un indice de groupe familial ou entrez %s pour créer un nouveau groupe familial</value>
     </translation>
     <translation>
         <key>AssignToFamily</key>
-        <value>Assign this person to a family group?</value>
+        <value>Attribuer cette personne à un groupe familial ?</value>
     </translation>
 
     <translation>
         <key>SelectLocation</key>
-        <value>Select last known location</value>
+        <value>Sélectionner le dernier emplacement connu</value>
     </translation>
     <translation>
         <key>LocationName</key>
-        <value>Location name</value>
+        <value>Nom de l'emplacement</value>
     </translation>
     <translation>
         <key>InvalidGrid</key>
-        <value>Grid location must be a letter followed by a number</value>
+        <value>L'emplacement de la grille doit être une lettre suivie d'un chiffre</value>
     </translation>
     <translation>
         <key>InvalidRoomNumber</key>
-        <value>Room number must be exactly 3 digits</value>
+        <value>Le numéro de la chambre doit comporter exactement 3 chiffres</value>
     </translation>
 
     <translation>
         <key>MainMenu</key>
-        <value>Main Menu</value>
+        <value>Retour au menu principal</value>
     </translation>
     <translation>
         <key>SelectItem</key>
-        <value>Select inventory item type</value>
+        <value>Sélectionner le type d'article d'inventaire</value>
     </translation>
     <translation>
         <key>LocationOrPerson</key>
-        <value>Allocate to 0 = Location or 1 = Person?</value>
+        <value>Allouer à 0 = Emplacement ou 1 = Personne ?</value>
     </translation>
     <translation>
         <key>EnterPersonalDescription</key>
-        <value>Enter a description for the personal item (Cannot be blank)</value>
+        <value>Entrez une description de l'objet personnel</value>
     </translation>
     <translation>
         <key>InvalidTreatmentDetails</key>
-        <value>Description cannot be blank</value>
+        <value>La description ne peut pas être vide</value>
     </translation>
     <translation>
         <key>PersonalVictim</key>
-        <value>Select a victim to assign the personal belonging</value>
+        <value>Sélectionner une victime à qui attribuer l'objet personnel</value>
     </translation>
     <translation>
         <key>NoUnallocatedInventory</key>
-        <value>No unallocated inventory is available</value>
+        <value>Aucun inventaire non attribué n'est disponible</value>
     </translation>
     <translation>
         <key>NoInventoryAtVictimLocation</key>
-        <value>No inventory available at the victim’s location</value>
+        <value>Aucun inventaire disponible à l'emplacement de la victime</value>
     </translation>
     <translation>
         <key>InventoryAllocatedSuccessfully</key>
-        <value>Inventory successfully allocated</value>
+        <value>Inventaire attribué avec succès</value>
     </translation>
 
     <translation>
         <key>SelectInquirer</key>
-        <value>Select an inquirer</value>
+        <value>Sélectionner un enquêteur</value>
     </translation>
     <translation>
         <key>SelectMissingPerson</key>
-        <value>Select the missing person</value>
+        <value>Sélectionner la personne disparue</value>
     </translation>
     <translation>
         <key>EnterComments</key>
-        <value>Enter inquiry comments</value>
+        <value>Entrez les commentaires de la demande</value>
     </translation>
     <translation>
         <key>InquiryLoggedSuccessfully</key>
-        <value>Inquiry successfully logged</value>
+        <value>Demande enregistrée avec succès</value>
     </translation>
     <translation>
         <key>EnterNewInquiryComments</key>
-        <value>Enter updated comments</value>
+        <value>Entrez les commentaires mis à jour</value>
     </translation>
     <translation>
         <key>InquiryUpdated</key>
-        <value>Inquiry updated successfully</value>
+        <value>Demande mise à jour avec succès</value>
     </translation>
 
     <translation>
         <key>MedicalRecordSelectVictim</key>
-        <value>Select a victim for the medical record</value>
+        <value>Sélectionner une victime pour le dossier médical</value>
     </translation>
     <translation>
         <key>EnterTreatmentDetails</key>
-        <value>Enter treatment details</value>
+        <value>Entrez les détails du traitement</value>
     </translation>
     <translation>
         <key>EnterDateOfTreatment</key>
-        <value>Enter the date of treatment (YYYY-MM-DD)</value>
+        <value>Entrez la date du traitement (AAAA-MM-JJ)</value>
     </translation>
     <translation>
         <key>MedicalRecordAddedSuccess</key>
-        <value>Medical record successfully added</value>
+        <value>Dossier médical ajouté avec succès</value>
     </translation>
     <translation>
         <key>MedicalRecordView</key>
-        <value>View medical records</value>
+        <value>Voir les dossiers médicaux</value>
     </translation>
     <translation>
         <key>EnterNewTreatment</key>
-        <value>Enter updated treatment details</value>
+        <value>Entrez les détails mis à jour du traitement</value>
     </translation>
     <translation>
         <key>EnterNewDate</key>
-        <value>Enter updated treatment date (YYYY-MM-DD)</value>
+        <value>Entrez la date de traitement mise à jour</value>
     </translation>
     <translation>
         <key>MedicalRecordUpdated</key>
-        <value>Medical record updated successfully</value>
+        <value>Dossier médical mis à jour avec succès</value>
     </translation>
 
     <translation>
         <key>FirstName</key>
-        <value>First Name</value>
+        <value>Prénom</value>
     </translation>
     <translation>
         <key>LastName</key>
-        <value>Last Name</value>
+        <value>Nom de famille</value>
     </translation>
     <translation>
         <key>DateOfBirth</key>
-        <value>Date of Birth</value>
+        <value>Date de naissance</value>
     </translation>
     <translation>
         <key>PhoneNumber</key>
-        <value>Phone Number</value>
+        <value>Numéro de téléphone</value>
     </translation>
     <translation>
         <key>FamilyID</key>
-        <value>Family ID</value>
+        <value>ID de la famille</value>
     </translation>
     <translation>
         <key>ItemType</key>
-        <value>Item Type</value>
+        <value>Type d'article</value>
     </translation>
     <translation>
         <key>Inquirer</key>
-        <value>Inquirer</value>
+        <value>Enquêteur</value>
     </translation>
     <translation>
         <key>MissingPerson</key>
-        <value>Missing Person</value>
+        <value>Personne disparue</value>
     </translation>
     <translation>
         <key>Infoed</key>
-        <value>Info Provided</value>
+        <value>Informations fournies</value>
     </translation>
     <translation>
         <key>TreatmentDetails</key>
-        <value>Treatment Details</value>
+        <value>Détails du traitement</value>
     </translation>
     <translation>
         <key>dateOfTreatment</key>
-        <value>Date of Treatment</value>
+        <value>Date du traitement</value>
     </translation>
     <translation>
         <key>MainMenu</key>
-        <value>Main Menu</value>
+        <value>Menu principal</value>
     </translation>
     <translation>
         <key>InsertData</key>
-        <value>Insert New Data</value>
+        <value>Insérer de nouvelles données</value>
     </translation>
     <translation>
         <key>ViewData</key>
-        <value>View Existing Data</value>
+        <value>Voir les données existantes</value>
     </translation>
     <translation>
         <key>UpdateData</key>
-        <value>Update Data</value>
+        <value>Mettre à jour les données</value>
     </translation>
     <translation>
         <key>Exit</key>
-        <value>Exit</value>
+        <value>Quitter</value>
     </translation>
     <translation>
         <key>EnterChoice</key>
-        <value>Enter your choice</value>
+        <value>Entrez votre choix</value>
     </translation>
     <translation>
         <key>InvalidInputNumber</key>
-        <value>Invalid input. Please enter a valid number.</value>
+        <value>Entrée invalide. Veuillez entrer un nombre valide.</value>
     </translation>
-
     <translation>
         <key>AddDisasterVictim</key>
-        <value>Add Disaster Victim</value>
+        <value>Ajouter une victime de catastrophe</value>
     </translation>
     <translation>
         <key>AddInquirer</key>
-        <value>Add Inquirer</value>
+        <value>Ajouter un enquêteur</value>
     </translation>
     <translation>
         <key>AddMedicalRecord</key>
-        <value>Add Medical Record</value>
+        <value>Ajouter un dossier médical</value>
     </translation>
     <translation>
         <key>AddSupply</key>
-        <value>Add Supply</value>
+        <value>Ajouter une fourniture</value>
     </translation>
     <translation>
         <key>LogInquiry</key>
-        <value>Log Inquiry</value>
+        <value>Enregistrer une demande</value>
     </translation>
     <translation>
         <key>ViewVictims</key>
-        <value>View Disaster Victims</value>
+        <value>Voir les victimes de catastrophe</value>
     </translation>
     <translation>
         <key>ViewInquirers</key>
-        <value>View Inquirers</value>
+        <value>Voir les enquêteurs</value>
     </translation>
     <translation>
         <key>ViewLocations</key>
-        <value>View Locations</value>
+        <value>Voir les emplacements</value>
     </translation>
     <translation>
         <key>ViewMedicalRecords</key>
-        <value>View Medical Records</value>
+        <value>Voir les dossiers médicaux</value>
     </translation>
     <translation>
         <key>ViewInquiries</key>
-        <value>View Inquiries</value>
+        <value>Voir les demandes</value>
     </translation>
     <translation>
         <key>ViewInventory</key>
-        <value>View Inventory</value>
+        <value>Voir l'inventaire</value>
     </translation>
     <translation>
         <key>UpdateVictim</key>
-        <value>Update Victim</value>
+        <value>Mettre à jour la victime</value>
     </translation>
     <translation>
         <key>UpdateInquirer</key>
-        <value>Update Inquirer</value>
+        <value>Mettre à jour l'enquêteur</value>
     </translation>
     <translation>
         <key>UpdateMedicalRecord</key>
-        <value>Update Medical Record</value>
+        <value>Mettre à jour le dossier médical</value>
     </translation>
     <translation>
         <key>UpdateInquiry</key>
-        <value>Update Inquiry</value>
+        <value>Mettre à jour la demande</value>
     </translation>
     <translation>
-    <key>GenderMale</key>
-    <value>Male</value>
+        <key>GenderMale</key>
+        <value>Homme</value>
     </translation>
     <translation>
         <key>GenderFemale</key>
-        <value>Female</value>
+        <value>Femme</value>
     </translation>
     <translation>
         <key>GenderNonBinary</key>
-        <value>Non-binary</value>
+        <value>Non binaire</value>
     </translation>
     <translation>
         <key>EnterGender</key>
-        <value>Enter the person's gender:</value>
+        <value>Entrez le genre de la personne :</value>
     </translation>
     <translation>
         <key>AllocateInventoryToPerson</key>
-        <value>Allocate Inventory To Person</value>
+        <value>Attribuer l'inventaire à une personne</value>
     </translation>
     <translation>
         <key>AllocateInventoryToLocation</key>
-        <value>Allocate Inventory To Location</value>
+        <value>Attribuer l'inventaire à un emplacement</value>
     </translation>
     <translation>
         <key>AllocateVictimToLocation</key>
-        <value>Allocate Victim To Location</value>
+        <value>Attribuer la victime à un emplacement</value>
     </translation>
     <translation>
         <key>WhoIsLoggingInquiry</key>
-        <value>Who is logging the inquiry?</value>
+        <value>Qui enregistre la demande ?</value>
     </translation>
     <translation>
         <key>SelectDisasterVictim</key>
-        <value>Select a disaster victim</value>
+        <value>Sélectionner une victime de catastrophe</value>
     </translation>
     <translation>
         <key>EnterGridLocation</key>
-        <value>Enter the grid location: (Letter followed by a single digit)</value>
+        <value>Entrez l'emplacement sur la grille :</value>
     </translation>
     <translation>
         <key>EnterRoomNumber</key>
-        <value>Enter the room number: (3 digits)</value>
+        <value>Entrez le numéro de la chambre :</value>
     </translation>
     <translation>
         <key>Name</key>
-        <value>Name</value>
+        <value>Nom</value>
     </translation>
     <translation>
         <key>WarningMissingInquirer</key>
-        <value>Warning: Could not find inquirer with ID</value>
+        <value>Attention : enquêteur introuvable avec cet ID</value>
     </translation>
     <translation>
         <key>WarningMissingVictim</key>
-        <value>Warning: Could not find disaster victim with ID</value>
+        <value>Attention : victime introuvable avec cet ID</value>
     </translation>
     <translation>
-    <key>SupplyBlanket</key>
-    <value>Blanket</value>
+        <key>SupplyBlanket</key>
+        <value>Couverture</value>
     </translation>
     <translation>
         <key>SupplyCot</key>
-        <value>Cot</value>
+        <value>Lit de camp</value>
     </translation>
     <translation>
         <key>SupplyBelongings</key>
-        <value>Personal Belongings</value>
+        <value>Effets personnels</value>
     </translation>
     <translation>
         <key>SupplyWater</key>
-        <value>Water</value>
+        <value>Eau</value>
     </translation>
     <translation>
         <key>SupplyAddedSuccess</key>
-        <value>Item added successfully!</value>
+        <value>Article ajouté avec succès !</value>
     </translation>
     <translation>
         <key>DisasterVictim</key>
-        <value>Disaster Victim</value>
+        <value>Victime de catastrophe</value>
     </translation>
     <translation>
         <key>EnterNewGender</key>
-        <value>Enter the person's new gender</value>
+        <value>Entrez le nouveau genre de la personne</value>
     </translation>
     <translation>
         <key>WhoIsLoggingInquiry</key>
-        <value>Who is logging the inquiry?</value>
+        <value>Qui enregistre la demande ?</value>
+    </translation>
+    <translation>
+        <key>EnterNewGender</key>
+        <value>Entrez le nouveau genre</value>
     </translation>
     <translation>
         <key>EnterNewComments</key>
-        <value>Enter new comments (optional)</value>
+        <value>Entrez de nouveaux commentaires (optionnel)</value>
     </translation>
     <translation>
         <key>EnterNewPhone</key>
-        <value>Enter the new phone number (###-####)</value>
+        <value>Entrez le nouveau numéro de téléphone</value>
     </translation>
 </translations>

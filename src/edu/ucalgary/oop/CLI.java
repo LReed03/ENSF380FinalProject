@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Command Line Interface (CLI) for interacting with the Relief Management System.
- * Provides methods for inserting, viewing, and updating data, as well as allocating resources.
+ * Command Line Interface (CLI) for interacting with the Relief Management System
+ * Provides methods for inserting, viewing, and updating data, as well as allocating resources
  * 
  @author Landon Reed
  @version 1.0
@@ -21,8 +21,8 @@ public class CLI {
     private ArrayList<String> languageCodes = new ArrayList<>(Arrays.asList("en-CA", "fr-CA"));
 
     /**
-     Constructs a CLI object, initializes the language manager, database manager, 
-     and the relief controller. Prompts the user to select a language.
+     Constructs a CLI object, initializes the language manager, database manager and
+     relief controller. Prompts the user to select a language
      */
     public CLI() {
         this.scanner = new Scanner(System.in);
@@ -48,8 +48,7 @@ public class CLI {
     }
 
     /**
-     Starts the main loop of the command-line interface, allowing the user to navigate
-     through various options such as inserting, viewing, and updating data.
+     Starts the main loop of the command-line interface
      */
     public void run() {
         boolean running = true;
@@ -82,7 +81,7 @@ public class CLI {
     }
 
     /**
-     Displays the insert menu and handles user input for adding new data.
+     Displays the insert menu and handles user input for adding new data
      */
     private void insertMenu() {    
         while(true){
@@ -122,7 +121,7 @@ public class CLI {
     }
 
     /**
-     Displays the view menu and handles user input for viewing different types of data.
+     Displays the view menu and handles user input for viewing different types of data
      */
     private void viewMenu() {
         while(true){
@@ -170,7 +169,7 @@ public class CLI {
     }
 
     /**
-     Displays the update menu and handles user input for updating data.
+     Displays the update menu and handles user input for updating data
      */
     private void updateMenu() {
         while(true){
@@ -214,19 +213,32 @@ public class CLI {
     }
 
     /**
-    Adds a new disaster victim through the CLI.
-    Prompts the user for victim details such as name, date of birth, gender, and family group.
+    Adds a new disaster victim through the CLI
+    Prompts the user for victim details such as name, date of birth, gender, and family group
      */
     public void addDisasterVictimCLI() {
         try{
             System.out.println(languageManager.getTranslation("EnterFirstName"));
             String firstName = scanner.nextLine().trim();
+            if(!firstName.matches("[a-zA-Z]+")){
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+                return;
+            }
 
             System.out.println(languageManager.getTranslation("EnterLastName"));
             String lastName = scanner.nextLine().trim();
+            if(!lastName.matches("[a-zA-Z]+")){
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+                return;
+            }
 
             System.out.println(languageManager.getTranslation("EnterDOB"));
             String dob = scanner.nextLine().trim();
+            if (!isValidDateFormat(dob)) {
+                System.out.println(languageManager.getTranslation("InvalidDateFormat"));
+                return;
+            }
+    
 
             System.out.println(languageManager.getTranslation("EnterGender"));
             System.out.println("0. " + languageManager.getTranslation("GenderMale"));
@@ -242,7 +254,8 @@ public class CLI {
 
             System.out.println(languageManager.getTranslation("EnterComments"));
             String comments = scanner.nextLine().trim();
-
+            
+            controller.viewFamilies();
             System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroups().size()));
             int familyIndex = getValidatedIndex(controller.getFamilyGroups().size() + 1);
 
@@ -272,19 +285,31 @@ public class CLI {
     }
 
     /**
-    Adds a new inquirer through the CLI.
-    Prompts the user for inquirer details such as name, phone number, and family group.
+    Adds a new inquirer through the CLI
+    Prompts the user for inquirer details such as name, phone number, and family group
      */
     public void addNewInquirerCLI() {
         try {
             System.out.print(languageManager.getTranslation("EnterFirstName") + ": ");
             String firstName = scanner.nextLine().trim();
+            if(!firstName.matches("[a-zA-Z]+")){
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+                return;
+            }
     
             System.out.print(languageManager.getTranslation("EnterLastName") + ": ");
             String lastName = scanner.nextLine().trim();
+            if(!lastName.matches("[a-zA-Z]+")){
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+                return;
+            }
     
             System.out.print(languageManager.getTranslation("EnterPhoneNumber") + ": ");
             String phoneNumber = scanner.nextLine().trim();
+            if(!phoneNumber.matches("[0-9\\-]+")){
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+                return;
+            }
     
             controller.viewFamilies();
             System.out.println(String.format(languageManager.getTranslation("EnterFamilyGroupOrSkip"), controller.getFamilyGroups().size()));
@@ -318,8 +343,8 @@ public class CLI {
     }
 
     /**
-    Adds a new supply item through the CLI.
-    Prompts the user to select the type of supply and its allocation (location or person).
+    Adds a new supply item through the CLI
+    Prompts the user to select the type of supply and its allocation (location or person)
      */
     public void addNewSupplyCLI() {
         try {
@@ -386,14 +411,14 @@ public class CLI {
         } 
         catch (Exception e) {
             new ErrorLog(e);
-            System.out.println(languageManager.getTranslation("UnexpectedError"));
+            System.out.println(languageManager.getTranslation("InvalidInput"));
             System.exit(1);
         }
     }
 
     /**
-    Adds a new medical record for a disaster victim through the CLI.
-    Prompts the user for treatment details and date of treatment.
+    Adds a new medical record for a disaster victim through the CLI
+    Prompts the user for treatment details and date of treatment
      */
     public void addNewMedicalRecord() {
         try {
@@ -439,7 +464,7 @@ public class CLI {
                 System.out.println(languageManager.getTranslation("MedicalRecordAddedSuccess"));
             } 
             else {
-                System.out.println(languageManager.getTranslation("UnexpectedError"));
+                System.out.println(languageManager.getTranslation("InvalidInput"));
             }
     
         } 
@@ -451,8 +476,8 @@ public class CLI {
     }
 
     /**
-    Logs a new inquiry through the CLI.
-    Prompts the user to select the person logging the inquiry, the missing person, and the location.
+    Logs a new inquiry through the CLI
+    Prompts the user to select the person logging the inquiry, the missing person, and the location
      */
     public void logInquiryCLI() {
         try {
@@ -531,8 +556,12 @@ public class CLI {
             } 
             Location location = controller.getLocations().get(locationIndex);
     
-            System.out.println(languageManager.getTranslation("EnterComments"));
+            System.out.println(languageManager.getTranslation("EnterInquiry"));
             String comments = scanner.nextLine().trim();
+            if(comments.isEmpty()){
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+                return;
+            }
     
             controller.logInquiry(loggedBy, missingPerson, location, comments);
             System.out.println(languageManager.getTranslation("InquiryLoggedSuccessfully"));
@@ -546,8 +575,8 @@ public class CLI {
     }
 
     /**
-    Updates the details of a disaster victim through the CLI.
-    Prompts the user for new gender, comments, and family group.
+    Updates the details of a disaster victim through the CLI
+    Prompts the user for new gender, comments, and family group
      */
     public void updateDisasterVictimCLI() {
         try {
@@ -602,8 +631,8 @@ public class CLI {
     }
 
     /**
-    Updates the details of an inquirer through the CLI.
-    Prompts the user for a new phone number and family group.
+    Updates the details of an inquirer through the CLI
+    Prompts the user for a new phone number and family group
      */
     public void updateInquirerCLI() {
         try {
@@ -650,8 +679,8 @@ public class CLI {
     }
 
     /**
-    Updates the comments of an inquiry through the CLI.
-    Prompts the user for new comments.
+    Updates the comments of an inquiry through the CLI
+    Prompts the user for new comments
      */
     public void updateInquiryCLI() {
         try {
@@ -666,7 +695,10 @@ public class CLI {
     
             System.out.println(languageManager.getTranslation("EnterNewInquiryComments"));
             String comments = scanner.nextLine().trim();
-            if (comments.isEmpty()) return;
+            if (comments.isEmpty()) {
+                System.out.println(languageManager.getTranslation("InvalidInput"));
+                return;
+            }
             controller.updateInquiry(inquiry, comments);
             System.out.println(languageManager.getTranslation("InquiryUpdated"));
         } 
@@ -678,8 +710,8 @@ public class CLI {
     }
 
     /**
-    Updates a medical record for a disaster victim through the CLI.
-    Prompts the user to select a victim, a record, and provide new treatment details and date.
+    Updates a medical record for a disaster victim through the CLI
+    Prompts the user to select a victim, a record, and provide new treatment details and date
      */
     public void updateMedicalRecordCLI() {
         try {
@@ -746,8 +778,8 @@ public class CLI {
     
 
     /**
-    Allocates inventory to a location through the CLI.
-    Prompts the user to select a location and an inventory item.
+    Allocates inventory to a location through the CLI
+    Prompts the user to select a location and an inventory item
      */
     public void allocateInventoryToLocationCLI() {
         try {
@@ -801,8 +833,8 @@ public class CLI {
     
     
     /**
-    Allocates inventory to a person through the CLI.
-    Prompts the user to select a disaster victim and an inventory item.
+    Allocates inventory to a person through the CLI
+    Prompts the user to select a disaster victim and an inventory item
      */
     public void allocateInventoryToPersonCLI() {
         try {
@@ -867,8 +899,8 @@ public class CLI {
     }
     
     /**
-    Allocates a disaster victim to a location through the CLI.
-    Prompts the user to select a victim and a location.
+    Allocates a disaster victim to a location through the CLI
+    Prompts the user to select a victim and a location
      */
     public void allocateVictimToLocationCLI() {
         try {
@@ -899,9 +931,9 @@ public class CLI {
     }
 
     /**
-    Validates if a given date string matches the expected format (YYYY-MM-DD).
-    @param date The date string to validate.
-    @return True if the date is valid, false otherwise.
+    Validates if a given date string matches the expected format (YYYY-MM-DD)
+    @param date The date string to validate
+    @return True if the date is valid, false otherwise
      */
     private static boolean isValidDateFormat(String date){
 		String dateRegex = "^\\d{4}[-]{1}\\d{2}[-]\\d{2}$";
@@ -917,9 +949,9 @@ public class CLI {
 	}
 
     /**
-    Validates user input to ensure it is a valid index within the specified range.
-    @param size The upper limit of the valid index range.
-    @return The validated index, or -1 if the input is invalid.
+    Validates user input to ensure it is a valid index within the specified range
+    @param size The upper limit of the valid index range
+    @return The validated index, or -1 if the input is invalid
      */
     private int getValidatedIndex(int size) {
         while (true) {

@@ -9,10 +9,10 @@ public class Cot extends InventoryItem {
     private String gridLocation;
 
     /**
-    Constructs a Cot allocated to a disaster victim.
-    @param rmNum        The room number where the cot is located.
-    @param gridLocation The grid location of the cot.
-    @param person       The disaster victim to whom the cot is allocated.
+    Constructs a Cot allocated to a disaster victim
+    @param rmNum        The room number where the cot is located
+    @param gridLocation The grid location of the cot
+    @param person       The disaster victim to whom the cot is allocated
      */
     public Cot(int rmNum, String gridLocation, DisasterVictim person) {
         setRoomNumber(rmNum);              
@@ -22,10 +22,10 @@ public class Cot extends InventoryItem {
     }
 
     /**
-    Constructs a Cot allocated to a specific location.
-    @param rmNum        The room number where the cot is located.
-    @param gridLocation The grid location of the cot.
-    @param location     The location to which the cot is allocated.
+    Constructs a Cot allocated to a specific location
+    @param rmNum        The room number where the cot is located
+    @param gridLocation The grid location of the cot
+    @param location     The location to which the cot is allocated
      */
     public Cot(int rmNum, String gridLocation, Location location) {
         setRoomNumber(rmNum);             
@@ -35,8 +35,8 @@ public class Cot extends InventoryItem {
     }
 
     /**
-    Sets the room number for the cot.
-    @param rmNum The room number to set.
+    Sets the room number for the cot
+    @param rmNum The room number to set
      */
     public void setRoomNumber(int rmNum) {
         if (rmNum < 100 || rmNum > 999) {
@@ -46,16 +46,16 @@ public class Cot extends InventoryItem {
     }
 
     /**
-    Gets the room number of the cot.
-    @return The room number of the cot.
+    Gets the room number of the cot
+    @return The room number of the cot
      */
     public int getRoomNumber() {
         return this.roomNumber;
     }
 
     /**
-    Sets the grid location for the cot.
-    @param gridLocation The grid location to set.
+    Sets the grid location for the cot
+    @param gridLocation The grid location to set
      */
     public void setGridLocation(String gridLocation) {
         if (gridLocation == null || gridLocation.trim().isEmpty() || !gridLocation.matches("^[A-Za-z]{1}\\d+$")) {
@@ -65,8 +65,8 @@ public class Cot extends InventoryItem {
     }
 
     /**
-    Gets the grid location of the cot.
-    @return The grid location of the cot.
+    Gets the grid location of the cot
+    @return The grid location of the cot
      */
     public String getGridLocation() {
         return this.gridLocation;

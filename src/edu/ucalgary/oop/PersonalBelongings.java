@@ -8,9 +8,9 @@ public class PersonalBelongings extends InventoryItem {
     private String description;
 
     /**
-    Constructor to initialize personal belongings with a description and associated disaster victim.
-    @param description A description of the personal belongings.
-    @param person The disaster victim to whom the belongings are allocated.
+    Constructor to initialize personal belongings with a description and associated disaster victim
+    @param description A description of the personal belongings
+    @param person The disaster victim to whom the belongings are allocated
      */
     public PersonalBelongings(String description, DisasterVictim person) throws IllegalArgumentException {
         if(description == null || description.length() == 0){
@@ -22,8 +22,8 @@ public class PersonalBelongings extends InventoryItem {
     }
 
     /**
-    Overrides the method to prevent allocating personal belongings to a location.
-    @param location The location to allocate to (ignored).
+    Overrides the method to prevent allocating personal belongings to a location
+    @param location The location to allocate to (ignored)
      */
     @Override
     public void setAllocatedToLocation(Location location){
@@ -31,8 +31,8 @@ public class PersonalBelongings extends InventoryItem {
     }
 
     /**
-    Sets the description of the personal belongings.
-    @param description The new description to set.
+    Sets the description of the personal belongings
+    @param description The new description to set
      */
     public void setDescription(String description){
         if(description == null || description.length() == 0){
@@ -42,8 +42,8 @@ public class PersonalBelongings extends InventoryItem {
     }
 
     /**
-    Retrieves the description of the personal belongings.
-    @return The description of the belongings.
+    Retrieves the description of the personal belongings
+    @return The description of the belongings
      */
     public String getDescription(){
         return this.description;

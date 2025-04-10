@@ -9,10 +9,10 @@ public class Inquirer extends Person {
     private String phoneNumber;
 
     /**
-    Constructor to initialize an Inquirer with a first name, last name, and phone number.
-    @param firstName The first name of the inquirer.
-    @param lastName The last name of the inquirer.
-    @param phone The phone number of the inquirer.
+    Constructor to initialize an Inquirer with a first name, last name, and phone number
+    @param firstName The first name of the inquirer
+    @param lastName The last name of the inquirer
+    @param phone The phone number of the inquirer
      */
     public Inquirer(String firstName, String lastName, String phone){
         this.firstName = firstName;
@@ -22,10 +22,10 @@ public class Inquirer extends Person {
 
 
     /**
-    Constructor to initialize an Inquirer with a first name, last name, and phone number.
-    @param firstName The first name of the inquirer.
-    @param lastName The last name of the inquirer.
-    @param phone The phone number of the inquirer.
+    Constructor to initialize an Inquirer with a first name, last name, and phone number
+    @param firstName The first name of the inquirer
+    @param lastName The last name of the inquirer
+    @param phone The phone number of the inquirer
     @param info The info of the inquirer
      */
     public Inquirer(String firstName, String lastName, String phone, String info){
@@ -36,32 +36,32 @@ public class Inquirer extends Person {
     }
 
     /**
-    Retrieves the information associated with the inquirer.
-    @return The information as a string.
+    Retrieves the information associated with the inquirer
+    @return The information as a string
      */
     public String getInfo(){
         return this.info;
     }
 
     /** 
-    Sets the information associated with the inquirer.
-    @param info The information to set.
+    Sets the information associated with the inquirer
+    @param info The information to set
      */
     public void setInfo(String info){
         this.info = info;
     }
 
     /**
-    Retrieves the phone number of the inquirer.
-    @return The phone number as a string.
+    Retrieves the phone number of the inquirer
+    @return The phone number as a string
      */
     public String getPhone(){
         return this.phoneNumber;
     }
 
     /**
-    Sets the phone number of the inquirer.
-    @param phoneNumber The phone number to set.
+    Sets the phone number of the inquirer
+    @param phoneNumber The phone number to set
      */
     public void setPhone(String phoneNumber){
         this.phoneNumber = phoneNumber;

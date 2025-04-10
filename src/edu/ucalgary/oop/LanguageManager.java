@@ -18,17 +18,17 @@ public class LanguageManager {
     private static LanguageManager instance;
 
     /**
-    Private constructor to initialize the LanguageManager with a specific language code.
-    @param languageCode The language code to initialize with.
+    Private constructor to initialize the LanguageManager with a specific language code
+    @param languageCode The language code to initialize with
      */
     private LanguageManager(String languageCode){
         setLanguageCode(languageCode);
     }
 
     /**
-    Retrieves the singleton instance of LanguageManager, initializing it if necessary.
-    @param languageCode The language code to initialize with if the instance is null.
-    @return The singleton instance of LanguageManager.
+    Retrieves the singleton instance of LanguageManager, initializing it if necessary
+    @param languageCode The language code to initialize with if the instance is null
+    @return The singleton instance of LanguageManager
      */
     public static LanguageManager getInstance(String languageCode){
         if(instance == null){
@@ -38,8 +38,8 @@ public class LanguageManager {
     }
 
     /**
-    Retrieves the singleton instance of LanguageManager without reinitializing.
-    @return The singleton instance of LanguageManager.
+    Retrieves the singleton instance of LanguageManager
+    @return The singleton instance of LanguageManager
      */
     public static LanguageManager getInstance(){
         return instance;
@@ -47,8 +47,8 @@ public class LanguageManager {
     
 
     /**
-    Loads the language file from the specified language code.
-    @param languageCode The language code of the file to load.
+    Loads the language file from the language code
+    @param languageCode The language code of the file to load
      */
     public void loadLanguageFile(String languageCode) {
         keys.clear();
@@ -86,8 +86,8 @@ public class LanguageManager {
     }
 
     /**
-    Sets the current language code and reloads the corresponding language file.
-    @param code The new language code to set.
+    Sets the current language code and reloads the corresponding language file
+    @param code The new language code to set
      */
     public void setLanguageCode(String code) {
         if (checkLanguageCodeFormat(code) && languageCodes.contains(code)) {
@@ -97,16 +97,16 @@ public class LanguageManager {
     }
 
     /**
-    Lists all supported language codes.
-    @return An ArrayList of supported language codes.
+    Lists all supported language codes
+    @return An ArrayList of supported language codes
      */
     public ArrayList<String> listLanguages(){
         return languageCodes;
     }
 
     /**
-    Retrieves the translation for a given key.
-    @param key The key to look up in the translations.
+    Retrieves the translation for a given key
+    @param key The key to look up in the translations
     @return The translation
      */
     public String getTranslation(String key) {
@@ -119,8 +119,8 @@ public class LanguageManager {
     }
 
     /**
-    Checks if a language code is in the correct format (e.g., "en-CA").
-    @param code The language code to validate.
+    Checks if a language code is in the correct format (e.g., "en-CA")
+    @param code The language code to validate
     @return True if the format is valid, false otherwise.
      */
     private static boolean checkLanguageCodeFormat(String code) {
